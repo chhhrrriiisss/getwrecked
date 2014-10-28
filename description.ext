@@ -1,0 +1,84 @@
+respawn = "BASE"; 
+respawndelay = 1;  
+
+author="SLI";
+OnLoadName = "GET WRECKED";
+OnLoadMission = "Vehicle combat sandbox.";
+enableDebugConsole = 1;
+
+overviewPicture = "client\images\load.jpg";
+loadScreen = "client\images\load.jpg";
+
+disabledAI = true;
+
+class Header
+{
+	gameType = SANDBOX; 
+	minPlayers = 2; 
+	maxPlayers = 8; 
+};
+
+disableChannels[] = {0,1,2,3,6};
+allowFunctionsLog = 1;
+
+// Control types
+#define CT_STATIC           0
+#define CT_MAP_MAIN         101
+#define ST_LINE           176
+
+// Static styles
+#define ST_CENTER         0x02
+#define ST_PICTURE        0x30
+
+#include "client\ui\common.hpp"
+#include "client\ui\menus\preview.hpp"
+#include "client\ui\menus\spawn.hpp"
+#include "client\ui\dialogs\new.hpp"
+#include "client\ui\dialogs\buy.hpp"
+#include "client\ui\dialogs\settings.hpp"
+#include "client\ui\dialogs\inventory.hpp"
+#include "client\ui\dialogs\message.hpp"
+#include "client\ui\dialogs\timer.hpp"
+
+
+class RscTitles 
+{   
+   #include "client\ui\hud\hud.hpp"
+   #include "client\ui\hud\alert.hpp"
+};
+
+
+class CfgSounds
+{
+	sounds[] = {};
+
+	class nitro
+	{
+		name = "nitro";
+		sound[] = {"\client\sounds\nitro.ogg", 0.75, 1};
+		titles[] = {};
+	};
+
+	class nitroAlt
+	{
+		name = "nitroAlt";
+		sound[] = {"\client\sounds\nitro_alt.ogg", 0.75, 1};
+		titles[] = {};
+	};
+
+	class paint
+	{
+		name = "paint";
+		sound[] = {"\client\sounds\paint.ogg", 1, 1};
+		titles[] = {};
+	};
+
+	// Retrieved from the awesome http://www.freesfx.co.uk
+	class money
+	{
+		name = "money";
+		sound[] = {"\client\sounds\money.ogg", 1.1, 1};
+		titles[] = {};
+	};
+ 
+};

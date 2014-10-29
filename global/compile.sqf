@@ -14,7 +14,7 @@ GW_ABANDON_DELAY = 10;
 GW_DEAD_DELAY = 1;
 
 // Weapon Damage (vs vehicles)
-GW_GDS = 0.25;
+GW_GDS = 0.5;
 WHEEL_COLLISION_DMG_SCALE = 0;
 COLLISION_DMG_SCALE = 0;
 FIRE_DMG_SCALE = 35;
@@ -47,7 +47,7 @@ OBJ_FLM_DMG_SCALE = (0 * GW_GHS);
 OBJ_RLG_DMG_SCALE = 2 * GW_GHS;
 
 // Lock on properties
-GW_MINLOCKRANGE = 250;
+GW_MINLOCKRANGE = 175;
 GW_MAXLOCKRANGE = 2500;
 GW_MINLOCKTIME = 3;
 GW_LOCKON_TOLERANCE = 10; // Difference in angle needed to acquire target
@@ -66,7 +66,7 @@ GW_KILL_EMPTY_VALUE = 0.1;
 GW_EJECT_FAILURE = 15;
 
 // Default start balance
-GW_INIT_BALANCE = 250;
+GW_INIT_BALANCE = 500;
 
 // Icon Compile
 call compile preprocessFile 'global\icons.sqf';
@@ -263,7 +263,7 @@ getTagData = {
 		case "GUD":	{  [20, 0.2] };
 		case "MIS":	{  [10, 0.2] };	
 		case "MOR":	{  [2.5, 0.05] };
-		case "RLG":	{  [10, 0.2] };
+		case "RLG":	{  [15, 0.25] };
 		case "LSR":	{  [3, 0.05] };		
 
 		default

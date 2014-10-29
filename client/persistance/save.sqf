@@ -160,7 +160,7 @@ if (_abort) exitWith {
 _paint = _vehicle getVariable ["paint",""];
 
 // Grab position
-_pos = getPosASL _vehicle;
+_pos = (ASLtoATL getPosASL _vehicle);
 _oldPos = _pos call positionToString;
 _oldDir = getDir _vehicle;
 

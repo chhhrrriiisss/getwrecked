@@ -1,3 +1,14 @@
+//
+//     Get Wrecked
+//     Vehicle Combat Sandbox by Sli
+//
+//     chrisnic.github.io/getwrecked
+//     
+//     This mod and its content (excluding those already attributed therein) are under a CC-BY-NC-ND 4.0 License
+//     Attribution-NonCommercial-NoDerivatives 4.0 International
+//     Permission must be sought from the Author for its commercial use or any modification
+//     
+
 X_Server = false;
 X_Client = false;
 X_JIP = false;
@@ -21,7 +32,7 @@ MISSION_ROOT = call {
 call compile preprocessFile "global\compile.sqf";
 [] execVM "briefing.sqf";
 
-hint "v0.7.6 RC1";
+hint "v0.7.6 RC4";
 
 99999 cutText ["Loading...", "BLACK", 0.01]; 
 

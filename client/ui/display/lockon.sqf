@@ -102,13 +102,17 @@ _closest = (vehicle player);
 
 // Find the closest target from those that are valid
 {
-	_d = _x distance (vehicle player);
+	// Bad entry? Reset
+	if (isNil "_x") exitWith { GW_VALIDTARGETS = []; };
 
+	_d = _x distance (vehicle player);
 	if (_d < _dist && _x != (vehicle player) && !(_x in GW_LOCKEDTARGETS)) then {
 		_closest = _x;
 	};
 
+
 } ForEach GW_VALIDTARGETS;
+
 
 // Start locking closest target if we havent already
 if (!GW_ACQUIRE_ACTIVE && !(_closest in GW_LOCKEDTARGETS) && !_isCloaked) then {
@@ -118,6 +122,7 @@ if (!GW_ACQUIRE_ACTIVE && !(_closest in GW_LOCKEDTARGETS) && !_isCloaked) then {
 	// If we're not already locked and there's no CM
 	if ( !("locked" in _status) && !("nolock" in _status) && !("cloak" in _status)) then {
 		[_closest] spawn acquireTarget;
+
 	};
 	
 };
@@ -164,6 +169,7 @@ if (count GW_LOCKEDTARGETS > 0) then {
     	] call BIS_fnc_MP;  
 
     	GW_LOCKEDTARGETS = GW_LOCKEDTARGETS - [_lockedTarget];
+    	GW_VALIDTARGETS = GW_VALIDTARGETS - [_lockedTarget];
 
 	};
 };

@@ -68,6 +68,8 @@ _nearby = _pos nearEntities[["Car"], _range];
 
 		if (GW_DEBUG) then { systemChat format['%1 / %2 / %3', typeof _x, _calcPower, _mass]; };
 
+		if (_x != (_vehicle)) then { [_x] call markAsKilledBy; };
+			
 		// Apply velocity to vehicles
 		if (local _x) then {
 			

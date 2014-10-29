@@ -66,6 +66,8 @@ class CfgSounds
 		titles[] = {};
 	};
 
+	// Retrieved from the awesome http://www.freesfx.co.uk
+	// Modified by Sli 
 	class paint
 	{
 		name = "paint";
@@ -74,6 +76,7 @@ class CfgSounds
 	};
 
 	// Retrieved from the awesome http://www.freesfx.co.uk
+	// Modified by Sli 
 	class money
 	{
 		name = "money";

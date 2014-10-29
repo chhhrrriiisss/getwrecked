@@ -58,15 +58,16 @@ _reloadTime = (_tagData) select 0;
 _cost = (_tagData) select 1;
 _ammo = _vehicle getVariable ["ammo", 0];
 
+_usesAmmo = (_type in ["MIN", "CAL", "CLK"]);
 
-// Check we're not out of ammo (if there is a cost)
-if (_cost > 0 && _ammo <= 0 && !(_type in ["OIL", "NTO", "THR"]) ) exitWith {
+// Check we're not out of ammo (and this is a type that uses it)
+if (_cost > 0 && _ammo <= 0 && _usesAmmo) exitWith {
 	["OUT OF AMMO ", 0.3, warningIcon, colorRed, "warning"] spawn createAlert;
 	GW_WAITUSE = false;
 };
 
-// Check we have enough for at least one use
-if (_ammo < _cost) exitWith {	
+// Check we have enough for at least one use (and this is a type that uses it)
+if (_ammo < _cost && _usesAmmo) exitWith {	
 	["NEED AMMO ", 0.3, warningIcon, colorRed, "warning"] spawn createAlert;
 	GW_WAITUSE = false;
 };

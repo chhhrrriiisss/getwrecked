@@ -45,7 +45,10 @@ if (!_processed) then {
                 
             _owner = _veh getVariable ["owner", ''];  
             _name = _veh getVariable ['name', ""];
-            _value =  (_veh getVariable ['GW_Value', 0]) + (_veh getVariable ['GW_WantedValue', 0]);
+            _newSpawn = _veh getVariable ["newSpawn", false];
+
+            // No money for killing new spawns
+            _value =  if (_newSpawn) then { 0 } else { ((_veh getVariable ['GW_Value', 200]) + (_veh getVariable ['GW_WantedValue', 0])) };
             _crew = crew _veh;     
 
             _value = if (count _crew > 0) then { (_value * GW_KILL_VALUE) } else { (_value * GW_KILL_EMPTY_VALUE) };

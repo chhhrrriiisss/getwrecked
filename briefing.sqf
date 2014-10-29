@@ -788,6 +788,29 @@ player createDiaryRecord ["changelog",
 ]];
 
 
+player createDiaryRecord ["changelog",
+[
+"v0.7.6",
+"
+- Fix for kill message displaying multiple times<br />
+- Cloaking device now properly hiding vehicle tag<br />
+- Self destruct no longer tags own vehicle allowing easy money<br />
+- No money earned for killing newly deployed vehicles<br />
+- Some light tweaks to the targetting to improve aiming (still a WIP)<br />
+- Mortar should now lock correctly and fire when locked<br />
+- Welcome note for new players <br />
+- Added truck to starter vehicles in library<br />
+- $500 starting cash so weapons are more accessible<BR />
+- Tweaked minimum lock range to 175m<br />
+- Corrected a bug with destroyed vehicles not being cleared from lockon array<br />
+- Having low ammo should no longer prevent you using some items<br />
+- Prevent tagging self with proxmity mines, explosives etc<br />
+- Magnetic coil now correctly tags victims
+<br />
+"
+]];
+
+
 
 
 

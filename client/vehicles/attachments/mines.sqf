@@ -57,14 +57,15 @@ dropTrigger = {
 				// If its a vehicle and its going fast blow it up
 				if (_isVehicle && _vel > 1.5) then {
 
-					[_x] call checkMark;	
+					if (_x != (vehicle player)) then { [_x] call checkMark;	};
 
 					playSound3D ["a3\sounds_f\weapons\mines\electron_trigger_1.wss", _obj, false, getPos _obj, 2, 1, 50]; 
 
 					_tPos =  (ASLtoATL getPosASL _x);
 					_tPos set[2, 0.25];
 					_x setDammage 0.98;
-					_bomb = createVehicle ["Bo_GBU12_LGB", _tPos, [], 0, "CAN_COLLIDE"];					
+					_bomb = createVehicle ["Bo_GBU12_LGB", _tPos, [], 0, "CAN_COLLIDE"];		
+					Sleep 0.01;			
 					deleteVehicle _obj;
 
 				} else {

@@ -55,7 +55,7 @@ for "_i" from 1 to _repeats step 1 do {
 
 	if (GW_DEBUG) then { [_gPos, _targetPos, 3] spawn debugLine; };
 
-	[(ATLtoASL _gPos), (ATLtoASL _targetPos)] call markIntersects;
+	[(ATLtoASL _gPos), (ATLtoASL _targetPos)] spawn markIntersects;
 
 	_bullet setVectorDir _heading; 
 	_bullet setVelocity _velocity; 

@@ -6,6 +6,11 @@
 
 private ["_argument", "_newPreview", "_type"];
 
+disableSerialization;
+_logo = findDisplay 42000 displayCtrl 42005;
+ctrlSetFocus _logo;
+_logo ctrlCommit 0;
+
 if (GW_WAITLOAD) exitWith {};
 
 _argument = _this select 0;
@@ -28,5 +33,5 @@ if (_type == "STRING") then {
 };
 
 // Ensure the selected vehicle is in range of the array
-_newPreview = [_newPreview, 0, (count GW_LIBRARY), true] call limitToRange;
+_newPreview = [_newPreview, 0, (count GW_LIBRARY - 1), true] call limitToRange;
 [_newPreview] spawn previewVehicle;

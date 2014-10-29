@@ -30,7 +30,7 @@ class GW_Menu
 		
 		class Logo : GW_StructuredTextBox
 		{
-			idc = -1;
+			idc = 42005;
 			colorBackground[] = {0,0,0,0};
 			x = (0 - 0.014) * safezoneW + safezoneX;
 			y = (0 - 0.03) * safezoneH + safezoneY;
@@ -60,26 +60,7 @@ class GW_Menu
 			y = 0 * safezoneH + safezoneY; 
 			w = 3;
 			h = MARGIN_TOP + (GW_BUTTON_HEIGHT) * safezoneH;
-		};	
-
-		
-
-		// class LoadIcon
-		// {    
-		// 		idc = -1;
-		// 		type = 0;
-		// 		style = 48 + 2048; //1 2 3...176				
-		// 		x = (0.01) * safezoneW + safezoneX; 
-		// 		y = (MARGIN_BOTTOM - 0.073) * safezoneH + safezoneY;				
-		// 		w = 0.05 * safezoneW;
-		// 		h = 0.05 * safezoneH;
-		// 		font = "";
-		// 		sizeEx = 0.05;
-		// 		colorBackground[] = {1,1,1,1}; //white background
-		// 		colorText[] = {1,1,1,0.95}; //grey foreground
-		// 		text = "client\images\icons\load.paa";
-		// 		lineSpacing = 1; //required for multi-line style
-		// };
+		};			
 
 		class StatsListBackground : GW_Block
 		{
@@ -90,17 +71,6 @@ class GW_Menu
 			w = (GW_BUTTON_WIDTH) * safezoneW;
 			h = (GW_BUTTON_HEIGHT * 9) * safezoneH;
 		};	
-
-
-		// class StatsBackground : GW_Block
-		// {
-		// 	idc = -1;
-		// 	colorBackground[] = {0,0,0,0.25};
-		// 	x = (SETTINGS_X - 0.015) * safezoneW + safezoneX;
-		// 	y = (SETTINGS_Y - 0.025) * safezoneH + safezoneY;
-		// 	w = ((GW_BUTTON_WIDTH * 2) + 0.03) * safezoneW;
-		// 	h = ((GW_BUTTON_HEIGHT * 11) + (GW_BUTTON_GAP_Y * 2) + 0.05) * safezoneH;
-		// };	
 
 	};
 

@@ -229,7 +229,7 @@ checkBinds = {
 			
 					if (_tag in GW_WEAPONSARRAY && _canShoot) then {
 
-						if (_tag == 'GUD' || _tag == 'MIS') then {
+						if (_tag == 'GUD' || _tag == 'MIS' || (_tag == 'MOR' && (count GW_LOCKEDTARGETS) > 0) )  then {
 
 							GW_ACTIVE_WEAPONS = (GW_ACTIVE_WEAPONS - [_obj]) + [_obj];
 							[_tag, _vehicle, "MANUAL"] spawn fireAttached;

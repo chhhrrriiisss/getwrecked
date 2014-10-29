@@ -85,7 +85,7 @@ if (alive _obj) then {
 	if (count _nearby > 0) then {
 		// To be extra badass, lets spawn a bomb for each vehicle nearby
 		{
-			[_x] call markAsKilledBy;
+			if (_x != (_vehicle)) then { [_x] call markAsKilledBy; };
 
 			_tPos =  (ASLtoATL getPosASL _x);
 			_tPos set [2, 2];

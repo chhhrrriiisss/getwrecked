@@ -4,6 +4,11 @@
 //      Return: None
 //
 
+disableSerialization;
+_logo = findDisplay 52000 displayCtrl 52004;
+ctrlSetFocus _logo;
+_logo ctrlCommit 0;
+
 _value = _this select 0;
 _newValue = 0;
 
@@ -29,3 +34,5 @@ _currentIndex = [_newValue, 0, (count GW_VALID_ZONES - 1), true] call limitToRan
 GW_SPAWN_LOCATION = GW_VALID_ZONES select _currentIndex;
 
 [GW_SPAWN_LOCATION] spawn previewLocation;
+
+

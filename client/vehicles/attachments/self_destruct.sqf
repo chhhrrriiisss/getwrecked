@@ -36,7 +36,7 @@ _pos = (ASLtoATL getPosATL _vehicle);
 
 // Prevent invulnerability from stopping it
 _vehicle setVariable ["status", [], true];
-_nearby = _pos nearEntities [["car"], 30];
+_nearby = _pos nearEntities [["Car"], 30];
 
 {
 	if (_x != _vehicle) then { 
@@ -50,6 +50,8 @@ _nearby = _pos nearEntities [["car"], 30];
 	false
 	
 } count _nearby > 0;
+
+Sleep 0.01;
 
 // Just in case
 _vehicle setDammage 1;

@@ -29,7 +29,7 @@ class GW_Spawn
 
 		class Logo : GW_StructuredTextBox
 		{
-			idc = 600001;
+			idc = 52004;
 			colorBackground[] = {0,0,0,0};
 			x = (0 - 0.014) * safezoneW + safezoneX;
 			y = (0 - 0.03) * safezoneH + safezoneY;

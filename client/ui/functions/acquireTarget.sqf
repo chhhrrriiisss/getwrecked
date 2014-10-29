@@ -20,7 +20,9 @@ _distanceModifier = (_target distance (vehicle player)) / 500;
 _data = [typeOf _target, GW_VEHICLE_LIST] call getData;
 _signature = if (!isNil "_data") then { ((_data select 2) select 7) } else { "" };
 _adjustedLockTime = switch (_signature) do { case "Large": { (GW_MINLOCKTIME / 3) }; case "Medium": { (GW_MINLOCKTIME * 0.6) }; case "Low": { (GW_MINLOCKTIME * 1) }; case "Tiny": { (GW_MINLOCKTIME * 2) }; default { GW_MINLOCKTIME }; };
-_lockTime = time + GW_MINLOCKTIME + (_distanceModifier);
+
+
+_lockTime = time + _adjustedLockTime + (_distanceModifier);
 _origLockTime = _lockTime;
 
 _targetted = false;
@@ -31,7 +33,7 @@ _isCloaked = if ('cloak' in ((vehicle player) getVariable ["status", []]) ) then
 
 // While its in locking range and alive
 while {!_isCloaked && _hasLockons && (_target in GW_VALIDTARGETS) && (alive _target) && !_targetted && _target != (vehicle player)} do {
-
+	
 	_hasLockons = (vehicle player) getVariable ["lockOns", false];
 	_pos =  _target modelToWorld [0,0,0];
 
@@ -42,7 +44,7 @@ while {!_isCloaked && _hasLockons && (_target in GW_VALIDTARGETS) && (alive _tar
 
 	// No lock status kills lock
 	_status = _target getVariable ["status", []];
-	if ("nolock" in _status || !("cloak" in _status)) exitWith {};
+	if ("nolock" in _status || ("cloak" in _status)) exitWith { if (GW_DEBUG) then { systemchat 'failed - no lock or cloak'; }; };
 
 	// If it doesnt have a locking status, send one
 	if ( !("locking" in _status) ) then {
@@ -66,7 +68,7 @@ while {!_isCloaked && _hasLockons && (_target in GW_VALIDTARGETS) && (alive _tar
 	_dist = _target distance (vehicle player);
 
 	// If the target goes in or out of the min and max lock ranges
-	if ( (_dist > GW_MAXLOCKRANGE) || (_dist < GW_MINLOCKRANGE) ) exitWith { };
+	if ( (_dist > GW_MAXLOCKRANGE) || (_dist < GW_MINLOCKRANGE) ) exitWith { if (GW_DEBUG) then { systemchat 'failed - out of range'; }; };
 
 	// If we've succesfully reached the lock time
 	_dif = _lockTime - time;
@@ -96,6 +98,7 @@ while {!_isCloaked && _hasLockons && (_target in GW_VALIDTARGETS) && (alive _tar
 
 // If the lock was successful, add it to the locked targets list
 if (_targetted) then {		
+
 	GW_LOCKEDTARGETS = (GW_LOCKEDTARGETS - [_target]) + [_target];
 	playSound3D ["a3\sounds_f\weapons\mines\electron_trigger_1.wss", (vehicle player), false, (visiblePosition  (vehicle player)), 2, 1, 20];  
 };

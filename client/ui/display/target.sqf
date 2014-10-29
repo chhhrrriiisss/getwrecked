@@ -17,10 +17,17 @@ _unit = player;
 GW_CAMERA_HEADING = [(positionCameraToWorld [0,0,0]), (positionCameraToWorld [0,0,1])] call BIS_fnc_vectorDiff;
 GW_TARGET_DIRECTION = [(positionCameraToWorld [0,0,0]), (positionCameraToWorld [0,0,4])] call BIS_fnc_dirTo;
 GW_MAX = positionCameraToWorld [0,0,2000];
-GW_MIN = positionCameraToWorld [0,0,300];
+GW_MIN = positionCameraToWorld [0,0,500];
 GW_ORIGIN = (ASLtoATL getPosASL _vehicle);
 GW_SCREEN = screenToWorld [0.5, 0.5];
-GW_TARGET = GW_MAX;
+
+// Determine which target marker to use
+// Resolution of aim and ballistics is still very much a WIP
+GW_TARGET = GW_MIN;
+_terrainIntersect = terrainIntersect [(positionCameraToWorld [0,0,0]), GW_MIN];
+if (GW_DEBUG) then { [GW_ORIGIN, GW_MIN, 0.1] spawn debugLine; };
+if (_terrainIntersect) then { GW_TARGET = GW_SCREEN; };
+
 _vehDir = getDir _vehicle;
 
 // Determine available weapons from camera direction

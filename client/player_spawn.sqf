@@ -94,9 +94,16 @@ if (!_firstSpawn) then {
 		[_unit, _unit] spawn deathCamera;
 	};
 
-	_pos = [spawnAreas, ["Car", "Man"]] call findEmpty;
-	_unit setPosATL (ASLtoATL getPosATL _pos);	
-	_unit setDir (getDir _pos);
+	_location = [spawnAreas, ["Car", "Man"]] call findEmpty;
+	_pos = (ASLtoATL getPosATL _location);
+	_unit setPosATL _pos;	
+	_unit setDir (getDir _location);
+
+	if (!isNil "GW_LASTLOAD") then {
+
+		_closest = [saveAreas, _pos] call findClosest; 
+		[(ASLtoATL getPosASL _closest), GW_LASTLOAD] spawn requestVehicle;
+	};
 
 } else {
 	// First spawn, just show us the workshop yo!

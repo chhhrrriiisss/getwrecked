@@ -4,7 +4,7 @@
 //      Return: None
 //
 
-if (GW_SPAWN_ACTIVE) exitWith {};
+if (GW_SPAWN_ACTIVE) exitWith { closeDialog 0;	GW_SPAWN_ACTIVE = false; };
 GW_SPAWN_ACTIVE = true;
 
 _pad = _this select 0;
@@ -12,27 +12,73 @@ _unit = _this select 1;
 
 // Do we actually have something to deploy?
 _nearby = (ASLtoATL (getPosASL _pad)) nearEntities [["Car"], 8];
-if (count _nearby <= 0) exitWith {	systemChat 'You have no vehicle to deploy.'; GW_SPAWN_ACTIVE = false; };
+if (count _nearby <= 0 && isNil "GW_LASTLOAD") exitWith {	systemChat 'You have no vehicle to deploy.'; GW_SPAWN_ACTIVE = false; };
 
 // Check the vehicle on the pad exists, is ready and simulated
 GW_SPAWN_VEHICLE = nil;
 {
 	_isVehicle = _x getVariable ["isVehicle", false];
-	_simulated = simulationEnabled _x;
 	_isOwner = [_x, _unit, true] call checkOwner;	
 	
-	if (_isVehicle && _isOwner && _simulated) exitWith {
+	if (_isVehicle && _isOwner) exitWith {
 		GW_SPAWN_VEHICLE = _x;
 	};
 	false
 } count _nearby > 0;
 
-if (isNil "GW_SPAWN_VEHICLE") exitWith { systemChat 'No valid vehicle found.'; GW_SPAWN_ACTIVE = false; };
+if (isNil "GW_SPAWN_VEHICLE") exitWith { systemChat 'Error using this vehicle, maybe try save and load it again.'; GW_SPAWN_ACTIVE = false; };
+
+if (!simulationEnabled GW_SPAWN_VEHICLE) then {
+
+    [       
+        [
+            GW_SPAWN_VEHICLE,
+            true
+        ],
+        "setObjectSimulation",
+        false,
+        false 
+    ] call BIS_fnc_MP;  
+
+};
+
+// Wait for simulation to be enabled
+_timeout = time + 3;
+waitUntil{ 
+	Sleep 0.1;
+    if ( (time > _timeout) || simulationEnabled GW_SPAWN_VEHICLE ) exitWith { true };
+    false
+};
+
+if (time > _timeout) exitWith {
+    systemChat 'Vehicle needs to be placed on the ground to be deployed.';
+    GW_SPAWN_ACTIVE = false;
+};
+
+// Check it's a valid vehicle and if not wait for it to be compiled
+_allowUpgrade = GW_SPAWN_VEHICLE getVariable ['isVehicle', false];
+
+if (!_allowUpgrade) then {
+    [_closest] call compileAttached;    
+};
+
+_timeout = time + 3;
+waitUntil{ 
+	Sleep 0.1;
+    _valid = GW_SPAWN_VEHICLE getVariable ['isVehicle', false];
+    if ( (time > _timeout) || _valid ) exitWith { true };
+    false
+};
+
+if (time > _timeout) exitWith {
+    systemChat 'Please hop in this vehicle at least once before saving.';
+    GW_SPAWN_ACTIVE = false;
+};
 
 // Check the vehicle has been saved at least once prior
 _isSaved = GW_SPAWN_VEHICLE getVariable ["isSaved", false];
 _continue = if (!_isSaved) then { (['UNSAVED VEHICLE', 'CONTINUE?', 'CONFIRM'] call createMessage) } else { true };
-if (!_continue) exitWith {};
+if (!_continue) exitWith { GW_SPAWN_ACTIVE = false; };
 
 // Ensure the vehicle is compiled & has handlers
 [GW_SPAWN_VEHICLE] call compileAttached;

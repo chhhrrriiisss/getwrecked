@@ -12,12 +12,14 @@ GW_RESPAWN_DELAY = 30;
 // Vehicle Respawn Settings (in minutes)
 GW_ABANDON_DELAY = 10;
 GW_DEAD_DELAY = 1;
+GW_OBJECT_ABANDON_DELAY = 3;
+GW_OBJECT_DEAD_DELAY = .5;
 
 // Weapon Damage (vs vehicles)
-GW_GDS = 0.5;
+GW_GDS = 0.3;
 WHEEL_COLLISION_DMG_SCALE = 0;
 COLLISION_DMG_SCALE = 0;
-FIRE_DMG_SCALE = 35;
+FIRE_DMG_SCALE = 25;
 MORTAR_DMG_SCALE = (10 * GW_GDS);
 TITAN_AT_DMG_SCALE = (2 * GW_GDS);
 RPG_DMG_SCALE = (0.4 * GW_GDS);
@@ -67,6 +69,9 @@ GW_EJECT_FAILURE = 15;
 
 // Default start balance
 GW_INIT_BALANCE = 500;
+
+// Limit for supply boxes
+GW_INVENTORY_LIMIT = 40;
 
 // Icon Compile
 call compile preprocessFile 'global\icons.sqf';
@@ -160,7 +165,8 @@ GW_WEAPONSARRAY = [
 	'MIS',
 	'GUD',
 	'LSR',
-	'RLG'
+	'RLG',
+	'FLM'
 ];
 
 // Weapons that use groundWeaponsHolder 
@@ -182,7 +188,6 @@ GW_TACTICALARRAY = [
 	'PAR',
 	'CAL',
 	'SHD',
-	'FLM',	
 	'THR',
 	'MIN',
 	'EPL',
@@ -194,7 +199,8 @@ GW_TACTICALARRAY = [
 // Modules without an action menu, but that still do something
 GW_SPECIALARRAY = [
 	'IND',
-	'EXP'
+	'EXP',
+	'FRK'
 ];
 
 // Texture selection config for specific vehicles
@@ -251,7 +257,7 @@ getTagData = {
 		case "MIN":	{  [30, 0.2] };
 		case "PAR":	{  [10, 0]	};
 		case "CLK":	{  [0, 0.08] };
-		case "MAG":	{  [60, 0]	};
+		case "MAG":	{  [75, 0]	};
 		case "GRP":	{  [1, 0]	};
 		case "CAL":	{  [30, 0.1] };
 		case "EPL":	{  [0, 0]	};
@@ -263,8 +269,10 @@ getTagData = {
 		case "GUD":	{  [20, 0.2] };
 		case "MIS":	{  [10, 0.2] };	
 		case "MOR":	{  [2.5, 0.05] };
-		case "RLG":	{  [15, 0.25] };
+		case "RLG":	{  [20, 0.25] };
 		case "LSR":	{  [3, 0.05] };		
+
+		case "FLM":	{  [0.5, 0.01] };		
 
 		default
 		{
@@ -349,3 +357,4 @@ tempAreas = ['tempArea'] call findAllObjects;
 spawnAreas = ['spawnArea'] call findAllObjects;
 buySigns = ['buySign'] call findAllObjects;
 vehicleTerminals = ['vehicleTerminal'] call findAllObjects;
+lootAreas = ['lootArea'] call findAllObjects;

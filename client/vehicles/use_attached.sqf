@@ -21,7 +21,7 @@ if (count _tacticalList == 0) exitWith { GW_WAITUSE = false; };
 // Check we're not emp'd or anything
 _status = _vehicle getVariable ['status', []];
 
-if ('emp' in _status || 'cloak' in _status || GW_CURRENTZONE == 'workshopZone' ) exitWith {
+if ('emp' in _status || 'cloak' in _status || (GW_CURRENTZONE == 'workshopZone' && !GW_DEBUG)) exitWith {
 	['DISABLED!  ', 0.5, warningIcon, colorRed, "flash"] spawn createAlert;
 	GW_WAITUSE = false;	
 };

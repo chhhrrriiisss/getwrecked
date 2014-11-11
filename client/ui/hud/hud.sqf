@@ -88,7 +88,7 @@ _moduleList = [];
 [[_hudStripesTopLeft, _hudStripesBottomRight], [['fade', 1, 0, 1.2]], "quad"] spawn createTween;
 
 // Starting conditions and loop config
-_refreshRate = 0.5; // How quickly the hud should update (faster can be buggier)
+_refreshRate = 0.3; // How quickly the hud should update (faster can be buggier)
 
 _blink = false;
 _blinkCount = 0;
@@ -141,7 +141,7 @@ while {GW_HUD_ACTIVE && alive player} do {
 		[[_hudMoney, _hudTransaction], [['fade', 1, 0, 0], ['y', '0', '-0.1', 1.2]], "quad"] spawn createTween;
 
 	};
-
+	
 	// We're in a vehicle
 	if (_inVehicle && _isDriver) then {		
 
@@ -439,7 +439,7 @@ while {GW_HUD_ACTIVE && alive player} do {
 				_pos = (_actualAmmo / 100);
 			};
 
-			if (_tag == "OIL") then {
+			if (_tag == "OIL" || _tag == "FLM") then {
 				_pos = (_actualFuel / 100);
 			};
 			

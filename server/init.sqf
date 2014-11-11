@@ -6,6 +6,8 @@
 //
 //
 
+_startTime = time;
+
 [] call spawnObjects;
 [] call initPaint;
 [] call initSupply;
@@ -15,3 +17,7 @@
 serverSetupComplete = compileFinal "true";
 publicVariable "serverSetupComplete";
 
+_endTime = time;
+_str =  format['Server setup completed in %1s.', (_endTime - _startTime)];
+diag_log _str;
+systemchat _str;

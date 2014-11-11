@@ -10,7 +10,7 @@ _p = _this select 0;
 _speed = _this select 1;
 
 // Vary the accuracy slightly
-_p = [_p, 4, 4] call setVariance;
+_p = [_p, 1.5, 1.5] call setVariance;
 
 // Distance from local vehicle
 _dist = (vehicle player) distance _p;

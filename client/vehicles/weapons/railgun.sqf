@@ -36,13 +36,14 @@ _bullet = createVehicle ["M_NLAW_AT_F", _oPos, [], 0, "FLY"];
 _bullet disableCollisionWith _obj;
 _bullet disableCollisionWith _vehicle;
 
-_vehicle setVelocity [(_vel select 0)+(sin _dir*-9),(_vel select 1)+(cos _dir*-9),(_vel select 2)];	
+_power = -20;
+_vehicle setVelocity [(_vel select 0)+(sin _dir*_power),(_vel select 1)+(cos _dir*_power),(_vel select 2) + 0.4];	
 
 playSound3D ["a3\sounds_f\sfx\special_sfx\sparkles_wreck_2.wss", _obj, false, _oPos, 2, 1, 50];	
 addCamShake [10, .1,30];
 
 [(ATLtoASL _oPos), (ATLtoASL _tPos)] call markIntersects;
-[ATLtoASL _oPos, ATLtoASL _tPos, (vehicle player)] spawn destroyIntersects;
+[ATLtoASL _oPos, ATLtoASL _tPos, (vehicle player), 0.5] spawn damageIntersects;
 
 _bullet setVectorDir _heading; 
 _bullet setVelocity _velocity; 

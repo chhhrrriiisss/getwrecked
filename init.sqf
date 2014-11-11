@@ -2,7 +2,8 @@
 //     Get Wrecked
 //     Vehicle Combat Sandbox by Sli
 //
-//     chrisnic.github.io/getwrecked
+//     getwrecked.info
+//     @GetWreckedA3
 //     
 //     This mod and its content (excluding those already attributed therein) are under a CC-BY-NC-ND 4.0 License
 //     Attribution-NonCommercial-NoDerivatives 4.0 International
@@ -14,7 +15,7 @@ X_Client = false;
 X_JIP = false;
 
 // Used to determine if saved vehicles are out-of-date
-GW_VERSION = 76;
+GW_VERSION = 77;
 
 if (isServer) then { X_Server = true };
 if (!isDedicated) then { X_Client = true };
@@ -32,32 +33,30 @@ MISSION_ROOT = call {
 call compile preprocessFile "global\compile.sqf";
 [] execVM "briefing.sqf";
 
-hint "v0.7.6 RC4";
+hint "v0.7.7 RC4";
 
 99999 cutText ["Loading...", "BLACK", 0.01]; 
 
 // Zone boundaries
 [] call parseZones;
 
-if (isServer) then {      
-
-    call compile preprocessFile "server\compile.sqf";   
-    [] execVM 'server\init.sqf'; 
-
-};
 
 if (X_Client || X_JIP) then {
    
    [] spawn {  
 
         call compile preprocessFile "client\compile.sqf";  
-
-        waitUntil {!isNull player};     
-        waitUntil {(getPlayerUID player) != ""};   
-                 
+        waitUntil {!isNull player};                 
         [] execVM 'client\init.sqf'; 
 
     };
+
+};
+
+if (isServer) then {      
+
+    call compile preprocessFile "server\compile.sqf";   
+    [] execVM 'server\init.sqf'; 
 
 };
 

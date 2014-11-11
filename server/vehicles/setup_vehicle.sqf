@@ -16,9 +16,7 @@ _vehicle lockDriver true;
 _vehicle lockCargo true;
 _vehicle lockTurret [[0], true];
 
-if (count toArray _name == 0 || _name == " ") then {
-    _name == 'Untitled';
-};
+if (count toArray _name == 0 || _name == " ") then {  _name == 'Untitled'; };
 
 // Custom
 _vehicle setVariable["name", _name, true]; 
@@ -53,14 +51,14 @@ _vehicle setVariable["GW_defaults", [
 
 {
     _vehicle setVariable ["GW_hitPoint_" + getText (_x >> "name"), configName _x, true];
-    
-} forEach ((typeOf _vehicle) call getHitPoints);
+    false
+} count ((typeOf _vehicle) call getHitPoints) > 0;
 
 clearWeaponCargoGlobal _vehicle;
 clearMagazineCargoGlobal _vehicle;
 clearItemCargoGlobal _vehicle;
 
-[_vehicle] spawn setVehicleHandlers;
+[_vehicle] call setVehicleHandlers;
 
 if (_respawn) then {
     [_vehicle, GW_ABANDON_DELAY, GW_DEAD_DELAY, _recreate] spawn setVehicleRespawn;

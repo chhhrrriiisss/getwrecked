@@ -46,7 +46,7 @@ if (count _raw <= 0 && (typename _loadTarget != "ARRAY")) exitWith {
 };
 
 // Find an empty temporary location to spawn a new car
-_temp = [tempAreas, ["Car"], 15] call findEmpty;
+_temp = [tempAreas, ["Car"], 8] call findEmpty;
 
 if ( (_temp distance [0,0,0]) <= 200) exitWith {
     systemChat 'Load areas full. Try again in a few seconds.';
@@ -56,16 +56,17 @@ if ( (_temp distance [0,0,0]) <= 200) exitWith {
 
 // Ok, we're good to go, send a request to the server
 systemChat 'Sending load request... ';
-[
+
+[       
     [
         player,
         _target,
         _raw
     ],
-    "serverLoadVehicle",
+    "loadVehicle",
     false,
-    false
-] call BIS_fnc_MP;
+    false 
+] call BIS_fnc_MP; 
 
 // Make it easier to spawn this vehicle next time
 if (typename _loadTarget != "ARRAY") then {
@@ -75,8 +76,12 @@ if (typename _loadTarget != "ARRAY") then {
 };
 
 // Start a timeout so we can abort if nothing comes back
-_timeout = time + 20;
-waitUntil { if ( !GW_WAITLOAD || (time > _timeout) ) exitWith { true };  };
+_timeout = time + 25;
+waitUntil { 
+    Sleep 1;
+    if ( !GW_WAITLOAD || (time > _timeout) ) exitWith { true };  
+    false
+};
 
 // If we're still waiting, reset GW_WAITLOAD
 if (GW_WAITLOAD) then {

@@ -111,7 +111,6 @@ GW_RESTRICTED_KEYS = [
 	17, // w
 	30, // a 
 	32, // d
-	219, // Windows Key, default for settings
 	69 // Num Lock Spam
 ];
 
@@ -165,6 +164,7 @@ checkBinds = {
 	User4 = actionKeys "User4"; // Rotate CCW
 	User5 = actionKeys "User5"; // Tilt Forward
 	User6 = actionKeys "User6"; // Tilt Backward
+	User20 = actionKeys "User20"; // Settings
 
 	_key = _this select 1; // The key that was pressed
 	_shift = _this select 2; 
@@ -189,7 +189,7 @@ checkBinds = {
 	};
 
 	// Windows key
-	if (_key == 219 && (_inVehicle && _isDriver) ) then {
+	if (_key in User20 && (_inVehicle && _isDriver) ) then {
 
 		if (!GW_SETTINGS_ACTIVE) then {
 			[_vehicle, player] spawn settingsMenu;

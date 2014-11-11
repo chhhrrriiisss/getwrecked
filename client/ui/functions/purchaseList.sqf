@@ -31,6 +31,9 @@ if (_totalItems <= 0 && !isNil "_index") then {
 	_totalItems = 1;
 };
 
+// Is there actually anything selected?
+if (_totalItems > GW_INVENTORY_LIMIT) exitWith {	['TOO MANY ITEMS'] spawn showPurchaseMessage;	};
+
 // Do we have enough moolah for this?
 if (GW_BALANCE - _totalCost < 0) exitWith {	['INSUFFICIENT FUNDS'] spawn showPurchaseMessage; };
 
@@ -58,9 +61,9 @@ if (_totalItems > 1) then {
 } else {
 
 	_type = ((_inventory select 0) select 1);
-	_relPos = player modelToWorld [1,0,0];
+	_relPos = player modelToWorld [0.25,0,0];
 
-	pubVar_spawnObject = [_type, _relPos];
+	pubVar_spawnObject = [_type, _relPos, true];
 	publicVariableServer "pubVar_spawnObject"; 	
 };
 

@@ -3,3 +3,4 @@
 if (isNull _o) exitWith {};
 
 _o enableSimulationGlobal (_this select 1);		
+

@@ -26,9 +26,6 @@ systemChat _string;
 pubVar_systemChat = _string;
 publicVariable "pubVar_systemChat";
 
-// If there's no money, ignore next step
-if (_value == 0) exitWith {};
-
 // Give the killer his cash if we can find him
 _target = [_killer] call findUnit;
 

@@ -9,7 +9,7 @@
 // Object
 setObjectData = compile preprocessFile "server\objects\object_data.sqf";
 setObjectHandlers = compile preprocessFile "server\objects\object_handlers.sqf";
-setObjectRespawn = compile preprocessFile "server\objects\object_respawn.sqf";
+setObjectCleanup = compile preprocessFile "server\objects\object_cleanup.sqf";
 spawnObjects = compile preprocessFile "server\objects\spawn_objects.sqf";
 
 // Vehicle
@@ -28,7 +28,6 @@ pubVar_fnc_spawnObject = compile preprocessFile "server\functions\pubVar_spawnOb
 "pubVar_spawnObject" addPublicVariableEventHandler { (_this select 1) call pubVar_fnc_spawnObject };
 
 logKill = compile preprocessFile "server\functions\logKill.sqf";
-serverLoadVehicle = compile preprocessFile "server\functions\serverLoadVehicle.sqf";
 
 // Utility
 setVisibleAttached = compile preprocessFile "server\functions\setVisibleAttached.sqf";

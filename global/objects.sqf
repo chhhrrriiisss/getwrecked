@@ -29,6 +29,7 @@ GW_LOOT_LIST = [
 	["launch_NLAW_F", "Guided Missile", 750, 9999, 0, 0, 'GUD', "Guided Missile", 1, guidedIcon], 
 	["launch_RPG32_F", "Rocket Launcher", 750, 9999, 0, 0, 'RPG', "Rocket Launcher", 0.3, rpgIcon],
 	["srifle_LRR_LRPS_F", "SR2 Railgun", 750, 9999, 0, 0, 'RLG', "Railgun", 1, railgunIcon],
+	["Land_DischargeStick_01_F", "Flamethrower", 750, 9999, 0, 0, 'FLM', "Flamethrower", 1, flameIcon],
 
 	// Fuel
 
@@ -44,7 +45,10 @@ GW_LOOT_LIST = [
 	// Special
 
 	["Box_East_AmmoOrd_F", "Incendiary Ammo", 500, 8, 0.3, 0, 'IND', "Hit vehicles will be set alight", 1, flameIcon],
-	["Box_IND_Grenades_F", "HE Ammo", 500, 8, 0.3, 0, 'EXP', "Projectiles have a small explosive effect", 1, minesIcon],		
+	["Box_IND_Grenades_F", "HE Ammo", 500, 8, 0.3, 0, 'EXP', "Projectiles have a small explosive effect", 1, minesIcon],	
+
+	// Claw [Disabled]
+	// ["Land_PalletTrolley_01_khaki_F", "Metal Forks", 1000, 8, 0, 0, 'FRK', "Used to damage vehicles at close range", 1, warningIcon],	
 
 	// Tactical	
 
@@ -62,5 +66,120 @@ GW_LOOT_LIST = [
 	["Land_FoodContainer_01_F", "Proximity Mines",  5, 500, 0, 0, 'MIN', "Drops a handful of mines", 0.7, minesIcon],
 	["Box_IND_Wps_F", "Shield Generator",  5, 500, 0, 0, 'SHD', "Shield that grants temporary invulnerability", 1, shieldIcon],
 	["Land_Coil_F", "Magnetic Coil",  5, 6000, 0, 0, 'MAG', "Deploys a magnetic pulse that pulls in vehicles", 1, magneticIcon]
+
+];
+
+
+// Price List and Categories for all loot
+
+// Building
+GW_LOOT_BUILDING = [
+	["Land_CnCBarrier_stripes_F", 25],
+	["Land_BagFence_Short_F", 20],
+	["Land_BagFence_Long_F", 40],
+	["Land_BagFence_Round_F", 50],
+	["Land_Wall_Tin_4", 50],
+	["Land_Wall_IndCnc_2deco_F", 200],
+	["Land_CnCBarrierMedium4_F", 100],
+	["Land_CnCBarrierMedium_F", 25],
+	["Land_Shoot_House_Wall_Prone_F", 10],
+	["Land_Shoot_House_Corner_Crouch_F", 10],
+	["Land_Shoot_House_Wall_Crouch_F", 10],
+	["Land_Pallets_F", 20],
+	["Land_Pallet_vertical_F", 20],
+	["Land_New_WiredFence_5m_F", 30]
+];
+
+// Weapons
+GW_LOOT_WEAPONS = [
+	["B_HMG_01_A_F", 100],
+	["B_GMG_01_A_F", 150],
+	["B_static_AT_F", 300],
+	["B_Mortar_01_F", 200],
+	["Land_Runway_PAPI", 400],
+	["launch_NLAW_F", 300],
+	["launch_RPG32_F", 200],
+	["srifle_LRR_LRPS_F", 600],
+	["Land_DischargeStick_01_F", 300]
+];
+
+// Performance
+GW_LOOT_PERFORMANCE = [
+	["Land_MetalBarrel_F", 300],
+	["Land_CanisterPlastic_F", 150],
+	["Land_CanisterFuel_F", 75],
+	["Land_Portable_generator_F", 100],
+	["Box_NATO_Ammo_F", 150], 
+	["Box_Nato_AmmoVeh_F", 300]
+];
+
+// Incendiary
+GW_LOOT_INCENDIARY = [
+	["Land_WaterTank_F", 100],
+	["Box_East_AmmoOrd_F", 400],
+	["Box_IND_Grenades_F", 300],
+	["Land_FireExtinguisher_F", 100],
+	["Land_Runway_PAPI", 400],
+	["Land_DischargeStick_01_F", 300]
+];
+
+// Electronics
+GW_LOOT_ELECTRONICS = [
+	["Land_BarrelEmpty_F", 400],
+	["Land_Suitcase_F", 200],
+	["launch_NLAW_F", 300],
+	["Land_Coil_F", 1000]
+];
+
+
+// Deployables
+GW_LOOT_DEPLOYABLES = [
+	["Land_Sacks_heap_F", 50],
+	["Land_WoodenBox_F", 200],
+	["Land_FoodContainer_01_F", 500],
+	["Land_WaterTank_F", 100]
+];
+
+// Defense
+GW_LOOT_DEFENCE = [
+	["Land_PowerGenerator_F", 400],
+	["Box_IND_Wps_F", 500],
+	["Land_Wall_IndCnc_2deco_F", 200],
+	["Land_Device_assembled_F", 250],
+	["Land_PalletTrolley_01_khaki_F", 300]
+];
+
+// Evasion
+GW_LOOT_EVASION = [
+	["Land_Portable_generator_F", 100],
+	["Land_Sack_F", 100],
+	["Land_FireExtinguisher_F", 100],
+	["Land_BarrelEmpty_grey_F", 100],
+	["Land_Device_assembled_F", 250]
+];
+
+GW_LOOT_VEHICLES = [
+
+	// Civilian
+	
+	["C_Offroad_01_F", 3000],
+	["C_SUV_01_F", 5000],
+	["C_Van_01_box_F", 1000],
+	["C_Hatchback_01_sport_F", 1000],	
+	["C_Kart_01_F", 5000],
+	["C_Quadbike_01_F", 1000],
+
+	// Trucks
+
+	["B_Truck_01_mover_F", 7500],
+	["B_Truck_01_transport_F", 10000],
+	["O_Truck_03_transport_F", 10000],
+	["I_Truck_02_transport_F", 12000],
+
+	// Military
+
+	["I_MRAP_03_F", 25000],
+	["B_MRAP_01_F", 20000],
+	["O_MRAP_02_F", 15000]
 
 ];

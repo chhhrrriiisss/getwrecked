@@ -25,6 +25,8 @@ if (count _objects == 0) exitWith {};
 	// If its not already on fire, set light to the first vehicle it hits
 	if ( !('fire' in _status) && { !('nofire' in _status) } && { _isVehicle } && {_rnd > _chance} ) exitWith { 
 
+		if (GW_DEBUG) then { systemchat format['Set %1 on fire', typeOf _x]; };
+			
 		// Fire duration 3 - 8
 		_rnd = (random 5) + 3;
 		
@@ -41,7 +43,7 @@ if (count _objects == 0) exitWith {};
     	] call BIS_fnc_MP;  
 
     	// Tag as killed by
-    	[_x] call markAsKilledBy;
+    	if (_x != (vehicle player)) then { [_x] call markAsKilledBy; };
 
     	// Apply particle effect
 		[

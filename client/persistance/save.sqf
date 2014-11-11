@@ -53,14 +53,56 @@ if ( (count _nearby) > 1) exitWith {
 
 _closest = _nearby select 0;
 
-// Check it's a valid vehicle
-_allowUpgrade = _closest getVariable ['isVehicle', false];
-_simulated = simulationEnabled _closest;
 
-if (!(_allowUpgrade) || !_simulated) exitWith {
-    systemChat 'Not a valid vehicle.';
+if (!simulationEnabled _closest) then {
+
+    [       
+        [
+            _closest,
+            true
+        ],
+        "setObjectSimulation",
+        false,
+        false 
+    ] call BIS_fnc_MP;  
+
+};
+
+// Wait for simulation to be enabled
+_timeout = time + 3;
+waitUntil{ 
+    Sleep 0.1;
+    if ( (time > _timeout) || simulationEnabled _closest ) exitWith { true };
+    false
+};
+
+if (time > _timeout) exitWith {
+    systemChat 'Vehicle needs to be placed on the ground to be saved.';
     GW_WAITSAVE = false;
 };
+
+// Check it's a valid vehicle and if not wait for it to be compiled
+_allowUpgrade = _closest getVariable ['isVehicle', false];
+
+if (!_allowUpgrade) then {
+    [_closest] call compileAttached;    
+};
+
+_timeout = time + 3;
+waitUntil{ 
+    Sleep 0.1;
+    _valid = _closest getVariable ['isVehicle', false];
+    if ( (time > _timeout) || _valid ) exitWith { true };
+    false
+};
+
+if (time > _timeout) exitWith {
+    systemChat 'Please hop in this vehicle at least once before saving.';
+    GW_WAITSAVE = false;
+};
+
+// Wait just a second
+Sleep 0.01;
 
 _vehicle = _closest;
 
@@ -75,6 +117,7 @@ if ( (count _crew) > 0) then {
 // Wait for them to get kicked out
 _timeout = time + 5;
 waitUntil{ 
+    Sleep 0.1;
     _crew =  (crew _vehicle);
     if ( (time > _timeout) || ((count _crew) <= 0) ) exitWith { true };
     false
@@ -102,7 +145,7 @@ _vehicle setPosASL _tempPos;
 
 // Wait for the vehicle to align
 _timeout = time + 5;
-waitUntil {     
+waitUntil {
     _vel = [0,0,0] distance (velocity _vehicle);
     _dist = ((getPosASL _vehicle) distance _tempPos);
     _dir = floor( getDir _vehicle );
@@ -113,7 +156,7 @@ waitUntil {
 
 // Took too long to align, abort to avoid errors
 if (time > _timeout) exitWith {
-    systemChat 'Error saving.';
+    systemChat 'Error saving. Try again in a few seconds.';
     GW_WAITSAVE = false;
     _vehicle setPosASL _targetPos;
 };
@@ -157,6 +200,7 @@ if (_abort) exitWith {
     _vehicle setPosASL _targetPos;
 };
 
+
 _paint = _vehicle getVariable ["paint",""];
 
 // Grab position
@@ -194,10 +238,11 @@ if (count _attachments > 0) then {
         _p = (ASLtoATL getPosASL _x);
 
         // If its a static weapon, or just wierd, correctly get the reference position
-        if (_x isKindOf "StaticWeapon" || typeOf _x == "groundWeaponHolder") then { 
+        if (_x isKindOf "StaticWeapon") then { 
             _boundingCenter = boundingCenter _x;
             _actualCenter = [-(_boundingCenter select 0), -(_boundingCenter select 1), -(_boundingCenter select 2)];
             _pos = (_x modelToWorld _actualCenter);
+
             _p = _pos;
         };
                 
@@ -255,6 +300,7 @@ if (_success) then {
 };
 
 // Return the vehicle to the pad
+_vehicle setVariable ["name", _saveTarget, true];
 _vehicle setVariable ["isSaved", true];
 _vehicle setPosASL _targetPos;
 _vehicle setDammage 0;

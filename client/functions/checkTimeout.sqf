@@ -14,7 +14,10 @@ _state = [0, false];
 if (_type == "" || _currentTime == 0 || (count GW_WAITLIST == 0)) exitWith { _state };
 
 _timeLeft = 0;
-{				
+{	
+	_timeLeft = 0;
+	_error = false;
+	if (!isNil "_x") then {			
 		_source = _x select 0;
 		_timeNeeded = _x select 1;
 
@@ -28,11 +31,14 @@ _timeLeft = 0;
 				_state = [ ceil(_timeLeft), true];
 			};
 		};		
+	} elsE {
+		_error = true;
+	};	
 
-		// If it should have expired
-		if (_timeLeft <= 0) then {
-			GW_WAITLIST set [_foreachindex, "x"];					
-		};		 			
+	// If it should have expired
+	if (_timeLeft <= 0 || _error) then {
+		GW_WAITLIST set [_foreachindex, "x"];					
+	};		 			
 
 } ForEach GW_WAITLIST;
 

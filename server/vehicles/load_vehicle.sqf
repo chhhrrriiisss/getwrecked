@@ -6,11 +6,17 @@
 
 private['_class', '_name', '_camo', '_source'];
 
-_source = [_this,0, 0, [0]] call BIS_fnc_param;
+_player = [_this,0, objNull, [objNull]] call BIS_fnc_param;
 _target = [_this,1, [], [[]]] call BIS_fnc_param;
 _raw = [_this,2, [], [[]]] call BIS_fnc_param;
 
-if (_source == 0 || (count _target == 0) || (count _raw == 0)) exitWith {};
+if (isNull _player || (count _target == 0) || (count _raw == 0)) exitWith {};
+
+_source = owner _player;
+
+// Everything's ok, reassure the client
+pubVar_systemChat = "Recieved request.";
+_source publicVariableClient "pubVar_systemChat";
 
 _data = _raw;
 if (count _data == 0) exitWith {
@@ -67,13 +73,21 @@ _errors = 0;
         _o setDammage 0;
 
         _dir = (_x select 2);
-        if (typename _dir == "ARRAY") then {
-            if (count _dir > 0) then {
-                [_o, (_x select 2)] call setPitchBankYaw;
-            };
+        _rotation = if (typename _dir == "ARRAY") then {
+
+            ((_x select 2) select 2)
+            // if (count _dir > 0) then {
+            //     [_o, (_x select 2)] call setPitchBankYaw;
+            // };
         } else {
-            _o setDir (_x select 2);
+
+            (_x select 2)
+            
         };
+
+        _o setDir _rotation;
+        pubVar_setDir = [_o, _rotation];
+        publicVariable "pubVar_setDir";
 
         // Add key bind
         _k = (_x select 3);
@@ -82,7 +96,9 @@ _errors = 0;
 
     };
 
-} ForEach _savedAttachments;
+    false
+    
+} count _savedAttachments > 0;
 
 // Set paint (if exists)
 _paint = (_raw select 2);
@@ -95,7 +111,6 @@ _newVehicle enableSimulationGlobal true;
 _newVehicle lockCargo true;
 _newVehicle setDammage 0;
 {  _x setDammage 0; false } count (attachedObjects _newVehicle) > 0;
-// _newVehicle setMass _vehMass;
 
 if (!isNil "_target") then {
     _newVehicle setPos _target;
@@ -106,4 +121,3 @@ _totalTime = round ((_endTime - _startTime) * (10 ^ 3)) / (10 ^ 3);
 pubVar_status = [1, [_newVehicle, (_endTime - _startTime)]]; 
 _source publicVariableClient "pubVar_status";
 
-true

@@ -25,7 +25,7 @@ _points = [_obj, _tPos];
 	"laserLine"
 ] call BIS_fnc_MP;
 
-playSound3D ["a3\sounds_f\sfx\special_sfx\sparkles_wreck_2.wss", _obj, false, _oPos, 1, 1, 50];	
+playSound3D ["a3\sounds_f\sfx\special_sfx\sparkles_wreck_2.wss", _obj, false, _oPos, 2, 1, 50];	
 
 for "_i" from 1 to _repeats step 1 do {
 

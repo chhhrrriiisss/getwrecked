@@ -15,6 +15,9 @@ if (!alive _vehicle) exitWith {};
 _vehicle lockCargo true;
 [_vehicle] call compileAttached;
 
+// Set us as the owner
+_vehicle setVariable ["owner", GW_PLAYERNAME, true];
+
 _name = _vehicle getVariable ["name", ''];
 if (_name == '' || _name == "UNTITLED") exitWith {};
 

@@ -36,6 +36,7 @@ if (_fuel < _cost) then {
 
 		// Calculate power based off of weight
 		_power = (15 - (_mass * 0.0002)) max 1;
+
 		_speed = _power; 
 		
 		// Wheels aren't touching the ground

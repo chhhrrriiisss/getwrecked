@@ -12,11 +12,14 @@ if (isNull _obj) exitWith {};
 	
 if (GW_BUY_ACTIVE) exitWith {};
 GW_BUY_ACTIVE = true;
+GW_BUY_OBJ = _obj;
+GW_BUY_CART = [];
 
 disableSerialization;
 if(!(createDialog "GW_Buy")) exitWith { GW_BUY_ACTIVE = false; }; 
 
 [_obj] spawn generateSponsorInfo;
+[0] spawn generateCategoryList;
 
 _layerStatic = ("BIS_layerStatic" call BIS_fnc_rscLayer);
 _layerStatic cutRsc ["RscStatic", "PLAIN" , 0.5];
@@ -27,7 +30,7 @@ _total ctrlSetText 'TOTAL: $0';
 _total ctrlCommit 0;
 
 // Generate a shopping list with prices for the company
-[_obj] spawn generateItemsList;
+[GW_BUY_OBJ] spawn generateItemsList;
 
 "dynamicBlur" ppEffectEnable true;
 "dynamicBlur" ppEffectAdjust [0.3]; 

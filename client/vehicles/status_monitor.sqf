@@ -13,14 +13,6 @@ _special = _vehicle getVariable ["special", []];
 // Do we need to eject?
 [_vehicle, player] spawn checkEject;
 
-// If the number of attached items has changed, re-compile vehicle info
-if (isNil "GW_LASTATTACHED") then {   GW_LASTATTACHED = (count attachedObjects _vehicle); };
-_attachedObjects = (count (attachedObjects _vehicle));
-if (_attachedObjects != GW_LASTATTACHED) then {
-    GW_LASTATTACHED = _attachedObjects;
-    [_vehicle] call compileAttached;    
-};
-
 // Every 2 minutes, give sponsorship money
 if (isNil "GW_LASTPAYCHECK") then {  GW_LASTPAYCHECK = time; };
 if (time - GW_LASTPAYCHECK > 120) then {
@@ -35,7 +27,6 @@ if (time - GW_LASTPAYCHECK > 120) then {
     _wantedValue = _wantedValue + 50;
     _vehicle setVariable ["GW_WantedValue", _wantedValue];
     _vehicle say3D "money";
-
 
 };
 
@@ -74,10 +65,15 @@ if (_remainder == 0 && (typeOf _vehicle != "Steerable_Parachute_F")) then {
 
 // No status, reinflate tyres 
 if (count _status <= 0) exitWith {
-    _vehicle sethit ["wheel_1_1_steering", 0.5];
-    _vehicle sethit ["wheel_1_2_steering", 0.5];
-    _vehicle sethit ["wheel_2_1_steering", 0.5];
-    _vehicle sethit ["wheel_2_2_steering", 0.5];
+    _vehicle sethit ["wheel_1_1_steering", 0];
+    _vehicle sethit ["wheel_1_2_steering", 0];
+    _vehicle sethit ["wheel_2_1_steering", 0];
+    _vehicle sethit ["wheel_2_2_steering", 0];
+};
+
+// Give a little bit of fuel if it looks like we're out
+if (fuel _vehicle < 0.01) then {
+    _vehicle setFuel 0.01;
 };
 
 switch (true) do {     

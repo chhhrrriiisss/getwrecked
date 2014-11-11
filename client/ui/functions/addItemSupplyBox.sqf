@@ -11,9 +11,12 @@ _item = _this select 1;
 
 _class = if (typeOf _item == "groundWeaponHolder") then { (_item getVariable "type") } else { (typeOf _item) };
 
-deleteVehicle _item;
-
 _contents = _box getVariable ["GW_INVENTORY", []];
+_count = [_box] call countItemsSupplyBox;
+
+if (_count >= GW_INVENTORY_LIMIT) exitWith { systemChat 'Supply box full.'; };
+
+deleteVehicle _item;
 
 _exists = false;
 {
@@ -34,3 +37,4 @@ if (!_exists) then {
 
 _box setVariable ["GW_INVENTORY", _contents, true];	
 _box spawn newItemsSupplyBox;
+

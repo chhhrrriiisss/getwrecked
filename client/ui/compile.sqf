@@ -22,6 +22,8 @@ generateSponsorInfo = compile preprocessFile "client\ui\functions\generateSponso
 generateItemsList = compile preprocessFile "client\ui\functions\generateItemsList.sqf";	
 requestSupplyBox = compile preprocessFile "client\ui\functions\requestSupplyBox.sqf";	
 purchaseList = compile preprocessFile "client\ui\functions\purchaseList.sqf";	
+generateCategoryList = compile preprocessFile "client\ui\functions\generateCategoryList.sqf";	
+changeCategory = compile preprocessFile "client\ui\functions\changeCategory.sqf";	
 
 // Displays and restores purchase button text
 showPurchaseMessage = {
@@ -85,6 +87,7 @@ abortLocation = {
 //      
 //
 
+countItemsSupplyBox = compile preprocessFile "client\ui\functions\countItemsSupplyBox.sqf";
 addItemSupplyBox = compile preprocessFile "client\ui\functions\addItemSupplyBox.sqf";
 newItemsSupplyBox = compile preprocessFile "client\ui\functions\newItemsSupplyBox.sqf";	
 removeItemSupplyBox = compile preprocessFile "client\ui\functions\removeItemSupplyBox.sqf";	

@@ -174,7 +174,7 @@ switch (_type) do {
 };
 
 // Game over, now tidy up
-waitUntil {camCommitted _cam;};
+waitUntil { (camCommitted _cam) };
 player cameraeffect["terminate","back"];
 "colorCorrections" ppEffectEnable false; 
 camdestroy _cam;

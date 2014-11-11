@@ -19,6 +19,7 @@ colorWhite = [1,1,1,1];
 GW_STATS_ORDER = ["kills", "deaths", "destroyed", "mileage", "moneyEarned", "timeAlive", "deploys"];
 GW_INVULNERABLE = true;
 GW_DEPLOYLIST = [];
+GW_LOCKEDTARGETS = [];
 GW_LASTMESSAGELOGGED = time;
 GW_DEBUG = false;
 GW_BUY_ACTIVE = false;
@@ -138,6 +139,8 @@ fireHmg = compile preprocessFile "client\vehicles\weapons\hmg.sqf";
 fireGmg = compile preprocessFile "client\vehicles\weapons\gmg.sqf";
 fireLockOn = compile preprocessFile "client\vehicles\weapons\lockon_missile.sqf";
 fireGuided = compile preprocessFile "client\vehicles\weapons\guided_missile.sqf";
+fireFlamethrower = compile preprocessFile "client\vehicles\weapons\flamethrower.sqf";
+
 
 // Module Functions
 smokeBomb = compile preprocessFile "client\vehicles\attachments\smoke_bomb.sqf";
@@ -155,7 +158,11 @@ dropExplosives = compile preprocessFile "client\vehicles\attachments\explosives.
 shieldGenerator = compile preprocessFile "client\vehicles\attachments\shield_generator.sqf";
 cloakingDevice = compile preprocessFile "client\vehicles\attachments\cloak.sqf";
 magneticCoil = compile preprocessFile "client\vehicles\attachments\magnetic_coil.sqf";
+vehicleForks = compile preprocessFile "client\vehicles\attachments\vehicle_forks.sqf";
+attachVehicleTo = compile preprocessFile "client\functions\attachVehicleTo.sqf";
+
 statusMonitor = compile preprocessFile "client\vehicles\status_monitor.sqf";
+simulationManager = compile preprocessFile "client\simulation_manager.sqf";
 
 // Effects
 thrusterEffect = compile preprocessFile "client\effects\thruster.sqf";
@@ -170,6 +177,7 @@ cloakEffect = compile preprocessFile "client\effects\cloak.sqf";
 magnetEffect = compile preprocessFile "client\effects\magnet.sqf";
 nitroEffect = compile preprocessFile "client\effects\nitro.sqf";
 muzzleEffect = compile preprocessFile "client\effects\muzzle.sqf";
+flameEffect = compile preprocessFile "client\effects\flame.sqf";
 
 // Zone Functions
 returnToZone =  compile preprocessFile "client\functions\returnToZone.sqf";
@@ -199,8 +207,9 @@ markAsKilledBy = compile preprocessFile "client\functions\markAsKilledBy.sqf";
 markIntersects = compile preprocessFile "client\functions\markIntersects.sqf";
 markNearby = compile preprocessFile "client\functions\markNearby.sqf";
 checkMark = compile preprocessFile "client\functions\checkMark.sqf";
-destroyIntersects = compile preprocessFile "client\functions\destroyIntersects.sqf";
+damageIntersects = compile preprocessFile "client\functions\damageIntersects.sqf";
 burnIntersects = compile preprocessFile "client\functions\burnIntersects.sqf";
+destroyInstantly = compile preprocessFile "client\functions\destroyInstantly.sqf";
 popIntersects = compile preprocessFile "client\functions\popIntersects.sqf";
 slowDown = compile preprocessFile "client\functions\slowDown.sqf";
 flipVehicle = compile preprocessFile "client\functions\flipVehicle.sqf";

@@ -27,9 +27,15 @@ for "_i" from 0 to _size step 1 do {
 		
 		_total = _total + _subtotal;		
 		_itemCount = _itemCount + (parseNumber _value);
-		_inventory set [count _inventory, [(parseNumber _value), _class] ];
+		_inventory pushBack [(parseNumber _value), _class];
 	};
 };
+
+// Also include items already added to cart
+{
+	_total = _total + ((_x select 2) * (_x select 1));
+	_inventory pushBack [_quantity, (_x select 0)];
+} count GW_BUY_CART > 0;
 
 disableSerialization;
 _text = ((findDisplay 97000) displayCtrl 97005);

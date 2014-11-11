@@ -30,7 +30,7 @@ if (count _weaponsList <= 0) then {
 	call addReservedIndex;
 };
 
-_list lnbAddRow["TACTICAL", "", ""];	
+_list lnbAddRow["TACTICAL", "", ""];
 call addReservedIndex;
 
 // Create a list of tactical items

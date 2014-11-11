@@ -37,8 +37,7 @@ while {time < _timeout && _outOfBounds && alive _unit && !isNil "GW_CURRENTZONE"
 
 // Kill the player and vehicle if we're still out of zone
 if (_outOfBounds) then {
-	(vehicle player) setDammage 1;
-	_unit setDammage 1;
+	(vehicle player) call destroyInstantly;		
 };
 
 // Restore all ppEffects

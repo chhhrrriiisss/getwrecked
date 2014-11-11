@@ -26,3 +26,10 @@ if ( (typeOf _veh == "C_Kart_01_F" || !isNil {_veh getVariable "newSpawn"} ) && 
 	};
 	
 };
+
+_special = _veh getVariable ["special", []];
+
+if ('FRK' in _special) then {	
+    [_veh] spawn vehicleForks;
+};
+

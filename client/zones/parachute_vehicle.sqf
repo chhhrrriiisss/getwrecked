@@ -14,9 +14,9 @@ _ignore = [_this,3, false] call BIS_fnc_param;
 if (!_ignore) then {
 
     _timeout = time + 5;
-    waitUntil{
-    	
-    	((time > _timeout) || (_unit == (driver _targetVehicle)))
+    waitUntil{    	
+    	if ((time > _timeout) || (_unit == (driver _targetVehicle))) exitWith { true };
+        false
     };
 
     if (time > _timeout) exitWith {
@@ -29,13 +29,15 @@ if (!_ignore) then {
     [
         _targetVehicle,
         ['invulnerable', 'nolock', 'nofire'],
-        10
+        20
     ],
     "addVehicleStatus",
     _targetVehicle,
     false 
  ] call BIS_fnc_MP;  
 
+// Force a hud refresh to resolve some lag issues
+GW_HUD_ACTIVE = false; 
 
 _oldPosition = _targetPosition;
 
@@ -108,17 +110,7 @@ _targetVehicle setVectorUp [0,0,1];
         waitUntil { ( (getPos _veh select 2 < 5) || (isEngineOn _veh) || time > (_this select 2)) };
 
         _veh setDammage 0;
-        { _x setDammage 0; } count (crew _veh) > 0;     
-
-        [       
-            [
-                _veh,
-                ['invulnerable', 'nolock', 'nofire']
-            ],
-            "removeVehicleStatus",
-            _veh,
-            false 
-        ] call BIS_fnc_MP;  
+        { _x setDammage 0; } count (crew _veh) > 0;            
 
         playSound3D ["a3\sounds_f\weapons\Flare_Gun\flaregun_1_shoot.wss", _veh, false, getPosASL _veh, 1, 1, 40];             
         _vel = velocity _veh;
@@ -138,6 +130,18 @@ _targetVehicle setVectorUp [0,0,1];
 
         } count (_this select 1);
 
+        // Wait 10 second before removing new spawn tag
+        Sleep 5;
         _veh setVariable ["newSpawn", nil];
+
+        [       
+            [
+                _veh,
+                ['invulnerable', 'nolock', 'nofire']
+            ],
+            "removeVehicleStatus",
+            _veh,
+            false 
+        ] call BIS_fnc_MP;  
  };
 

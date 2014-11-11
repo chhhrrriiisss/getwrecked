@@ -25,8 +25,6 @@ if ( ((_pitchBank select 0) <= -50) && (_pitchAmount < 0)) exitWith {};
 _newPitch = [(_pitchBank select 0) + _pitchAmount] call normalizeAngle;
 _newBank = [(_pitchBank select 1) + _bankAmount] call normalizeAngle;
 
-// systemchat format ['%1 / %2', _newPitch, _newBank];
-
 [_obj, [_newPitch,_newBank, (getDir _obj)]] call setPitchBankYaw;
 
 true

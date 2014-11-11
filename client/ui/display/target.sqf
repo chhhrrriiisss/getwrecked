@@ -25,8 +25,11 @@ GW_SCREEN = screenToWorld [0.5, 0.5];
 // Resolution of aim and ballistics is still very much a WIP
 GW_TARGET = GW_MIN;
 _terrainIntersect = terrainIntersect [(positionCameraToWorld [0,0,0]), GW_MIN];
-if (GW_DEBUG) then { [GW_ORIGIN, GW_MIN, 0.1] spawn debugLine; };
-if (_terrainIntersect) then { GW_TARGET = GW_SCREEN; };
+_heightAboveTerrain = (GW_ORIGIN) select 2;
+
+if (GW_DEBUG) then { [GW_ORIGIN, GW_SCREEN, 0.1] spawn debugLine; };
+
+if (_terrainIntersect || _heightAboveTerrain > 3) then { GW_TARGET = GW_SCREEN; };
 
 _vehDir = getDir _vehicle;
 
@@ -50,7 +53,8 @@ _allowedWeapons = [
 	'MIS',
 	'RPG',
 	'LSR',
-	'RLG'
+	'RLG',
+	'FLM'
 ];
 
 _count = 0;
@@ -62,7 +66,7 @@ _count = 0;
 	_defaultDir = _obj getVariable ["defaultDirection", 0];
 
 	// Flip it around to the correct side if laser
-	_defaultDir = if (_type == "LSR") then { ([_defaultDir + 180] call normalizeAngle) } else { _defaultDir };
+	_defaultDir = if (_type == "LSR" || _type == "FLM") then { ([_defaultDir + 180] call normalizeAngle) } else { _defaultDir };
 
 	// Corrected angle based off of vehicle direction
 	_actualDir = [GW_TARGET_DIRECTION - _vehDir] call normalizeAngle;	
@@ -85,7 +89,8 @@ _count = 0;
 				case "RPG":	{ rpgTargetIcon };				
 				case "MIS":	{ rpgTargetIcon };				
 				case "MOR":	{ rangeTargetIcon };				
-				case "GMG":	{ rangeTargetIcon };				
+				case "GMG":	{ rangeTargetIcon };	
+				case "FLM":	{ rpgTargetIcon };				
 				default	{ noTargetIcon };			
 			};
 
@@ -94,8 +99,8 @@ _count = 0;
 		};
 
 	};
-
-} ForEach _weaponsList;
+	false
+} count _weaponsList > 0;
 
 // For multiple weapons, just use the default
 if (_count > 1) then {
@@ -108,6 +113,7 @@ GW_ACTIVE_WEAPONS = [];
 // Are we actually able to shoot?
 _status = _vehicle getVariable ["status", []];
 _canShoot = if (!GW_SETTINGS_ACTIVE && (count GW_AVAIL_WEAPONS > 0) && !GW_WAITFIRE && !('cloak' in _status) && GW_CURRENTZONE != "workshopZone") then { true } else { false };
+if (GW_DEBUG) then {_canShoot = true; };
 
 // Mouse shooting
 if (GW_LMBDOWN && _canShoot && !GW_WAITFIRE) then {
@@ -120,11 +126,13 @@ if (GW_LMBDOWN && _canShoot && !GW_WAITFIRE) then {
 		_type = _x select 1;
 		if ( !(_type in _availTypes) ) then { _availTypes pushBack _type; };
 		GW_ACTIVE_WEAPONS pushback (_x select 0);
-	} ForEach GW_AVAIL_WEAPONS;
+		false
+	} count GW_AVAIL_WEAPONS > 0;
 
 	{
 		[_x, _vehicle, "AUTO"] spawn fireAttached;
-	} ForEach _availTypes;	
+		false
+	} count _availTypes > 0;
 };
 
 _pos = _vehicle modelToWorld [0,40,0];

@@ -13,11 +13,11 @@ MISSION_ROOT = call {
 };
 
 // String formats
-createVehFormat = "<img size='3' color='#ffffff' shadow='0' image='" + MISSION_ROOT + "client\images\icons\menus\create.paa' />";
-spawnInFormat = "<img size='3' color='#ffffff' shadow='0' image='" + MISSION_ROOT + "client\images\icons\menus\spawnin.paa' />";
-clearPadFormat = "<img size='3' color='#ffffff' shadow='0' image='" + MISSION_ROOT + "client\images\icons\menus\clear.paa' />";
-savePadFormat = "<img size='3' color='#ffffff' shadow='0' image='" + MISSION_ROOT + "client\images\icons\menus\save.paa' />";
-loadPadFormat = "<img size='3' color='#ffffff' shadow='0' image='" + MISSION_ROOT + "client\images\icons\menus\load.paa' />";
+createVehFormat = "<img size='3' color='#ffffff' shadow='0' image='" + MISSION_ROOT + "client\images\icons\menus\create.paa' align='left' /> <t size='1.1' shadow='0' align='left'>CREATE  </t>";
+spawnInFormat = "<img size='3' color='#ffffff' shadow='0' image='" + MISSION_ROOT + "client\images\icons\menus\spawnin.paa' align='left' /> <t size='1.1' shadow='0' align='left'>DEPLOY  </t>";
+clearPadFormat = "<img size='3' color='#ffffff' shadow='0' image='" + MISSION_ROOT + "client\images\icons\menus\clear.paa' align='left' /> <t size='1.1' shadow='0' align='left'>CLEAR  </t>";
+savePadFormat = "<img size='3' color='#ffffff' shadow='0' image='" + MISSION_ROOT + "client\images\icons\menus\save.paa' align='left' /> <t size='1.1' shadow='0' align='left'>SAVE  </t>";
+loadPadFormat = "<img size='3' color='#ffffff' shadow='0' image='" + MISSION_ROOT + "client\images\icons\menus\load.paa' align='left' /> <t size='1.1' shadow='0' align='left'>LOAD  </t>";
 
 _obj = [_this,0, objNull, [objNull]] call BIS_fnc_param;
 _pad = [_this,1, objNull, [objNull]] call BIS_fnc_param;

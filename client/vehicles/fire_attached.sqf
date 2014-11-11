@@ -18,7 +18,7 @@ _weaponsList = _vehicle getVariable ["weapons", []];
 
 // Check we're not emp'd or anything
 _status = _vehicle getVariable ['status', []];
-if ('emp' in _status || GW_CURRENTZONE == 'workshopZone') exitWith {
+if ('emp' in _status || (GW_CURRENTZONE == 'workshopZone' && !GW_DEBUG)) exitWith {
 	['DISABLED!    ', 0.5, warningIcon, colorRed, "flash"] spawn createAlert;
 	GW_WAITFIRE = false;
 };
@@ -30,7 +30,7 @@ if (count _weaponsList == 0) exitWith {
 
 // Check we're not out of ammo
 _ammo = _vehicle getVariable ["ammo", 0];
-if (_ammo <= 0) exitWith {
+if (_ammo <= 0 && _type != "FLM") exitWith {
 	["OUT OF AMMO ", 0.3, warningIcon, colorRed, "warning"] spawn createAlert;
 	GW_WAITFIRE = false;
 };
@@ -58,7 +58,7 @@ _found = _state select 1;
 // Is the device on timeout?
 if (_timeLeft > 0 && _found) exitWith {
 
-		if ( _type == "HMG" || _type == "GMG") then {} else {
+		if ( _type == "HMG" || _type == "GMG" || _type == "FLM") then {} else {
 			[format['RELOADING (%1s)', round(_timeLeft)], 0.5, warningIcon, nil, "flash"] spawn createAlert;
 		};
 		GW_WAITFIRE = false;
@@ -68,7 +68,9 @@ if (_timeLeft > 0 && _found) exitWith {
 _tagData = [_type] call getTagData;
 _reloadTime = _tagData select 0;
 _cost = _tagData select 1;
-if (_ammo < _cost) exitWith {	
+
+// Do we have enough ammo? Flamethrower is an exception
+if (_ammo < _cost && _type != "FLM") exitWith {	
 	["NEED AMMO ", 0.3, warningIcon, colorRed, "warning"] spawn createAlert;
 	GW_WAITFIRE = false;
 };
@@ -141,7 +143,7 @@ switch (_type) do {
 
 				if (_obj in GW_ACTIVE_WEAPONS) then {	
 					_target = GW_TARGET;			
-					[_obj, _target] spawn fireRpg;	
+					[_obj, _target, _vehicle] spawn fireRpg;	
 					_count = _count + 1;
 				};	
 			};
@@ -259,6 +261,27 @@ switch (_type) do {
 				if (_obj in GW_ACTIVE_WEAPONS) then {
 					_target = GW_TARGET;			
 					[_obj, _target, _vehicle] spawn fireRail;
+					_count = _count + 1;
+				};
+			};
+		} ForEach _weaponsList;	
+
+		_reloadTime = _reloadTime * _count;
+		_cost = _cost * _count;
+		[_type, _reloadTime] call createTimeout;
+	};
+
+	// Flamethrower
+	case "FLM":
+	{
+		_count = 0;			
+		{
+			if (_type == _x select 0) then {
+				_obj = _x select 1;			
+
+				if (_obj in GW_ACTIVE_WEAPONS) then {
+					_target = GW_TARGET;			
+					[_obj, _target, _vehicle] spawn fireFlamethrower;
 					_count = _count + 1;
 				};
 			};

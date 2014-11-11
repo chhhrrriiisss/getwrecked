@@ -24,7 +24,10 @@ Caused by objects getting in the way of the attach point of the parachute, try t
 Occasionally this does get stuck. If you hop out and back in the vehicle it should fix it.<br />
 <br />
 - The vehicle repair/rearm/refuel point doesn't work<br />
-Try driving away and then coming back. Be sure not to stop on the point and not drive through.<br />
+Try driving away and then coming back. Be sure to stop on the point and not drive through.<br />
+<br />
+- Weapons and objects not facing the correct direction when you load a vehicle<br />
+This is caused by lag and the object (especially if its a railgun/rpg) should eventually update, it just takes a while<br />
 <br />
 "
 ]];
@@ -809,6 +812,48 @@ player createDiaryRecord ["changelog",
 <br />
 "
 ]];
+
+player createDiaryRecord ["changelog",
+[
+"v0.7.7",
+"
+- Swapped Kart DLC driver units for pilots so people without the dlc don't get harrased<br />
+- Streamlined vehicle loading so it's running from just one script<br />
+- New Higher resolution Vehicle Service Terminal image to prevent it disappearing at different resolutions<br />
+- Kart &amp; Quadbike now have slightly lower mass modifiers them to handle heavier parts<br />
+- Increased kick-back and reload time for Railgun<br />
+- Increased railgun reload time to 20 seconds<br />
+- Railgun now only does 50% damage to intersecting vehicles<br />
+- Magnetic Coil will no longer activate if the source vehicle is dead or emp'd<br />
+- Effective range of Magnetic Coil reduced slightly and reload time increased<br />
+- Mortar round now has less variance and a faster speed when locked<br />
+- Newly parachuted vehicles no longer show tags<br />
+- New checks on save to automatically compile and re-enable simulation on vehicle <br />
+- Lowered overall weapon damage slightly<br />
+- Moved spawn location at airfield that was above runway edgelights<br />
+- Text added to vehicle service terminal icons<br />
+- Laser sound effect should be a bit more noticeable<br />
+- Temporary fix for hud failing to update on deploy due to lag (needs testing)<br />
+- Deploy menu should now work a bit more reliably<br />
+- Improved spawn protection - you are now invulnerable, fire proof and lock proof for 5 seconds after chute detaches<br />
+- Reduced quality of all vehicle textures to bring down overall file size (feedback needed here)<br />
+- Settings key in a vehicle now bindable to User Action 20<br />
+- Last vehicle should now be automatically loaded at a nearby pad when you spawn back at the workshop<br />
+- Added filter button to buy menu <br />
+- Added new hud marker for junk piles<br />
+- Added Flamethrower (WIP)<br />
+- Added cleanup scripts for abandoned and dead objects<br />
+- Added simulation toggle system for vehicles not in current zone<br />
+- Fixed - Default vehicles now should have a value when killed<br />
+- Fixed - Vehicles saved for the first time (with prompt) now properly get their new name<br />
+- Fixed - burnIntersects and railgun no longer tag own player<br />
+- Fixed - handleKill spamming the server with 'logKill' requests when a vehicle is blown up<br />
+- Fixed - Vehicles disappearing in workshop area (stay within 10m of it and nothing should happen)<br />
+- Fixed - Key binds for some weapons not working despite being bound correctly (Railgun/Rocket Launcher primarily)
+<br />
+"
+]];
+
 
 
 

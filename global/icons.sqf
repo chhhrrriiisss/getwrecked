@@ -67,6 +67,7 @@ refuelIcon = ICON_ROOT + "hud\refuel.paa";
 refuelActiveIcon = ICON_ROOT + "hud\refuel_active.paa";
 saveAreaIcon = ICON_ROOT + "hud\saveArea.paa";
 buyAreaIcon = ICON_ROOT + "hud\buyArea.paa";
+lootAreaIcon = ICON_ROOT + "hud\lootArea.paa"; 
 
 activeIconA = ICON_ROOT + "hud\active_a.paa";
 activeIconB = ICON_ROOT + "hud\active_b.paa";

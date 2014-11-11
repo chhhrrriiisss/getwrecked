@@ -16,11 +16,15 @@ _fireSpeed = 0.3;
 _projectileSpeed = 250;
 _range = 400;
 
+[_gun] spawn muzzleEffect;
+
 [
 	[
 		_gun
 	],
-	"muzzleEffect"
+	"muzzleEffect",
+	false,
+	false
 ] call BIS_fnc_MP;
 
 for "_i" from 1 to _repeats step 1 do {

@@ -75,6 +75,11 @@ if ( !local _obj ) then {
 			false,
 			false 
 		] call BIS_fnc_MP;   
+
+		// Make sure we cant hop in static turrets
+		_newObj lockDriver true;
+		_obj lockTurret [[0], true];
+   		_obj lockTurret [[0,0], true];
 	};
 
     _obj = _newObj;
@@ -91,6 +96,8 @@ GW_EDITING = true;
 
 // Disable simulation server side if its active
 if (simulationEnabled _obj) then {
+
+	_obj enableSimulation false;
 
 	[		
 		[
@@ -109,7 +116,8 @@ Sleep 0.5;
 // Wait for simulation to be enabled on the item before moving it
 _timeout = time + 5;
 waitUntil{	
-	((time > _timeout) || (!simulationEnabled _obj))
+	if ( (time > _timeout) || !(simulationEnabled _obj) ) exitWith { true };
+	false
 };
 
 // Used to dynamically change the loop period depending if snapping is active
@@ -119,7 +127,7 @@ _snappingInterval = 0.1;
 while {alive _unit && alive _obj && GW_EDITING && _unit == (vehicle player)} do {
 
 	// Continually prevent damage and simulation (wierd stuff happens otherwise...)
-	_obj enableSimulation false;
+	if (simulationEnabled _obj) then { _obj enableSimulation false; };
 	_obj setDammage 0;
 
 	// Use the camera height as a tool to manipulate the object height

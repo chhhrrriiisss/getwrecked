@@ -18,7 +18,7 @@ class Header
 	maxPlayers = 8; 
 };
 
-disableChannels[] = {0,1,2,3,6};
+disableChannels[] = {0,2,3,6};
 allowFunctionsLog = 1;
 
 // Control types
@@ -81,6 +81,15 @@ class CfgSounds
 	{
 		name = "money";
 		sound[] = {"\client\sounds\money.ogg", 1.1, 1};
+		titles[] = {};
+	};
+
+	// Retrieved from the awesome http://www.freesfx.co.uk
+	// Modified by Sli 
+	class flamethrower
+	{
+		name = "flamethrower";
+		sound[] = {"\client\sounds\flamethrower.ogg", 1.1, 1};
 		titles[] = {};
 	};
  

@@ -20,10 +20,11 @@ if (isServer) then {
         if ((alive _veh) && (canMove _veh) && {{alive _x} count crew _veh == 0}) then {
 
             _abandoned = true;
-            _position = getPos _veh;
 
             for "_i" from 0 to _abandonDelay do {  
 
+                // Keep getting its position, because otherwise it'll use the original load position
+                _position = getPos _veh;
                 _nearby = _position nearEntities [["Man"], 10];               
 
                 if (({alive _x} count (crew _veh) > 0) || (!alive _veh) || (!canMove _veh) || count _nearby > 0) exitWith {
@@ -48,7 +49,7 @@ if (isServer) then {
                     _veh = createVehicle [_vehtype, _pos, [], 0, "NONE"];
                     _veh setDir _dir;    
 
-                    [_veh, '', false, false] spawn setupVehicle;
+                    [_veh, '', false, false] call setupVehicle;
                 };
             };
         };
@@ -76,7 +77,7 @@ if (isServer) then {
                     _veh = createVehicle [_vehtype, _pos, [], 0, "NONE"];
                     _veh setDir _dir;
 
-                    [_veh, '', false, false] spawn setupVehicle;
+                    [_veh, '', false, false] call setupVehicle;
                 };
             };
         };     

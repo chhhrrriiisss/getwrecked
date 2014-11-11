@@ -7,12 +7,12 @@ GW_VEHICLE_LIST = [
 	
 	// Civilian
 
-	["C_Quadbike_01_F", "Quadbike", [ 0.1, 3, 2, 1, 1, 2, 4, 'Tiny', 1000 ], 'The quadbike is ideal for fast and stealthy surprise attacks.' ],
+	["C_Quadbike_01_F", "Quadbike", [ 0.05, 3, 2, 1, 1, 2, 4, 'Tiny', 1000 ], 'The quadbike is ideal for fast and stealthy surprise attacks.' ],
 	["C_Hatchback_01_sport_F", "Hatchback Sport", [ 0.1, 3, 3, 1, 2, 3, 3, 'Low', 1000 ], 'Although very lightly armoured, this vehicle is fast and difficult to catch.' ],
 	["C_Offroad_01_F", "Civilian Offroad", [ 0.2, 3, 4, 2, 1, 5, 5, 'Low', 1000 ],  'The offroad is an agile, versatile albeit lightly armored utility vehicle.' ],
 	["C_SUV_01_F", "SUV", [ 0.5, 3, 3, 1, 2, 4, 4, 'Low', 1000 ], 'A capable and reliable vehicle with a low radar signature.' ],
 	["C_Van_01_transport_F", "Civilian Truck", [ 0.5, 2, 6, 2, 2, 5, 5, 'Medium', 1000 ], 'Ample storage, fuel and ammo capacity, a great workhorse.' ],		
-	["C_Kart_01_F", "Kart", [ 0.1, 2, 2, 1, 1, 1, 4, 'Tiny', 1000 ], 'Extremely quick and hard to hit which makes it quite unpredictable.' ],
+	["C_Kart_01_F", "Kart", [ 0.05, 2, 2, 1, 1, 1, 4, 'Tiny', 1000 ], 'Extremely quick and hard to hit which makes it quite unpredictable.' ],
 
 	// Trucks
 

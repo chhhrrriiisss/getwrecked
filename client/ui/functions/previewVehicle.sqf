@@ -69,10 +69,18 @@ _title ctrlSetText '';
 _title ctrlCommit 0;
 
 45000 cutText ["", "BLACK OUT", 0.2];  
-waitUntil { (!isNil "GW_PREVIEW_VEHICLE" || loadError) };		
 
-if (loadError) then {
-	_name = 'NOT AVAILABLE';		
+_timeout = time + 15;
+waitUntil { 
+	if (!isNil "GW_PREVIEW_VEHICLE" || loadError || (time > _timeout) ) exitWith { true };
+	false 
+};		
+
+if (loadError || time > _timeout) then {
+	_title ctrlShow true;	
+	_title ctrlSetText 'ERROR LOADING VEHICLE';
+	_title ctrlCommit 0;
+
 } else {
 
 	// Fade in once new vehicle detected

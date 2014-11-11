@@ -32,6 +32,9 @@ if (count allUnits <= 0) exitWith { [] };
 
 	}; 
 
-} ForEach allUnits;
+	false
+	
+	
+} count allUnits > 0;
 
 _arr

@@ -4,7 +4,7 @@
 
 */
 
-private ["_veh", "_name"];
+private ["_veh", "_name", "_value", "_totalValue", "_actualValue", "_owner", "_newSpawn", "_crew", "_name"];
 
 _veh = [_this,0, objNull, [objNull]] call BIS_fnc_param;
 
@@ -32,7 +32,9 @@ if (!_processed) then {
 
         waitUntil{
 
-             _killedBy = _veh getVariable ["killedBy", nil];
+            Sleep 0.1;
+            
+            _killedBy = _veh getVariable ["killedBy", nil];
 
             if ( (!isNil "_killedBy") || (time > _timeout) ) exitWith { true };
 
@@ -41,16 +43,20 @@ if (!_processed) then {
 
         _killedBy = _veh getVariable ["killedBy", nil];
 
-        if (!isNil "_killedBy") then {   
+        if (!isNil "_killedBy") then {  
                 
-            _owner = _veh getVariable ["owner", ''];  
+            _owner = _veh getVariable ["owner", ""];  
             _name = _veh getVariable ['name', ""];
             _newSpawn = _veh getVariable ["newSpawn", false];
 
             // No money for killing new spawns
             _value =  if (_newSpawn) then { 0 } else { ((_veh getVariable ['GW_Value', 200]) + (_veh getVariable ['GW_WantedValue', 0])) };
-            _crew = crew _veh;     
+            _crew = crew _veh;    
 
+            // No money for destroying own vehicle
+            _value = if (_owner == _killedBy) then { 0 } else { _value }; 
+
+            // Reduce value if the vehicle is empty 
             _value = if (count _crew > 0) then { (_value * GW_KILL_VALUE) } else { (_value * GW_KILL_EMPTY_VALUE) };
 
             if (_name == "") then {   
@@ -78,7 +84,7 @@ if (!_processed) then {
             };
 
             // Kill the crew      
-            { _x setDammage 1; false } count _crew > 0;  
+            { _x setDammage 1; false } count _crew > 0;
 
         };
 

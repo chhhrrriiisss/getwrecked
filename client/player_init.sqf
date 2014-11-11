@@ -4,7 +4,7 @@
 
 */
 
-waitUntil{ !isNil { clientCompileComplete } };
+waitUntil{!isNil { clientCompileComplete } };
 
 _unit = _this select 0;
 if (!local _unit) exitWith {};

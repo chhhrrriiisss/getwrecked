@@ -13,17 +13,21 @@ _vehicle = _this select 2;
 _repeats = 1;
 _round = "B_127x99_Ball";
 _soundToPlay = "a3\sounds_f\weapons\HMG\HMG_gun.wss";
-_fireSpeed = 0.5;
-_projectileSpeed = 800;
+_fireSpeed = 1;
+_projectileSpeed = 600;
 _range = 300;
 
 _special = _vehicle getVariable ["special", []];
+
+[_gun] spawn muzzleEffect;
 
 [
 	[
 		_gun
 	],
-	"muzzleEffect"
+	"muzzleEffect",
+	false,
+	false
 ] call BIS_fnc_MP;
 
 for "_i" from 1 to _repeats step 1 do {

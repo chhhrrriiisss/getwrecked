@@ -72,7 +72,7 @@ while {alive _obj && time < _timeout && !_triggered} do {
 // If the object is still alive, let's go boom
 if (alive _obj) then {
 
-	_pos = (ASLtoATL getPosASL _obj);
+	_pos = (ASLtoATL visiblePositionASL _obj);
 
 	playSound3D ["a3\sounds_f\weapons\mines\electron_trigger_1.wss", _obj, false, _pos, 2, 1, 150]; 
 	
@@ -80,7 +80,7 @@ if (alive _obj) then {
 	_bomb = createVehicle ["Bo_GBU12_LGB", _pos, [], 0, "CAN_COLLIDE"];
 	_bomb setVelocity [0,0,-100];
 
-	_nearby = _pos nearEntities [["car"], 14];	
+	_nearby = _pos nearEntities [["Car"], 14];	
 
 	if (count _nearby > 0) then {
 		// To be extra badass, lets spawn a bomb for each vehicle nearby
@@ -88,10 +88,10 @@ if (alive _obj) then {
 			if (_x != (_vehicle)) then { [_x] call markAsKilledBy; };
 
 			_tPos =  (ASLtoATL getPosASL _x);
-			_tPos set [2, 2];
-			_x setDammage 0.96;	
+			_tPos set [2, 2];			
 			_bomb = createVehicle ["Bo_GBU12_LGB", _tPos, [], 0, "CAN_COLLIDE"];
-			_bomb setVelocity [0,0,-100];			
+			_bomb setVelocity [0,0,-100];	
+			_x call destroyInstantly;		
 
 			false
 			

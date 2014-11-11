@@ -93,10 +93,10 @@ if (count GW_LOCKEDTARGETS <= 0) then {
 
 			_dist = (_targetPos distance _gPos) / 1000;
 
-			Sleep 0.25;
+			Sleep 0.15;
 			deleteVehicle _launch;
 
-			[_targetPos, _projectileSpeed] call mortarImpact;
+			[_targetPos, (_projectileSpeed * 2)] call mortarImpact;
 
 			Sleep _fireSpeed;
 		};

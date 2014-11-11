@@ -118,11 +118,6 @@ if (_forceAttach) then {} else {
 // Set the object angle using the information we gathered before
 [_obj, [_tarPitch,_tarBank,_tarDir]] call setPitchBankYaw;
 
-// Bounce effect
-if (local _veh && simulationEnabled _veh) then {
-	_veh setVelocity [0,0,-0.2];
-};
-
 // Re-compile vehicle information
 if (_forceAttach) then {} else {
 	[_veh] call compileAttached;

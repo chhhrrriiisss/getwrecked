@@ -6,9 +6,9 @@
 
 if (!isServer) exitWith {};
 
-if (isNil "spawnedBoundaries") then {
+if (isNil "GW_boundariesSpawned") then {
 	
-    spawnedBoundaries = true;
+    GW_boundariesSpawned = true;
     spawnedWalls = [];
 
     createBoundary = {
@@ -43,15 +43,13 @@ if (isNil "spawnedBoundaries") then {
 		_wallOutside setDir (_this select 4);
 
 		_textureIn = "client\images\stripes_fade.paa";
-
-		// This used to be red, but we saved 300kb by dropping it :D
 		_textureOut = "client\images\stripes_fade.paa"; 
 
 		_wallInside setObjectTextureGlobal [0,_textureIn];
 		_wallOutside setObjectTextureGlobal [0,_textureOut];
 
-		spawnedWalls set [count spawnedWalls, _wallInside];
-		spawnedWalls set [count spawnedWalls, _wallOutside];
+		spawnedWalls pushback _wallInside;
+		spawnedWalls pushback _wallOutside;
 
 	};
 
@@ -72,7 +70,7 @@ if (isNil "spawnedBoundaries") then {
 			_distance = _p1 distance _p2;
 
 			for "_i" from 0 to _distance step 5 do {
-				[_p1, (-2.5 + _i), _dirTo, _dirIn, _dirOut] spawn createBoundary;
+				[_p1, (-2.5 + _i), _dirTo, _dirIn, _dirOut] call createBoundary;
 			};
 
 			_c = _c + 1;

@@ -32,7 +32,12 @@ if (isNil { GW_NEW_SUPPLY_BOX }) then {
 if (!isNil "GW_NEW_SUPPLY_BOX" ) then {
 	GW_NEW_SUPPLY_BOX setPos (player modelToWorld [1.5,0,0]);
 	_contents = GW_NEW_SUPPLY_BOX getVariable ["GW_Inventory", []];
-	_contents = _contents + _inventory;
+
+	_count = [GW_NEW_SUPPLY_BOX] call countItemsSupplyBox;
+	if (_count < GW_INVENTORY_LIMIT) then { _contents = _contents + _inventory; } else {
+		systemChat 'Supply box full, some items may have been lost.'
+	};	
+
 	GW_NEW_SUPPLY_BOX setVariable ["GW_Inventory", _contents];
 	GW_NEW_SUPPLY_BOX setVariable ["name", format["%1's Supply Box", ([GW_PLAYERNAME, 8, ''] call cropString) ], true];
 	GW_NEW_SUPPLY_BOX setVariable ["owner", GW_PLAYERNAME, true];		

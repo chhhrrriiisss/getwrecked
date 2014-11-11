@@ -12,7 +12,7 @@ if (isNull _vehicle) exitWith {};
 
 // Are we already stealthed?
 _status = _vehicle getVariable ["status", []];
-if ('cloak' in _status) exitWith {};
+if ('cloak' in _status || 'nocloak' in _status) exitWith {};
 
 // Do we have ammo?
 _vehAmmo = _vehicle getVariable ["ammo", 0];
@@ -63,6 +63,14 @@ playSound3D ["a3\sounds_f\sfx\special_sfx\sparkles_wreck_3.wss", _vehicle, false
 
 player action ["engineoff", _vehicle];
 
+// Wait for simulation to be enabled
+_timeout = time + 2;
+waitUntil{ 
+    if ( (time > _timeout) || !isEngineOn _vehicle ) exitWith { true };
+    false
+};
+
+
 while {alive _vehicle && _vehAmmo > 0 && (!isEngineOn _vehicle) && !GW_LMBDOWN && fireKeyDown == ''} do {	
 
 	Sleep _duration;	
@@ -108,6 +116,17 @@ while {alive _vehicle && _vehAmmo > 0 && (!isEngineOn _vehicle) && !GW_LMBDOWN &
 	if ( !('cloak' in _status) || _found ) exitWith {};
 
 };
+
+[       
+    [
+        _vehicle,
+        ['nocloak'],
+        5
+    ],
+    "addVehicleStatus",
+    _vehicle,
+    false 
+] call BIS_fnc_MP;  
 
 _layerStatic cutRsc ["RscStatic", "PLAIN" , 1];
 

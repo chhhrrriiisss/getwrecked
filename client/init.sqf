@@ -9,7 +9,7 @@
 if (isDedicated) exitWith {};
 
 // Wait for the server to finish doing its thang
-waitUntil {!isNil "serverSetupComplete"};
+waitUntil {Sleep 0.1; !isNil "serverSetupComplete"};
 
 // Check for an existing library
 _newPlayer = false;
@@ -40,6 +40,8 @@ GW_LASTLOAD = if (isNil "_last") then {  profileNamespace setVariable ['GW_LASTL
 [player] call playerInit;
 
 Sleep 0.1;
+
+[] spawn simulationManager;
 
 99999 cutText ["","PLAIN", 1];
 

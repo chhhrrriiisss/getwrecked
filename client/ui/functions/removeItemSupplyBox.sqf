@@ -38,5 +38,5 @@ if (count _contents == 0) exitWith {};
 GW_INVENTORY_BOX setVariable ["GW_INVENTORY", _contents, true];
 [GW_INVENTORY_BOX] spawn generateInventoryList;
 
-pubVar_spawnObject = [_class, _relPos];
+pubVar_spawnObject = [_class, _relPos, true];
 publicVariableServer "pubVar_spawnObject"; 	

@@ -41,6 +41,10 @@ class GW_StructuredTextBox
 	shadow = 0;
 	linespacing = 2;
 
+	toolTipColorText[] = {1, 1, 1, 1};
+	toolTipColorBox[] = {0, 0, 0, 0};
+	toolTipColorShade[] = {0, 0, 0, 0.5};
+
 };
 
 
@@ -269,6 +273,10 @@ class GW_RscListNBox {
 	autoScrollDelay = 5;
 	autoScrollRewind = 0;
 
+	toolTipColorText[] = {1, 1, 1, 1};
+	toolTipColorBox[] = {0, 0, 0, 0};
+	toolTipColorShade[] = {0, 0, 0, 0.5};
+
 	class ListScrollBar
 	{
 		color[] = {1,1,1,0.75};
@@ -340,9 +348,11 @@ class GW_RscButtonMenu : GW_RscButton {
 	periodOver = 1.2;
 	size = "(			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 1)";
 	sizeEx = "(			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 1)";
-	tooltipColorText[] = {1,1,1,1};
-	tooltipColorBox[] = {1,1,1,1};
-	tooltipColorShade[] = {0,0,0,0.65};
+
+	toolTipColorText[] = {1, 1, 1, 1};
+	toolTipColorBox[] = {0, 0, 0, 0};
+	toolTipColorShade[] = {0, 0, 0, 0.5};
+
 
 	class HitZone {
 		left = 0.0;

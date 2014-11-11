@@ -44,7 +44,7 @@ _nearby = _pos nearEntities [["Car"], 30];
 		_tPos =  (ASLtoATL getPosASL _x);
 		_tPos set[2, 0.5];
 		_bomb = createVehicle ["Bo_GBU12_LGB", _tPos, [], 0, "CAN_COLLIDE"];
-		_x setDammage 0.9;
+		_x call destroyInstantly;
 	};
 
 	false
@@ -54,6 +54,6 @@ _nearby = _pos nearEntities [["Car"], 30];
 Sleep 0.01;
 
 // Just in case
-_vehicle setDammage 1;
-
+_bomb = createVehicle ["Bo_GBU12_LGB", (ASltoATL getPosASL _vehicle), [], 0, "CAN_COLLIDE"];
+_vehicle call destroyInstantly;
 

@@ -15,17 +15,21 @@ Sleep 1;
 _pos = ASLtoATL getPosASL _vehicle;
 
 _minPower = 400;
-_maxPower = 600;
+_maxPower = 500;
 _power = random (_maxPower - _minPower) + _minPower;
 
 _minRange = 80;
-_maxRange = 100;
+_maxRange = 90;
 _range = random (_maxRange - _minRange) + _minRange;
 
 playSound3D ["a3\sounds_f\sfx\alarmCar.wss", _vehicle, false, _pos, 2, 1, 100]; 
 playSound3D ["a3\sounds_f\vehicles\armor\APC\APC2\int_engine_start.wss", _vehicle, false, _pos, 2, 1, 150];
 
 Sleep 1 + (random 1);
+
+if (!alive _vehicle) exitWith {};
+_status = _vehicle getVariable ["status", []];
+if ('emp' in _status || 'cloak' in _status) exitWith {};
 
 playSound3D ["a3\sounds_f\sfx\special_sfx\sparkles_wreck_2.wss", _vehicle, false, _pos, 2, 1, 150];
 playSound3D ["a3\sounds_f\sfx\earthquake1.wss", _vehicle, false, _pos, 10, 1, 150];
@@ -42,6 +46,8 @@ _nearby = _pos nearEntities[["Car"], _range];
 
 {
 	_isVehicle = _x getVariable ["isVehicle", false];
+
+
 
 	if (_isVehicle && _x != _vehicle) then {
 

@@ -42,7 +42,7 @@ receiveMoney = {
 	_vehicle = player getVariable ["prevVeh", nil];
 	if (!isNil "_vehicle") then {
 		['moneyEarned', _vehicle, _value] spawn logStat;   
-	};	
+	};		
 
 	_valueString = ([_value] call numberToCurrency);
 

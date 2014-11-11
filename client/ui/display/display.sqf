@@ -145,7 +145,8 @@ drawDisplay = {
 
 				} count [	
 					[2.2, vehicleTerminals, saveAreaIcon],
-					[1.7, buySigns, buyAreaIcon]
+					[1.7, buySigns, buyAreaIcon],
+					[2.2, lootAreas, lootAreaIcon]
 				] > 0;
 
   			};
@@ -196,6 +197,7 @@ drawDisplay = {
 			_isVehicle = _x getVariable ['isVehicle', false];
 			_name = _x getVariable ["name", ''];
 			_owner = _x getVariable ["owner",''];		
+			_newSpawn = _x getVariable ["newSpawn", false];	
 
 			if (_x isKindOf "Civilian" && _x != player && (_x == (vehicle _x)) && (alive _x)) then { // (isPlayer _x)
 
@@ -219,7 +221,7 @@ drawDisplay = {
 
 			};
 
-			if (_owner != '' && _isVehicle && (vehicle player) != _x) then {
+			if (_owner != '' && _isVehicle && (vehicle player) != _x && !_newSpawn) then {
 				[_x] call vehicleTag;
 			};		
 			false

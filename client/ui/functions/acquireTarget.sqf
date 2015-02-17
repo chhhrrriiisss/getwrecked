@@ -4,6 +4,8 @@
 //      Return: None
 //
 
+private ['_vehicle', '_target', '_acquireTime', '_data', '_status'];
+
 // Dont acquire more than one target at once
 if (GW_ACQUIRE_ACTIVE) exitWith {};
 GW_ACQUIRE_ACTIVE = true;
@@ -18,9 +20,11 @@ _distanceModifier = (_target distance (vehicle player)) / 500;
 
 // Targets with a larger signature are easier to lock
 _data = [typeOf _target, GW_VEHICLE_LIST] call getData;
+GW_CURRENTVEHICLE = (vehicle player);
+_status = GW_CURRENTVEHICLE getVariable ["status", []];
 _signature = if (!isNil "_data") then { ((_data select 2) select 7) } else { "" };
+_signature = if ('radar' in _status) then { "Large" } else { _signature };
 _adjustedLockTime = switch (_signature) do { case "Large": { (GW_MINLOCKTIME / 3) }; case "Medium": { (GW_MINLOCKTIME * 0.6) }; case "Low": { (GW_MINLOCKTIME * 1) }; case "Tiny": { (GW_MINLOCKTIME * 2) }; default { GW_MINLOCKTIME }; };
-
 
 _lockTime = time + _adjustedLockTime + (_distanceModifier);
 _origLockTime = _lockTime;
@@ -28,13 +32,17 @@ _origLockTime = _lockTime;
 _targetted = false;
 _direction = 0;
 _scale = 2;
-_hasLockons = (vehicle player) getVariable ["lockOns", false];	
-_isCloaked = if ('cloak' in ((vehicle player) getVariable ["status", []]) ) then { true } else { false };	
+
+_hasLockons = GW_CURRENTVEHICLE getVariable ["lockOns", false];	
+
+_isCloaked = if ('cloak' in _status) then { true } else { false };	
 
 // While its in locking range and alive
-while {!_isCloaked && _hasLockons && (_target in GW_VALIDTARGETS) && (alive _target) && !_targetted && _target != (vehicle player)} do {
-	
-	_hasLockons = (vehicle player) getVariable ["lockOns", false];
+for "_i" from 0 to 1 step 0 do {
+
+	if (_isCloaked || !_hasLockons || !(_target in GW_VALIDTARGETS) || !alive _target || _targetted || _target == GW_CURRENTVEHICLE ) exitWith {};
+
+	_hasLockons = GW_CURRENTVEHICLE getVariable ["lockOns", false];
 	_pos =  _target modelToWorld [0,0,0];
 
 	// Combined velocity of both vehicles influences lock time
@@ -52,8 +60,8 @@ while {!_isCloaked && _hasLockons && (_target in GW_VALIDTARGETS) && (alive _tar
 		[       
 			[
 				_target,
-				['locking'],
-				2.5 // Make it stay on for a bit to avoid too much spam
+				"['locking']",
+				3 
 			],
 			"addVehicleStatus",
 			_target,
@@ -92,7 +100,7 @@ while {!_isCloaked && _hasLockons && (_target in GW_VALIDTARGETS) && (alive _tar
 	drawIcon3D [lockingIcon,colorRed,_pos,_scale,_scale,_direction, _string, 0, 0.04, "PuristaMedium"];
 	playSound3D ["a3\sounds_f\sfx\beep_target.wss", (vehicle player), false, (visiblePosition  (vehicle player)), 0.8, 1, 20]; 
 
-	Sleep 0.05;
+	Sleep 0.1;
 
 };
 
@@ -105,12 +113,16 @@ if (_targetted) then {
 
 GW_ACQUIRE_ACTIVE = false;
 
-[       
-	[
+if ('locking' in _status) then {
+
+	[       
+		[
+			_target,
+			"['locking']"
+		],
+		"removeVehicleStatus",
 		_target,
-		['locking']
-	],
-	"removeVehicleStatus",
-	_target,
-	false 
-] call BIS_fnc_MP;  
+		false 
+	] call BIS_fnc_MP;  
+	
+};

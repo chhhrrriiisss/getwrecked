@@ -4,8 +4,8 @@
 //      Return: None
 //
 
-_status = [_this,0, -1, [0]] call BIS_fnc_param;
-_value = _this select 1;
+_status = if (isNil { _this select 0 }) then { -1 } else { (_this select 0) };
+_value = if (isNil { _this select  1}) then { [] } else { (_this select 1) };
 
 if (_status == -1) exitWith {};
 
@@ -44,4 +44,10 @@ if (_status == 1) exitWith {
 if (_status == 2) exitWith {
 	systemChat format["Critical error while loading [ %1 ]", (_value select 0)];
 };
+
+// Successfully hit vehicle
+if (_status == 3) exitWith {
+	// systemChat 'Hit a vehicle!';
+};
+
 

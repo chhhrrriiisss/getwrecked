@@ -5,6 +5,72 @@
 //
 
 // Actions for supply boxes
+setTerminalActions = {
+	
+	private ['_obj', '_var'];
+
+	_obj = [_this,0, objNull, [objNull]] call BIS_fnc_param;
+	_var = _this select 1;
+
+	removeAllActions _obj;
+
+	if (isNull _obj || isNil "_var") exitWith {};
+
+	// Store terminal target so we can re-add it later	
+	_obj addEventHandler['handleDamage', { false }];
+
+	// Server doesn't need action menus
+	if (isDedicated) exitWith {};
+
+	_obj setVariable ["hasActions", true];
+
+	// If it's a vehicle terminal
+	if (typeOf _obj == "SignAd_Sponsor_ARMEX_F" && typename _var == "STRING") exitWith {
+
+		_obj setVariable ['company', _var];
+
+		// Action
+		_obj addAction[buyMenuFormat, { 	
+		[(_this select 0)] spawn buyMenu;
+		}, _var, 0, false, false, "", "( !GW_EDITING && ((player distance _target) < 8) )"];
+
+	};
+
+	// If it's a vehicle terminal
+	if (typeOf _obj == "Land_spp_Transformer_F" || (typeOf _obj == "SignAd_Sponsor_ARMEX_F" && typename _var == "OBJECT") ) exitWith {
+
+		_obj setVariable ['GW_Target', _var];		
+
+		// New Vehicle
+		_obj addAction[createVehFormat, { 
+			[(_this select 3)] spawn newMenu;
+		}, _var, 9, false, false, "", "( !GW_EDITING && ((player distance _target) < 12) )"];
+
+		// Save Vehicle
+		_obj addAction[savePadFormat, {
+			[''] spawn saveVehicle;
+		}, _var, 8, false, false, "", "( !GW_EDITING && ((player distance _target) < 12)  )"];
+
+		// Deploy/Spawn
+		_obj addAction[spawnInFormat, { 
+			[(_this select 3), (_this select 1)] spawn spawnMenu;
+		}, _var,7, false, false, "", "( !GW_EDITING && ((player distance _target) < 12) )"];
+
+		// Load Vehicle
+		_obj addAction[loadPadFormat, {
+			[(_this select 3)] spawn previewMenu;
+		}, _var, 6, false, false, "", "( !GW_EDITING && ((player distance _target) < 12) )"];
+
+		// Clear pad
+		_obj addAction[clearPadFormat, {
+			[(_this select 3)] spawn clearPad;
+		}, _var, 5, false, false, "", "( !GW_EDITING && ((player distance _target) < 12) )"];
+	};
+
+	true
+};
+
+// Actions for supply boxes
 setSupplyAction = {
 	
 	private ['_obj'];
@@ -98,7 +164,7 @@ setMoveAction = {
 
 		removeAllActions _obj;	
 
-	}, [], 0, false, false, "", "( ( (vehicle player) == player ) && !GW_EDITING && (player distance _target < 5) && [_target, player, false] call checkOwner && !GW_LIFT_ACTIVE)"];		
+	}, [], 0, false, false, "", "( ( (vehicle player) == player ) && !GW_EDITING && (player distance _target < 5) && [_target, player, false] call checkOwner && !GW_LIFT_ACTIVE && GW_CURRENTZONE == 'workshopZone' )"];		
 
 	_obj setVariable ["hasActions", true];
 
@@ -125,7 +191,7 @@ setDetachAction = {
 
 		removeAllActions _obj;
 		
-	}, [], 0, false, false, "", "( ( (vehicle player) == player ) && !GW_EDITING && (player distance _target < 5) && [_target, player, false] call checkOwner && !GW_LIFT_ACTIVE)"];
+	}, [], 0, false, false, "", "( ((vehicle player) == player) && !GW_EDITING && (player distance _target < 5) && [_target, player, false] call checkOwner && !GW_LIFT_ACTIVE && GW_CURRENTZONE == 'workshopZone' )"];
 
 	_obj setVariable ["hasActions", true];
 

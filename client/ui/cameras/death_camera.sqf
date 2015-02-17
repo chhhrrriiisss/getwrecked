@@ -64,8 +64,50 @@ _cam = "camera" camCreate [_targetPosition select 0, _targetPosition select 1, 3
 
 _timeout = time + GW_RESPAWN_DELAY;
 
+
+// Were we killed by a nuke? Alternate camera mode
+_killedByNuke = profileNamespace getVariable ['killedByNuke', []];
+
+_type = if (count _killedByNuke > 0) then { _targetPosition = _killedByNuke; 'nukefocus' } else { _type };
+
 // Initialize the camera based on type requested
 switch (_type) do {
+	
+	case "nukefocus":
+	{
+		profileNamespace setVariable ['killedByNuke', []];
+		saveProfileNamespace;
+
+		_cam camSetTarget _targetPosition;
+		_cam cameraeffect["internal","back"];
+		_cam camCommit 0;
+
+		// Determine orbit position
+		_theta = random 360;
+		_r = 400;
+		_phi = 1;
+		_rx = _r * (sin _theta) * (cos _phi);
+		_ry = _r * (cos _theta) * (cos _phi);
+		_rz = 70;
+
+		// Apply to camera
+		_cam camSetRelPos [_rx, _ry, 100];
+
+		while {time < _timeout && GW_DEATH_CAMERA_ACTIVE} do {
+
+			_theta = _theta + 0.0001;
+			_theta = _theta mod 360;
+
+			_rx = _r * (sin _theta) * (cos _phi);
+			_ry = _r * (cos _theta) * (cos _phi);
+			_rz = _rz + 0.0001;
+
+			_cam camSetRelPos [_rx, _ry, _rz];
+			_cam camSetFocus [_r, 0.1];
+			_cam camCommit 0;
+
+		};	
+	};
 
 	case "focus":
 	{

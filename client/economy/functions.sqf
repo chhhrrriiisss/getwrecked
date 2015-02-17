@@ -4,7 +4,7 @@
 //      Return: None
 //
 
-// If we've got a new player, give them 500, otherwise use their existing cash
+// If we've got a new player, give them starter cash, otherwise use their existing cash
 _balance = profileNamespace getVariable ['GW_BALANCE', nil];
 GW_BALANCE = if (!isNil "_balance") then {
 
@@ -14,7 +14,6 @@ GW_BALANCE = if (!isNil "_balance") then {
 } else { GW_INIT_BALANCE };
 
 profileNamespace setVariable ['GW_BALANCE', GW_BALANCE];
-saveProfileNamespace;
 
 // If the player has unlocked items, apply them to the unlocked items array
 _unlocked = profileNamespace getVariable ['GW_UNLOCKED_ITEMS', []];
@@ -168,7 +167,7 @@ changeBalance = {
 	private ['_value', '_current'];
 
 	_value = [_this,0,0,[0]] call BIS_fnc_param;
-	if (_value == 0) exitWith {};
+	if (_value == 0) exitWith { false };
 
 	_current = profileNamespace getVariable ['GW_BALANCE', 0];
 	_current = _current + _value;

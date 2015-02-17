@@ -19,15 +19,49 @@ if (isNull _veh) exitWith { false };
 _isOwner = [_obj, _unit] call checkOwner;
 if (!_isOwner) exitWith { false };
 
+_wasSimulated = (simulationEnabled _veh);
+
+// Disable simulation on vehicle and object
+[		
+	[
+		[_obj, _veh],
+		false
+	],
+	"setObjectSimulation",
+	false,
+	false 
+] call BIS_fnc_MP;
+
+_timeout = time + 3;
+waitUntil{
+	Sleep 0.1;	
+	( (time > _timeout) || !(simulationEnabled _veh) )
+};
+
 detach _obj;
-Sleep 0.1;
+
+if (_wasSimulated) then {
+
+	// Re enable simulation on vehicle
+	[		
+		[
+			_veh,
+			true
+		],
+		"setObjectSimulation",
+		false,
+		false 
+	] call BIS_fnc_MP;
+};
 
 removeAllActions _obj;
+
 ["OBJECT DETACHED!", 1, successIcon, nil, "slideDown"] spawn createAlert;
 [_obj, _unit] spawn moveObj;
 
 // Re-compile vehicle information
 [_veh] call compileAttached;
+
 
 true
 

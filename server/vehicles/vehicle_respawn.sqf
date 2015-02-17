@@ -2,8 +2,6 @@ private ["_veh", "_abandonDelay", "_deadDelay", "_create", "_dir", "_pos", "_veh
 
 _veh = _this select 0;
 _abandonDelay = (_this select 1) * 60;
-_deadDelay = (_this select 2) * 60;
-_create = [_this, 3, false] call BIS_fnc_param;
 
 _dir = getDir _veh; 
 _pos = getPos _veh; 
@@ -13,7 +11,9 @@ _active = true;
 
 if (isServer) then {
 
-    While { _active } do {
+     for "_i" from 0 to 1 step 0 do {
+
+        if (!_active) exitWith {};
 
         Sleep 1;
 
@@ -42,44 +42,8 @@ if (isServer) then {
 
                 sleep 1;
 
-                if (!_create) exitWith { _active = false };
-
-                if (_create) then {                   
-
-                    _veh = createVehicle [_vehtype, _pos, [], 0, "NONE"];
-                    _veh setDir _dir;    
-
-                    [_veh, '', false, false] call setupVehicle;
-                };
+                _active = false;
             };
-        };
-
-
-        if ((!alive _veh) || (!canMove _veh)) then {
-            _dead = true;
-
-                for "_i" from 0 to _deadDelay do {  
-                    if (({alive _x} count (crew _veh) > 0) || (canMove _veh)) exitWith {_dead = false;};
-                    sleep 1;  
-                };
-             
-            if (_dead) then {
-
-                { deleteVehicle _x; } count (attachedObjects _veh) > 0;
-                deleteVehicle _veh;
-
-                sleep 1;
-                
-                if (!_create) exitWith { _active = false };
-
-                if (_create) then {
-
-                    _veh = createVehicle [_vehtype, _pos, [], 0, "NONE"];
-                    _veh setDir _dir;
-
-                    [_veh, '', false, false] call setupVehicle;
-                };
-            };
-        };     
+        };      
     };
 };

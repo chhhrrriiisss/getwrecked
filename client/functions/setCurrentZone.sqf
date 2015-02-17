@@ -6,8 +6,7 @@
 
 private ['_z'];
 
-_z =  [_this,0, "", [""]] call BIS_fnc_param;
-
+_z = _this select 0;
 if (_z == "") exitWith {};
 
 {

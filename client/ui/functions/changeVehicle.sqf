@@ -7,9 +7,6 @@
 private ["_argument", "_newPreview", "_type"];
 
 disableSerialization;
-_logo = findDisplay 42000 displayCtrl 42005;
-ctrlSetFocus _logo;
-_logo ctrlCommit 0;
 
 if (GW_WAITLOAD) exitWith {};
 

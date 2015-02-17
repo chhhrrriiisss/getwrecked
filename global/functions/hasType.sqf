@@ -6,17 +6,17 @@
 
 private ['_arr', '_t', '_v', '_r'];
 
-_t = [_this,0, "", [""]] call BIS_fnc_param;
-_v = [_this,1, objNull, [objNull]] call BIS_fnc_param;
+_t = _this select 0;
+_v = _this select 1;
 
 if (_t == "" || isNull _v) exitWith { -1 };
 _r = 0;
 
 // Get the correct module list
-_arr = switch (true) do {
-	case (_t in GW_WEAPONSARRAY): { (_v getVariable ["weapons", []]) };
-	case (_t in GW_TACTICALARRAY):	{  (_v getVariable ["tactical", []])  };
-	default { [] };
+_arr = [_t, _v] call {
+	if ((_this select 0) in GW_WEAPONSARRAY) exitWith { (_v getVariable ["weapons", []]) };
+	if ((_this select 0) in GW_TACTICALARRAY) exitWith {  (_v getVariable ["tactical", []])  };
+	[]
 };
 
 // Loop through and count

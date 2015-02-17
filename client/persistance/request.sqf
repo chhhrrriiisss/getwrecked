@@ -54,14 +54,31 @@ if ( (_temp distance [0,0,0]) <= 200) exitWith {
     GW_WAITLOAD = false;
 };
 
+// Convert array to string for transfer to server
+removeNull = {
+
+    {
+        if (isNil "_x") then { _this set [_forEachIndex, []] } else {
+            if (typename _x == "ARRAY") then {
+                _this set[_forEachIndex, (_x call removeNull)];
+            };
+        };
+
+    } ForEach _this;
+
+    _this
+};
+
+_packet = format['%1', (_raw call removeNull)];
+
 // Ok, we're good to go, send a request to the server
-systemChat 'Sending load request... ';
+if (GW_DEBUG) then { systemChat 'Sending load request... '; };
 
 [       
     [
         player,
         _target,
-        _raw
+        _packet
     ],
     "loadVehicle",
     false,

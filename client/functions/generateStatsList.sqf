@@ -19,8 +19,10 @@ lnbClear _statsList;
 
 // Collect all stats
 _dist = (_v getVariable ["mileage", 0]);
+_dist = if (typename _dist == "ARRAY") then { 0 } else { _dist };
 _dist = if (_dist > 5000) then { format['%1km', _dist / 1000] } else { format['%1m', _dist ]};
 _seconds = (_v getVariable ["timeAlive", 0]);
+_seconds = if (typename _seconds == "ARRAY") then { 0 } else { _seconds };
 _hoursAlive = floor(_seconds / 3600);
 _minsAlive = floor((_seconds - (_hoursAlive*3600)) / 60);
 _secsAlive = floor(_seconds % 60);

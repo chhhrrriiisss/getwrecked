@@ -6,8 +6,8 @@
 
 private ["_vehicle", "_obj"];
 
-_vehicle = [_this,0, objNull, [objNull]] call BIS_fnc_param;
-_obj = [_this,1, objNull, [objNull]] call BIS_fnc_param;
+_obj = [_this,0, objNull, [objNull]] call BIS_fnc_param;
+_vehicle = [_this,1, objNull, [objNull]] call BIS_fnc_param;
 
 if (isNull _obj || isNull _vehicle) exitWith { false };
 
@@ -19,8 +19,9 @@ if ("tyresPopped" in _status) then {
 
 	_tyresRepaired = true;
 
-	[_vehicle, ['_tyresPopped']] call removeVehicleStatus;
-
+	[_vehicle, ['tyresPopped']] call removeVehicleStatus;
+	[_vehicle, ['invTyres'], 5] call addVehicleStatus;
+	
 	_vehicle sethit ["wheel_1_1_steering", 0];
 	_vehicle sethit ["wheel_1_2_steering", 0];
 	_vehicle sethit ["wheel_2_1_steering", 0];
@@ -46,5 +47,10 @@ _vehicle setDammage 0;
 ] call BIS_fnc_MP;
 
 ["REPAIRED!", 1, emergencyRepairIcon, nil, "slideDown"] spawn createAlert;
+
+_cV = velocity _vehicle;
+_cV set [2, (_cV select 2) + 4];
+_vehicle setVelocity _cV;
+
 
 true

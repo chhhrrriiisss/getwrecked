@@ -12,11 +12,11 @@ waitUntil { !isNull _unit && (alive _unit) };
 
 45000 cutText ["", "BLACK IN", 1.5]; 
 
+removeAllActions _unit;
 removeAllWeapons _unit;
 removeVest _unit;
 removeBackpack _unit;
 removeGoggles _unit;
-
 removeAllPrimaryWeaponItems _unit;
 removeallassigneditems _unit;
 
@@ -46,17 +46,26 @@ if (_tx == "") then {
 	_tx = "slytech";
 };
 
-switch (_tx) do {
-	
-	case "slytech": { _unit addheadgear "H_RacingHelmet_1_white_F"; };
-	case "crisp": { _unit addheadgear "H_RacingHelmet_1_red_F"; };
-	case "gastrol": { _unit addheadgear "H_RacingHelmet_1_black_F"; };
-	case "haywire": { _unit addheadgear "H_RacingHelmet_1_black_F"; };
-	case "cognition": { _unit addheadgear "H_RacingHelmet_1_white_F"; };
-	case "terminal": { _unit addheadgear "H_RacingHelmet_1_red_F"; };
-	case "tank": { _unit addheadgear "H_RacingHelmet_1_black_F"; };
-	case "veneer": { _unit addheadgear "H_RacingHelmet_1_white_F"; };
-	default { _unit addheadgear "H_RacingHelmet_1_black_F"; };
+_fixDLC = profileNamespace getVariable ['GW_FIXDLC', false];
+
+// For people with the dlc, add helmets
+if (!_fixDLC) then {
+
+	switch (_tx) do {
+		
+		case "slytech": { _unit addheadgear "H_RacingHelmet_1_white_F"; };
+		case "crisp": { _unit addheadgear "H_RacingHelmet_1_red_F"; };
+		case "gastrol": { _unit addheadgear "H_RacingHelmet_1_black_F"; };
+		case "haywire": { _unit addheadgear "H_RacingHelmet_1_black_F"; };
+		case "cognition": { _unit addheadgear "H_RacingHelmet_1_white_F"; };
+		case "terminal": { _unit addheadgear "H_RacingHelmet_1_red_F"; };
+		case "tank": { _unit addheadgear "H_RacingHelmet_1_black_F"; };
+		case "veneer": { _unit addheadgear "H_RacingHelmet_1_white_F"; };
+		default { _unit addheadgear "H_RacingHelmet_1_black_F"; };
+	};
+
+} else {
+	_unit addHeadgear "H_PilotHelmetHeli_B";
 };
 	
 if(!isNil "_tx") then {
@@ -79,13 +88,6 @@ if (!_firstSpawn) then {
 
 	if (!isNil "_killedBy") then {
 
-		[       
-            [],
-            "logStatKill",
-            _killedBy,
-            false 
-        ] call BIS_fnc_MP;
-
 		// If killed by exists, trigger camera on killer		
 		[_unit, _killedBy] spawn deathCamera;
 
@@ -94,13 +96,15 @@ if (!_firstSpawn) then {
 		[_unit, _unit] spawn deathCamera;
 	};
 
+	_failSpawn = false;
 	_location = [spawnAreas, ["Car", "Man"]] call findEmpty;
-	_pos = (ASLtoATL getPosATL _location);
+
+	// If we've failed to find an empty one, just use the first in the list
+	_pos = if (typename _location == "ARRAY") then { _failSpawn = true; (ASLtoATL getPosASL (spawnAreas select 0)) } else { _unit setDir (getDir _location); (ASLtoATL getPosASL _location) };
 	_unit setPosATL _pos;	
-	_unit setDir (getDir _location);
+	
 
-	if (!isNil "GW_LASTLOAD") then {
-
+	if (!isNil "GW_LASTLOAD" && !_failSpawn) then {
 		_closest = [saveAreas, _pos] call findClosest; 
 		[(ASLtoATL getPosASL _closest), GW_LASTLOAD] spawn requestVehicle;
 	};
@@ -109,6 +113,8 @@ if (!_firstSpawn) then {
 	// First spawn, just show us the workshop yo!
 	_unit setVariable ["firstSpawn", false];
 	titlecut["","BLACK IN",3];
+
+	
 };
 
 // Wait for the death camera to be active before setting the current zone
@@ -116,34 +122,57 @@ _timeout = time + 3;
 waitUntil { (time > _timeout) || GW_DEATH_CAMERA_ACTIVE };
 ['workshopZone'] call setCurrentZone;
 
+// Clear/Unsimulate unnecessary items near workshop
+{
+	_i = _x getVariable ['GW_IGNORE_SIM', false];
+	if ( (isPlayer _x || _x isKindOf "car") && !_i) then { _x enableSimulation true; } else { _x enableSimulation false; };
+	false
+} count (nearestObjects [ (getMarkerPos "workshopZone_camera"), [], 250]) > 0;
+
 // Reset killed by as we need to start fresh
 profileNamespace setVariable ['killedBy', nil];
 saveProfileNamespace;
 
-while {alive player} do {
+waitUntil {Sleep 0.1; !isNil "serverSetupComplete"};
+
+_unit spawn setPlayerActions;
+
+_unit setVariable ['GW_Playername', GW_PLAYERNAME, true];
+
+[] call statusMonitor;
+
+for "_i" from 0 to 1 step 0 do {
+	
+	if (!alive _unit) exitWith {};
 
 	_currentPos = (ASLtoATL (getPosASL player));
 	_vehicle = (vehicle player);
 	_inVehicle = !(player == _vehicle);
 	_isDriver = (player == (driver _vehicle));
 
+	if (visibleMap) then {
+		GW_HUD_ACTIVE = false;
+	};
+
 	// Restore the HUD if we're somewhere that needs it
-	if (GW_DEATH_CAMERA_ACTIVE || GW_PREVIEW_CAM_ACTIVE || GW_TIMER_ACTIVE) then {} else {
+	if (GW_DEATH_CAMERA_ACTIVE || GW_PREVIEW_CAM_ACTIVE || GW_TIMER_ACTIVE || GW_SETTINGS_ACTIVE || visibleMap) then {} else {
 		if (!GW_HUD_ACTIVE) then {	
 			[] spawn drawHud;
 		};
 	};
 	
 	// Adds actions to nearby objects & vehicles
-	if (!_inVehicle && !GW_EDITING) then {		
-		[_currentPos] spawn checkNearbyActions;
+
+	if (!isNil "GW_CURRENTZONE") then {
+		if (!_inVehicle && !GW_EDITING && GW_CURRENTZONE == "workshopZone") then {		
+			[_currentPos] spawn checkNearbyActions;
+		};
 	};
 	
 	// In Zone Check
-	if (!isNil "GW_CURRENTZONE" && !(serverCommandAvailable "#kick")) then {
+	if (!isNil "GW_CURRENTZONE" && (count GW_CURRENTZONE_DATA > 0) && (!GW_DEBUG) ) then {
 
 		_inZone = [_currentPos, GW_CURRENTZONE_DATA ] call checkInZone;
-
 
 		if (_inZone) then {
 			player setVariable ["outofbounds", false];	
@@ -157,22 +186,7 @@ while {alive player} do {
 
 	} else {
 		player setVariable ["outofbounds", false];	
-	};
-
-	// In vehicle status check
-	if (_inVehicle && _isDriver && GW_CURRENTZONE != "workshopZone") then {
-		[_vehicle] spawn statusMonitor;	
-	};
-
-	// Auto close inventories
-	disableSerialization;
-	_invOpen = findDisplay 602;
-    if (!isNull _invOpen) then  { closeDialog 602;  };
-
-    // Force 3rd Person
-    if (cameraOn == (vehicle player) && cameraView == "Internal") then {
-    	(vehicle player) switchCamera "External";
-    };
+	};	
 
 	Sleep 0.5;
 

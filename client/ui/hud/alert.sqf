@@ -52,7 +52,7 @@ _title ctrlCommit 0;
 _inDuration = (_duration / 7.5) max 0.15;
 _outDuration = (_duration / 15) max 0.15;
 
-playSound3D ["a3\sounds_f\sfx\beep_target.wss", (vehicle player), false, (visiblePosition (vehicle player)), 2, 1, 20]; 
+playSound3D ["a3\sounds_f\sfx\beep_target.wss", (vehicle player), false, (visiblePosition (vehicle player)), 2, 1, 40]; 
 
 switch (_type) do {
 

@@ -4,18 +4,18 @@
 //      Return: None
 //
 
-private ['_pos', '_col', '_scale', '_icon', '_limit', '_vehDir'];
+private ['_pos', '_col', '_scale', '_icon', '_limit', '_vehDir', '_vehicle'];
 
-_vehicle = [_this,0, objNull, [objNull]] call BIS_fnc_param;
+if (isNull GW_CURRENTVEHICLE) exitWith {};
+if (!alive GW_CURRENTVEHICLE) exitWith {};
 
-if (isNull _vehicle) exitWith {};
-if (!alive _vehicle) exitWith {};
+_vehicle = GW_CURRENTVEHICLE;
 
 _unit = player;
 
 // Get all the camera information we need
 GW_CAMERA_HEADING = [(positionCameraToWorld [0,0,0]), (positionCameraToWorld [0,0,1])] call BIS_fnc_vectorDiff;
-GW_TARGET_DIRECTION = [(positionCameraToWorld [0,0,0]), (positionCameraToWorld [0,0,4])] call BIS_fnc_dirTo;
+GW_TARGET_DIRECTION = [(positionCameraToWorld [0,0,0]), (positionCameraToWorld [0,0,4])] call dirTo;
 GW_MAX = positionCameraToWorld [0,0,2000];
 GW_MIN = positionCameraToWorld [0,0,500];
 GW_ORIGIN = (ASLtoATL getPosASL _vehicle);
@@ -54,7 +54,10 @@ _allowedWeapons = [
 	'RPG',
 	'LSR',
 	'RLG',
-	'FLM'
+	'FLM',
+	'HAR',
+	'GUD',
+	'LMG'
 ];
 
 _count = 0;
@@ -74,29 +77,33 @@ _count = 0;
 	// Difference between these two
 	_dif = abs ( [_actualDir - _defaultDir] call flattenAngle );
 
-	if ( (_dif < _limit) && _type in _allowedWeapons) then {		
+	if ( (_dif < _limit) && _type in _allowedWeapons || (_type in GW_LOCKONWEAPONS)) then {	
 
-		if (true) then {
+		// Only add weapons that are mouse bound to active weapons list
+		_bind = _obj getVariable ['GW_KeyBind', []];
+		_bind = if (typename _bind == "ARRAY") then { (_bind select 1) } else { _bind };
 
-			GW_AVAIL_WEAPONS pushback [_obj, _type];
-			_col = [1,1,1,0.75];
+		GW_AVAIL_WEAPONS pushback [_obj, _type, _bind];
+		_col = [1,1,1,0.75];
 
-			// Decide on the icon to use for each weapon
-			_icon = switch (_type) do {
-				case "HMG":	{ hmgTargetIcon };
-				case "RLG":	{ hmgTargetIcon };			
-				case "LSR":	{ hmgTargetIcon };				
-				case "RPG":	{ rpgTargetIcon };				
-				case "MIS":	{ rpgTargetIcon };				
-				case "MOR":	{ rangeTargetIcon };				
-				case "GMG":	{ rangeTargetIcon };	
-				case "FLM":	{ rpgTargetIcon };				
-				default	{ noTargetIcon };			
-			};
+		// Decide on the icon to use for each weapon
+		_icon = _type call {
 
-			_count = _count + 1;
-
+			if (_this == "HMG") exitWith { hmgTargetIcon };
+			if (_this == "RLG") exitWith { hmgTargetIcon };
+			if (_this == "LSR") exitWith { hmgTargetIcon };
+			if (_this == "RPG") exitWith { rpgTargetIcon };
+			if (_this == "MIS") exitWith { rpgTargetIcon };
+			if (_this == "GUD") exitWith { rpgTargetIcon };
+			if (_this == "MOR") exitWith { rangeTargetIcon };
+			if (_this == "GMG") exitWith { rangeTargetIcon };
+			if (_this == "FLM") exitWith { rpgTargetIcon };
+			if (_this == "HAR") exitWith { rangeTargetIcon };
+			if (_this == "LMG") exitWith { hmgTargetIcon };
+			noTargetIcon
 		};
+		
+		_count = _count + 1;		
 
 	};
 	false
@@ -113,26 +120,23 @@ GW_ACTIVE_WEAPONS = [];
 // Are we actually able to shoot?
 _status = _vehicle getVariable ["status", []];
 _canShoot = if (!GW_SETTINGS_ACTIVE && (count GW_AVAIL_WEAPONS > 0) && !GW_WAITFIRE && !('cloak' in _status) && GW_CURRENTZONE != "workshopZone") then { true } else { false };
-if (GW_DEBUG) then {_canShoot = true; };
+
+['Can Shoot', true] call logDebug;
 
 // Mouse shooting
 if (GW_LMBDOWN && _canShoot && !GW_WAITFIRE) then {
 
 	_scale = 1.5;
 	_col = [1,1,1,1];	
-	_availTypes = [];
-	
-	{
-		_type = _x select 1;
-		if ( !(_type in _availTypes) ) then { _availTypes pushBack _type; };
-		GW_ACTIVE_WEAPONS pushback (_x select 0);
-		false
-	} count GW_AVAIL_WEAPONS > 0;
 
 	{
-		[_x, _vehicle, "AUTO"] spawn fireAttached;
+	
+		if (format['%1', (_x select 2)] == "1") then {
+			[(_x select 1), _vehicle, (_x select 0)] spawn fireAttached;
+		};
+
 		false
-	} count _availTypes > 0;
+	} count GW_AVAIL_WEAPONS > 0;
 };
 
 _pos = _vehicle modelToWorld [0,40,0];

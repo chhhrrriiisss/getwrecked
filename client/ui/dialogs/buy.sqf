@@ -30,7 +30,6 @@ _total ctrlSetText 'TOTAL: $0';
 _total ctrlCommit 0;
 
 // Generate a shopping list with prices for the company
-[GW_BUY_OBJ] spawn generateItemsList;
 
 "dynamicBlur" ppEffectEnable true;
 "dynamicBlur" ppEffectAdjust [0.3]; 

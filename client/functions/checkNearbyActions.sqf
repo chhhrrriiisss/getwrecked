@@ -16,14 +16,35 @@ if(count _nearby == 0) exitWith {};
 
 {
 
-	_hasActions = _x getVariable ["hasActions", false];		
-		
+	_hasActions = _x getVariable ["hasActions", false];	
+	_hasHandlers = _x getVariable ["hasHandlers", false];	
+	_isObject = _x getVariable ["isObject", false];	   
+	_isVehicle = _x getVariable ["isVehicle", false];	
+
+	if (!_hasHandlers) then {
+
+		if (_isObject) then {
+			[_x] call setObjectHandlers;
+		};
+
+		if (_isVehicle) then {
+			[_x] call setVehicleHandlers;
+		};
+	};
+
 	if (_hasActions) then {} else {
 
-   		_isObject = _x getVariable ["isObject", false];	       
-   		_isVehicle = _x getVariable ["isVehicle", false];	
+   		    
+   		
    		_isPaint = _x getVariable ["isPaint", false];
    		_isSupply = _x getVariable ["isSupply", false];
+   		_isTerminal = _x getVariable ["isTerminal", nil];
+
+   		
+
+   		if (!isNil "_isTerminal") then {
+   			[_x, _isTerminal] call setTerminalActions;
+   		};
 
    		// Supply boxes
    		if (_isSupply) then {
@@ -35,15 +56,9 @@ if(count _nearby == 0) exitWith {};
 			[_x] call setPaintAction;
 		};
 
-		// Vehicle handlers
-   		if (_isVehicle) then {
-   			[_x] call setupLocalVehicleHandlers;	 
-   		}; 	
 
    		// Object handlers & actions
    		if (_isObject) then {
-   			
-   			[_x] call setupLocalObjectHandlers;
 
 			// Strip actions
 			removeAllActions _x;	

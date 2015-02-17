@@ -125,8 +125,6 @@ if (_action == 'delete') exitWith {
 
 		systemChat format['Deleted from list: %1', _target];
 
-		[] spawn listVehicles;
-
 	};
 
 };

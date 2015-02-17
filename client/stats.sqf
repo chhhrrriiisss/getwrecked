@@ -1,8 +1,10 @@
 //
-//      Name: stats
+//      Name: logStat
 //      Desc: Handles updating and saving vehicle stats to profile name space
 //      Return: None
 //
+
+private ['_name'];
 
 if (isNil "GW_ISLOGGING") then {
 	GW_ISLOGGING = false;
@@ -18,62 +20,20 @@ _forceSync = [_this,3, false, [false]] call BIS_fnc_param;
 
 if (_statToLog == "" || isNull _vehicle) exitWith {};
 
-switch (_statToLog) do {
-	
-	case "death":
-	{		
-		_previousDeaths = _vehicle getVariable ["deaths", 0];
-		_totalDeaths = _previousDeaths + _value;
-		_vehicle setVariable ['deaths', round(_totalDeaths)]; 
-	};
-
-	case "destroyed":
-	{		
-		_previousDestroys = _vehicle getVariable ["destroyed", 0];
-		_totalDestroys = _previousDestroys + _value;
-		_vehicle setVariable ['destroyed', round(_totalDestroys)]; 
-	};
-
-	case "kill":
-	{		
-		_previousKills = _vehicle getVariable ["kills", 0];
-		_totalKills = _previousKills + _value;
-		_vehicle setVariable ['kills', round(_totalKills)]; 
-	};
-
-	case "mileage":
-	{
-		_previousDistance = _vehicle getVariable ["mileage", 0];
-		_totalDistance = _previousDistance + _value;
-		_vehicle setVariable ['mileage', round(_totalDistance)]; 
-
-	};
-
-	case "moneyEarned":
-	{
-		_previousValue = _vehicle getVariable ["moneyEarned", 0];
-		_totalEarned = _previousValue + _value;
-		_vehicle setVariable ['moneyEarned', _totalEarned]; 
-
-	};
-
-	case "timeAlive":
-	{
-		_previousAlive = _vehicle getVariable ["timeAlive", 0];
-		_totalAlive = _previousAlive + _value;
-		_vehicle setVariable ['timeAlive', _totalAlive]; 
-
-	};
-
-	case "deploy":
-	{
-		_previousAlive = _vehicle getVariable ["deploys", 0];
-		_totalAlive = _previousAlive + _value;
-		_vehicle setVariable ['deploys', _totalAlive]; 
-
-	};
-
+_var = switch (_statToLog) do {	
+	case "death":{"deaths"};
+	case "destroyed":{"destroyed"};
+	case "kill": {"kills"};
+	case "mileage":	{"mileage"};
+	case "moneyEarned":	{"moneyEarned"};
+	case "timeAlive":{ "timeAlive"};
+	case "deploy": {"deploys"};
 };
+
+_previousValue = _vehicle getVariable[_var, 0];
+_previousValue = if (typename _previousValue != "SCALAR") then { 0 } else { _previousValue };
+_totalValue = _previousValue + _value;
+_vehicle setVariable [_var, round(_totalValue)]; 
 
 // If its 9 seconds since last sync, sync data to profile
 _remainder = round (time) % 9;
@@ -88,8 +48,6 @@ _currentTime = time;
 if ((_currentTime - GW_LASTSYNC) >= 10 || _forceSync) then {
 
 	GW_LASTSYNC = time;
-
-	if (GW_DEBUG) then { systemchat 'Attempting sync'; };	
 
 
 	_newStats = [];
@@ -120,7 +78,7 @@ if ((_currentTime - GW_LASTSYNC) >= 10 || _forceSync) then {
 			profileNameSpace setVariable[_name, _raw]; 
 			saveProfileNamespace;	
 
-			if (GW_DEBUG) then { systemChat format['%1 stats updated at %2', _name, time]; } ;
+			['Stats Update', format['%1/%2', _name, time]] call logDebug;
 		};
 
 	};	

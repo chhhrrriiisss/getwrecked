@@ -6,6 +6,7 @@
 private ['_target', '_pos', '_duration'];
 
 _target = [_this,0, objNull, [objNull]] call BIS_fnc_param;
+_noise = [_this, 2, true, [false]] call BIS_fnc_param;
 
 if (isNull _target) exitWith {};
 _pos = visiblePositionASL _target;
@@ -17,7 +18,7 @@ _pos set[2, (_pos select 2) + _height];
 _duration = _this select 1;
 
 // Mix the sound up a bit
-if ((random 100) > 50) then { _target say3D "nitro"; } else { _target say3D "nitroAlt"; };
+if ((random 100) > 50 && _noise) then { _target say3D "nitro"; } else { _target say3D "nitroAlt"; };
 
 _source  = "#particlesource" createvehiclelocal _pos;
 _source setParticleCircle [0, [0, 0, 0]];

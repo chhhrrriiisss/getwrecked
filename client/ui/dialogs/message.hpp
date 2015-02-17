@@ -28,7 +28,7 @@ class GW_RscEdit
 	colorText[] = {1,1,1,1};
 	colorDisabled[] = {1,1,1,1};
 	colorSelection[] = {1,1,1,0.5};
-	font = "PuristaLight";
+	font = "PuristaMedium";
 	sizeEx = 0.03;
 	autocomplete = false;
 	text = "";
@@ -215,8 +215,6 @@ class GW_Dialog
 
 			class Attributes
 			{
-				font = "PuristaLight";
-				color = "#E5E5E5";
 				align = "left";
 				shadow = "false";
 			};

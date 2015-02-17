@@ -106,6 +106,8 @@ renameVehicle = compile preprocessFile "client\ui\functions\renameVehicle.sqf";
 setBind = compile preprocessFile "client\ui\functions\setBind.sqf";
 parseList = compile preprocessFile "client\ui\functions\parseList.sqf";
 generateSettingsList = compile preprocessFile "client\ui\functions\generateSettingsList.sqf";
+generateTauntsList = compile preprocessFile "client\ui\functions\generateTauntsList.sqf";
+setTaunt = compile preprocessFile "client\ui\functions\setTaunt.sqf";
 
 // Add the name to the settings stats column
 generateName = {
@@ -129,7 +131,7 @@ clearBind = {
 	
 	_index = lnbcurselrow 92001;
 	lnbSetText [92001, [_index, 2], ''];
-	lnbSetData [92001, [_index, 2], ''];
+	lnbSetData [92001, [_index, 2], '-1'];
 
 	[] call saveBinds;
 

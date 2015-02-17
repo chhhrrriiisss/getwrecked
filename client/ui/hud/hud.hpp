@@ -11,8 +11,8 @@
 #define GW_BUTTON_GAP_X 0.0025
 #define GW_BUTTON_BACKGROUND {0,0,0,0.7}
 
-#define STATUS_X (( 1 - GW_BUTTON_WIDTH ) - (GW_BUTTON_GAP_X * 6))
-#define STATUS_Y 0.78
+#define STATUS_X ((( 1 - GW_BUTTON_WIDTH ) - (GW_BUTTON_GAP_X * 6)) + 0.0047)
+#define STATUS_Y 0.788
 
 #define WEAPONS_X 0.28
 #define WEAPONS_Y 0.26
@@ -472,7 +472,7 @@ class GW_HUD_Vehicle
 
 			text = "";
 
-		};
+		};		
 
 		class VehicleNotification : GW_StructuredTextBox
 		{
@@ -502,6 +502,19 @@ class GW_HUD_Vehicle
 			};
 
 			text = "";
+		};
+
+		class VehicleHorn : GW_StructuredTextBox
+		{
+			idc = 12018;
+			fade = 1;
+			colorBackground[] = {0,0,0,0};
+			x = (0.865) * safezoneW + safezoneX;
+			y = (0.015) * safezoneH + safezoneY;
+			w = (GW_BUTTON_WIDTH / 6) * safezoneW;
+			h = (GW_BUTTON_HEIGHT * 2) * safezoneH;
+
+			text = "TEST";
 		};
 
 	};
@@ -539,20 +552,6 @@ class GW_HUD
 
 	class controls {		
 
-		class Logo : GW_StructuredTextBox
-		{
-			idc = 10020;
-			fade = 1;
-			colorBackground[] = {0,0,0,0};
-			x = (0 - 0.014) * safezoneW + safezoneX;
-			y = (0 - 0.03) * safezoneH + safezoneY;
-			w = (0.22) * safezoneW;
-			h = (0.12) * safezoneH;
-
-			size = "1";
-
-			text = "<img size='0.33' align='center' image='client\images\logo.paa' />";
-		};	
 
 		class StripesTopLeft : GW_StructuredTextBox
 		{

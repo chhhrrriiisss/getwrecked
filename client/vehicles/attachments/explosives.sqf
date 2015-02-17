@@ -6,44 +6,52 @@
 
 private ["_obj", "_vehicle", "_o"];
 
-_obj = [_this,0, objNull, [objNull]] call BIS_fnc_param;
-_vehicle = [_this,1, objNull, [objNull]] call BIS_fnc_param;
+if (isNull ( _this select 0) || isNull (_this select 1)) exitWith { false };
 
 [] spawn cleanDeployList;
+
+_obj = _this select 0;
+_vehicle = _this select 1;
 
 playSound3D ["a3\sounds_f\sfx\vehicle_drag_end.wss",_vehicle, false, getPosATL _vehicle, 2, 1, 50];
 
 _type = typeOf _obj;
-detach _obj;
 deleteVehicle _obj;
 
 // Ok, let's position it behind the vehicle
 _maxLength = ([_vehicle] call getBoundingBox) select 1;
 _pos = _vehicle modelToWorldVisual [0, (-1 * ((_maxLength/2) + 2)), 0];
-_pos set[2,0];
 
 // Spawn it
 _obj = nil;
 _obj = createVehicle [_type, _pos, [], 0, 'CAN_COLLIDE']; // So it doesnt collide when spawned in]
-_obj disableCollisionWith _vehicle;
-_obj allowDamage false;
-_obj enableSimulation false;
+_holder = createVehicle ["Land_PenBlack_F", _pos, [], 0, 'CAN_COLLIDE']; // So it doesnt collide when spawned in]
 
-[		
-	[
-		_obj,
-		false
-	],
-	"setObjectSimulation",
-	false,
-	false 
-] call BIS_fnc_MP;
+_obj attachTo [_holder, [0,0,0.1]];
+
+[_obj, _holder, _vehicle] spawn { 
+	_o = _this select 0;
+
+	_timeout = time + 10;
+	waitUntil {
+		Sleep 0.1;
+		((((getPos (_o)) select 2) < 1) || time > _timeout)
+	};
+
+	detach _o;
+	deleteVehicle (_this select 1);
+	_p = (ASLtoATL visiblePositionASL _o);
+	_p set [2, 0];
+	_o setPos _p;
+
+	// Recompile the vehicle to account for dropping one bag
+	[_this select 2] call compileAttached;
+
+};
 
 _releaseTime = time;
 _timer = 60;
 _timeout = time + _timer;
-
-Sleep 0.25;
 
 // Handlers to trigger effect early
 _obj addEventHandler['HandleDamage', {	(_this select 0) setVariable ["triggered", true]; }];
@@ -59,57 +67,83 @@ _vehicle setVariable ["GW_detonateTargets", _newTargets];
 GW_WARNINGICON_ARRAY = GW_WARNINGICON_ARRAY + [_obj];
 GW_DEPLOYLIST = GW_DEPLOYLIST + [_obj];
 
-// Recompile the vehicle to account for dropping one bag
-[_vehicle] call compileAttached;
 
-_triggered = false;
-while {alive _obj && time < _timeout && !_triggered} do {
-	_triggered = _obj getVariable ["triggered", false];
-	playSound3D ["a3\sounds_f\sfx\beep_target.wss", _obj, false, getPos _obj, 2, 1, 25]; 
-	Sleep 0.5;
-};
 
-// If the object is still alive, let's go boom
-if (alive _obj) then {
-
-	_pos = (ASLtoATL visiblePositionASL _obj);
-
-	playSound3D ["a3\sounds_f\weapons\mines\electron_trigger_1.wss", _obj, false, _pos, 2, 1, 150]; 
+[_obj, _timeout, _vehicle] spawn {
 	
-	_pos set [2,2];
-	_bomb = createVehicle ["Bo_GBU12_LGB", _pos, [], 0, "CAN_COLLIDE"];
-	_bomb setVelocity [0,0,-100];
+	_o = _this select 0;
+	_t = _this select 1;
+	_v = _this select 2;
 
-	_nearby = _pos nearEntities [["Car"], 14];	
+	_triggered = false;
 
-	if (count _nearby > 0) then {
-		// To be extra badass, lets spawn a bomb for each vehicle nearby
-		{
-			if (_x != (_vehicle)) then { [_x] call markAsKilledBy; };
+	for "_i" from 0 to 1 step 0 do {
 
-			_tPos =  (ASLtoATL getPosASL _x);
-			_tPos set [2, 2];			
-			_bomb = createVehicle ["Bo_GBU12_LGB", _tPos, [], 0, "CAN_COLLIDE"];
-			_bomb setVelocity [0,0,-100];	
-			_x call destroyInstantly;		
+		if (!alive _o || time > _t || _triggered) exitWith {};
 
-			false
-			
-		} count _nearby > 0;
+		_triggered = _o getVariable ["triggered", false];
+		playSound3D ["a3\sounds_f\sfx\beep_target.wss", _o, false, getPos _o, 2, 1, 25]; 
+		Sleep 0.5;
 	};
 
-	deleteVehicle _obj;
+	// If the object is still alive, let's go boom
+	if (alive _o) then {
+
+		_pos = (ASLtoATL visiblePositionASL _o);
+
+		playSound3D ["a3\sounds_f\weapons\mines\electron_trigger_1.wss", _o, false, _pos, 2, 1, 150]; 
+		
+		_pos set [2,2];
+
+		_o enableSimulation false;
+		[		
+			[
+				[_o],
+				false
+			],
+			"setObjectSimulation",
+			false,
+			false 
+		] call BIS_fnc_MP;
+
+		_bomb = createVehicle ["Bo_GBU12_LGB", _pos, [], 0, "FLY"];		
+		_bomb setVelocity [0,0,-10];
+
+		_nearby = _pos nearEntities [["Car"], 15];	
+
+		if (count _nearby > 0) then {
+			{
+				if (_x != (_v)) then { [_x, "EPL"] call markAsKilledBy; };
+				_status = _x getVariable ['status', []];
+				_d = if ('nanoarmor' in _status) then { 0.05 } else { (random (0.25) + 0.75) };
+				_x setDammage ((getdammage _x) + _d);
+				_x call updateVehicleDamage;
+				false
+				
+			} count _nearby > 0;
+		};
+
+		deleteVehicle _o;		
+	};
+
+	// Cleanup
+	_o removeAllEventHandlers "Hit";
+	_o removeAllEventHandlers "Explosion";
+	_o removeAllEventHandlers "HandleDamage";
+
+	_detonateTargets = _v getVariable ["GW_detonateTargets", []];
+	_newTargets = _detonateTargets - [_o];
+	_v setVariable ["GW_detonateTargets", _newTargets];
+
+	
+
+	GW_WARNINGICON_ARRAY = GW_WARNINGICON_ARRAY - [_o];
+	GW_DEPLOYLIST = GW_DEPLOYLIST - [_o];
+
+
+
 };
 
-// Cleanup
-_obj removeAllEventHandlers "Hit";
-_obj removeAllEventHandlers "Explosion";
-_obj removeAllEventHandlers "HandleDamage";
 
-_detonateTargets = _vehicle getVariable ["GW_detonateTargets", []];
-_newTargets = _detonateTargets - [_obj];
-_vehicle setVariable ["GW_detonateTargets", _newTargets];
 
-GW_WARNINGICON_ARRAY = GW_WARNINGICON_ARRAY - [_obj];
-GW_DEPLOYLIST = GW_DEPLOYLIST - [_obj];
-
+true

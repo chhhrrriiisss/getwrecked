@@ -16,6 +16,16 @@ colorInvisible = [0.99,0.14,0.09,0];
 colorWhite = [1,1,1,1];
 
 // Variables
+GW_BINDS_ORDER = [ 
+	["HORN", ""], 
+	["UNFL", ""], 
+	["EPLD", ""], 
+	["LOCK", ""],
+	["OILS", ""],
+	["DCLK", ""],
+	["PARC", ""]
+];
+
 GW_STATS_ORDER = ["kills", "deaths", "destroyed", "mileage", "moneyEarned", "timeAlive", "deploys"];
 GW_INVULNERABLE = true;
 GW_DEPLOYLIST = [];
@@ -33,6 +43,7 @@ GW_DEPLOY_ACTIVE = false;
 GW_TIMER_ACTIVE = false;
 GW_DIALOG_ACTIVE = false;
 GW_HUD_ACTIVE = false;
+GW_CURRENTVEHICLE = (vehicle player);
 GW_CURRENTZONE = nil;
 GW_CURRENTZONE_DATA = [];
 GW_WAITFIRE = false;
@@ -45,6 +56,7 @@ GW_WAITLOAD = false;
 GW_WAITCOMPILE = false;
 GW_SHAREARRAY = [];
 GW_EDITING = false;
+GW_HOLD_ROTATE = false;
 GW_LIFT_ACTIVE = false;
 GW_PAINT_ACTIVE = false;
 GW_LMBDOWN = false;
@@ -53,6 +65,8 @@ GW_LINEEFFECT_COLOR = colorRed;
 GW_TARGETICON_ARRAY = [];
 GW_WARNINGICON_ARRAY = [];
 GW_TAGLIST = [];
+GW_ANIMCOUNT = 0;
+GW_LASTTICK = 0;
 
 // Player
 playerInit = compile preprocessFile 'client\player_init.sqf';
@@ -65,9 +79,10 @@ previewCamera = compile preprocessFile "client\ui\cameras\preview_camera.sqf";
 setPlayerTexture = compile preprocessFile 'client\functions\setPlayerTexture.sqf';
 call compile preprocessfile "client\key_binds.sqf";
 
-// Ui
-call compile preprocessfile "client\ui\display\display.sqf";
+// UI
 call compile preprocessFile 'client\ui\compile.sqf';
+drawMap = compile preprocessfile "client\ui\display\map.sqf";
+drawDisplay = compile preprocessfile "client\ui\display\display.sqf";
 drawHud = compile preprocessFile "client\ui\hud\hud.sqf";
 vehicleTag = compile preprocessFile 'client\ui\display\vehicle_tag.sqf';
 targetLockOn = compile preprocessFile 'client\ui\display\lockon.sqf';
@@ -79,17 +94,20 @@ buyMenu = compile preprocessFile "client\ui\dialogs\buy.sqf";
 inventoryMenu = compile preprocessFile "client\ui\dialogs\inventory.sqf";
 spawnMenu = compile preprocessFile "client\ui\menus\spawn.sqf";
 previewMenu = compile preprocessFile "client\ui\menus\preview.sqf";
+drawServiceIcon = compile preprocessFile "client\functions\drawServiceIcon.sqf";
 
 // HUD Functions
 createAlert = compile preprocessFile "client\ui\hud\alert.sqf";
+createNotification = compile preprocessFile "client\ui\hud\notification.sqf";
+createHalo = compile preprocessFile "client\ui\hud\halo.sqf";
 createTween = compile preprocessFile "client\ui\hud\tween.sqf";
 createMessage = compile preprocessFile "client\ui\dialogs\message.sqf";
 createTimer = compile preprocessFile "client\ui\dialogs\timer.sqf";
 
 // Zone
 deployVehicle = compile preprocessFile 'client\zones\deploy.sqf';
-parachuteVehicle = compile preprocessFile 'client\zones\parachute_vehicle.sqf';
-checkInZone = compile preprocessFile 'client\zones\check_in_zone.sqf';
+servicePoint = compile preprocessFile 'client\zones\vehicle_point.sqf';
+nitroPad =  compile preprocessFile 'client\zones\nitro_pad.sqf';
 
 // Persistance Functions
 paintVehicle = compile preprocessFile 'client\customization\paint_vehicle.sqf';
@@ -101,8 +119,6 @@ listFunctions = compile preprocessFile  'client\persistance\library.sqf';
 listVehicles = compile preprocessFile  'client\persistance\list.sqf';
 
 // Setup Functions
-setupLocalVehicleHandlers = compile preprocessFile "client\vehicles\handlers\local_handlers.sqf";
-setupLocalObjectHandlers = compile preprocessFile "client\objects\handlers\local_handlers.sqf";
 setupLocalVehicle = compile preprocessFile "client\vehicles\local_vehicle_setup.sqf";
 
 // Economy Functions
@@ -125,6 +141,9 @@ tiltObj = compile preprocessFile 'client\objects\tilt.sqf';
 tagObj = compile preprocessFile 'client\objects\tag.sqf';	
 findSnapPoint = compile preprocessFile "client\functions\findSnapPoint.sqf";
 checkNearbyActions = compile preprocessFile "client\functions\checkNearbyActions.sqf";	
+setPlayerActions = compile preprocessFile "client\functions\setPlayerActions.sqf";	
+checkNearbyOwnership = compile preprocessFile "client\functions\checkNearbyOwnership.sqf";	
+
 
 // Vehicle Functions
 fireAttached = compile preprocessFile "client\vehicles\fire_attached.sqf";
@@ -140,21 +159,22 @@ fireGmg = compile preprocessFile "client\vehicles\weapons\gmg.sqf";
 fireLockOn = compile preprocessFile "client\vehicles\weapons\lockon_missile.sqf";
 fireGuided = compile preprocessFile "client\vehicles\weapons\guided_missile.sqf";
 fireFlamethrower = compile preprocessFile "client\vehicles\weapons\flamethrower.sqf";
-
+fireHarpoon = compile preprocessFile "client\vehicles\weapons\harpoon.sqf";
+fireLmg = compile preprocessFile "client\vehicles\weapons\lmg.sqf";
 
 // Module Functions
 smokeBomb = compile preprocessFile "client\vehicles\attachments\smoke_bomb.sqf";
 verticalThruster = compile preprocessFile "client\vehicles\attachments\thruster.sqf";
 nitroBoost = compile preprocessFile "client\vehicles\attachments\nitro_boost.sqf";
-ejectSystem = compile preprocessFile "client\vehicles\attachments\eject_system.sqf";
 emergencyRepair = compile preprocessFile "client\vehicles\attachments\emergency_repair.sqf";
 empDevice = compile preprocessFile "client\vehicles\attachments\emp_device.sqf";
 selfDestruct = compile preprocessFile "client\vehicles\attachments\self_destruct.sqf";
-ejectSystem = compile preprocessFile "client\vehicles\attachments\eject_system.sqf";
+emergencyParachute = compile preprocessFile "client\vehicles\attachments\emergency_parachute.sqf";
 oilSlick = compile preprocessFile "client\vehicles\attachments\oil_slick.sqf";
 dropCaltrops = compile preprocessFile "client\vehicles\attachments\caltrops.sqf";
 dropMines = compile preprocessFile 'client\vehicles\attachments\mines.sqf';
 dropExplosives = compile preprocessFile "client\vehicles\attachments\explosives.sqf";
+dropJammer = compile preprocessFile "client\vehicles\attachments\frequency_jammer.sqf";
 shieldGenerator = compile preprocessFile "client\vehicles\attachments\shield_generator.sqf";
 cloakingDevice = compile preprocessFile "client\vehicles\attachments\cloak.sqf";
 magneticCoil = compile preprocessFile "client\vehicles\attachments\magnetic_coil.sqf";
@@ -178,6 +198,7 @@ magnetEffect = compile preprocessFile "client\effects\magnet.sqf";
 nitroEffect = compile preprocessFile "client\effects\nitro.sqf";
 muzzleEffect = compile preprocessFile "client\effects\muzzle.sqf";
 flameEffect = compile preprocessFile "client\effects\flame.sqf";
+nukeEffect = compile preprocessFile "client\effects\nuke.sqf";
 
 // Zone Functions
 returnToZone =  compile preprocessFile "client\functions\returnToZone.sqf";
@@ -201,6 +222,7 @@ cleanDeployList = compile preprocessFile "client\functions\cleanDeployList.sqf";
 getZoom = compile preprocessFile "client\functions\getZoom.sqf";
 setVariance = compile preprocessFile "client\functions\setVariance.sqf";
 setVelocityLocal = compile preprocessFile "client\functions\setVelocityLocal.sqf";
+inString =  compile preprocessFile "client\functions\inString.sqf";
 
 // Vehicle Functions
 markAsKilledBy = compile preprocessFile "client\functions\markAsKilledBy.sqf";
@@ -211,8 +233,13 @@ damageIntersects = compile preprocessFile "client\functions\damageIntersects.sqf
 burnIntersects = compile preprocessFile "client\functions\burnIntersects.sqf";
 destroyInstantly = compile preprocessFile "client\functions\destroyInstantly.sqf";
 popIntersects = compile preprocessFile "client\functions\popIntersects.sqf";
+setVehicleOnFire = compile preprocessFile "client\functions\setVehicleOnFire.sqf";
 slowDown = compile preprocessFile "client\functions\slowDown.sqf";
 flipVehicle = compile preprocessFile "client\functions\flipVehicle.sqf";
+tauntVehicle = compile preprocessFile "client\functions\tauntVehicle.sqf";
+detonateTargets = compile preprocessFile "client\functions\detonateTargets.sqf";
+toggleLockOn = compile preprocessFile "client\functions\toggleLockOn.sqf";
+assignKill = compile preprocessFile "client\functions\assignKill.sqf";
 
 // MP Functions
 logStatKill = compile preprocessFile "client\functions\logStatKill.sqf";
@@ -223,5 +250,117 @@ pubVar_fnc_status = compile preprocessFile "client\functions\pubvar_status.sqf";
 
 pubVar_fnc_systemChat = compile preprocessFile "client\functions\pubvar_systemchat.sqf";
 "pubVar_systemChat" addPublicVariableEventHandler {(_this select 1) call pubVar_fnc_systemChat};
+
+// Chat command interceptor
+[] call compile preProcessFilelineNumbers "client\commands\init.sqf";
+
+// Keycodes
+keyCodes = [
+
+	['ESC', 1],
+	['F1', 59],
+	['F2', 60],
+	['F3', 61],
+	['F4', 62],
+	['F5', 63],
+	['F6', 64],
+	['F7', 65],
+	['F8', 66],
+	['F9', 67],
+	['F10', 68],
+	['F11', 87],
+	['F12', 88],
+	['Print', 183],
+	['Scroll', 70],
+	['Pause', 197],
+	['^', 41],
+	['1', 2],
+	['2', 3],
+	['3', 4],
+	['4', 5],
+	['5', 6],
+	['6', 7],
+	['7', 8],
+	['8', 9],
+	['9', 10],
+	['0', 11],
+	['ß', 12],
+	['´', 13],
+	['Ü', 26],
+	['Ö', 39],
+	['Ä', 40],
+	['#', 43],
+	['<', 86],
+	[',', 51],
+	['.', 52],
+	['-', 53],
+	['POS1', 199],
+	['Tab', 15],
+	['Enter', 28],
+	['Del', 211],
+	['Backspace', 14],
+	['Insert', 210],
+	['End', 207],
+	['PgUP', 201],
+	['PgDown', 209],
+	['Caps', 58],
+	['A', 30],
+	['B', 48],
+	['C', 46],
+	['D', 32],
+	['E', 18],
+	['F', 33],
+	['G', 34],
+	['H', 35],
+	['I', 23],
+	['J', 36],
+	['K', 37],
+	['L', 38],
+	['M', 50],
+	['N', 49],
+	['O', 24],
+	['P', 25],
+	['Q', 16],
+	['U', 22],
+	['R', 19],
+	['S', 31],
+	['T', 20],
+	['V', 47],
+	['W', 17],
+	['X', 45],
+	['Y', 21],
+	['Z', 44],
+	['LShift', 42],
+	['RShift', 54],
+	['Up', 200],
+	['Down', 208],
+	['Left', 203],
+	['Right', 205],
+	['Num 0', 82],
+	['Num 1', 79],
+	['Num 2', 80],
+	['Num 3', 81],
+	['Num 4', 75],
+	['Num 5', 76],
+	['Num 6', 77],
+	['Num 7', 71],
+	['Num 8', 72],
+	['Num 9', 73],
+	['Num +', 78],
+	['NUM', 69],
+	['Num /', 181],
+	['Num *', 55],
+	['Num -', 74],
+	['Num Enter', 156],
+	['R Ctrl', 29],
+	['L Ctrl', 157],
+	['L Win', 220],
+	['R Win', 219],
+	['L Alt', 56],
+	['Space', 57],
+	['R Alt', 184],
+	['App ', 221]
+
+];
 
 clientCompileComplete = true;

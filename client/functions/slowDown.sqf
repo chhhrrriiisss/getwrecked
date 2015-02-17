@@ -6,10 +6,11 @@
 
 private ['_vehicle', '_speed'];
 
-_vehicle =  [_this,0, objNull, [objNull]] call BIS_fnc_param;
-_speed = [_this,1, 0.97, [0]] call BIS_fnc_param;
+_vehicle =  _this select 0;
+_speed = if (isNil {_this select 1}) then { 0.97 } else { (_this select 1) };
 
 if (isNull _vehicle) exitWith {};
+if (!alive _vehicle) exitWith {};
 
 _alt = (ASLtoATL (getPosASL _vehicle)) select 2;
 _vel = velocity _vehicle;

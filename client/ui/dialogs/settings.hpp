@@ -4,6 +4,8 @@
 #define GW_Settings_Name_ID 92003
 #define GW_Stats_List_ID 92004
 #define GW_Stats_Title_ID 92005
+#define GW_Taunts_List_ID 92006
+#define GW_Settings_Tooltip_ID 92007
 
 #define GW_BUTTON_WIDTH 0.2
 #define GW_BUTTON_HEIGHT 0.035
@@ -56,7 +58,7 @@ class GW_Settings
 			x = (SETTINGS_X + (GW_BUTTON_WIDTH) + (GW_BUTTON_GAP_X)) * safezoneW + safezoneX;
 			y = (SETTINGS_Y + GW_BUTTON_HEIGHT + GW_BUTTON_GAP_Y) * safezoneH + safezoneY;
 			w = (GW_BUTTON_WIDTH - (GW_BUTTON_GAP_X)) * safezoneW;
-			h = ((GW_BUTTON_HEIGHT * 6) + (GW_BUTTON_GAP_Y * 5)) * safezoneH;
+			h = ((GW_BUTTON_HEIGHT * 5) + (GW_BUTTON_GAP_Y * 4)) * safezoneH;
 		};	
 
 	};
@@ -87,7 +89,7 @@ class GW_Settings
 			x = (SETTINGS_X + (GW_BUTTON_WIDTH) + (GW_BUTTON_GAP_X)) * safezoneW + safezoneX;
 			y = (SETTINGS_Y + GW_BUTTON_HEIGHT + GW_BUTTON_GAP_Y) * safezoneH + safezoneY;
 			w = (GW_BUTTON_WIDTH - (GW_BUTTON_GAP_X)) * safezoneW;
-			h = ((GW_BUTTON_HEIGHT * 6) + (GW_BUTTON_GAP_Y * 5)) * safezoneH;
+			h = ((GW_BUTTON_HEIGHT * 5) + (GW_BUTTON_GAP_Y * 4)) * safezoneH;
 			
 			colorSelectBackground[] = {0,0,0,0};
 			colorSelectBackground2[] = {0,0,0,0};
@@ -117,12 +119,13 @@ class GW_Settings
 			
 			text = "";
 			sizeEx = "0.03";
-			columns[] = {0, 0.16, 0.75, 1};
+			columns[] = {0, 0.16, 0.675, 0.825};
 			drawSideArrows = false;
 			idcLeft = -1;
 			idcRight = -1;
 			rowHeight = GW_BUTTON_HEIGHT * 2;
 
+			onMouseMoving = "GW_MOUSEX = (_this select 1); GW_MOUSEY = (_this select 2); ";
 			onLBSelChanged = "";
 			onLBDblClick = "_this spawn setBind; false";
 		
@@ -204,6 +207,52 @@ class GW_Settings
 
 		};
 
+
+		class TauntsTitle : GW_RscButtonMenu
+		{
+			idc = -1;
+			text = "TAUNT";
+			onButtonClick = "";
+			x = (SETTINGS_X + (GW_BUTTON_WIDTH) + (GW_BUTTON_GAP_X)) * safezoneW + safezoneX;
+			y = (SETTINGS_Y + (GW_BUTTON_HEIGHT * 6) + (GW_BUTTON_GAP_Y * 6)) * safezoneH + safezoneY;
+			w = ((GW_BUTTON_WIDTH / 2)) * safezoneW;
+			h = GW_BUTTON_HEIGHT * safezoneH;
+
+			colorFocused[] = {1,1,1,1};
+			color2[] = {1,1,1,1};
+
+			colorBackground[] = GW_BUTTON_BACKGROUND;
+			colorBackgroundFocused[] = GW_BUTTON_BACKGROUND;
+			colorBackground2[] = GW_BUTTON_BACKGROUND;
+
+			size = 0.03;
+			sizeEx = "0.03";
+
+			class TextPos
+			{
+				left = 0;
+				top = 0.015;
+				right = 0;
+				bottom = 0;
+
+			};
+
+		};
+
+		class TauntsList : GW_RscCombo
+		{
+			idc = GW_Taunts_List_ID;
+			colorBackground[] = {0,0,0,0.7};
+			onLBSelChanged  = "(_this select 1) spawn setTaunt; false";
+			x = (SETTINGS_X + (GW_BUTTON_WIDTH * 1.5) + (GW_BUTTON_GAP_X * 2)) * safezoneW + safezoneX;
+			y = (SETTINGS_Y + (GW_BUTTON_HEIGHT * 6) + (GW_BUTTON_GAP_Y * 6)) * safezoneH + safezoneY;
+			w = ((GW_BUTTON_WIDTH / 2) - (GW_BUTTON_GAP_X * 2)) * safezoneW;
+			h = GW_BUTTON_HEIGHT * safezoneH;
+
+			size = 0.025;
+			sizeEx = "0.025";
+		};
+		
 		class ButtonRename : GW_RscButtonMenu
 		{
 			idc = -1;
@@ -233,7 +282,7 @@ class GW_Settings
 			text = "UNFLIP VEHICLE";
 			size = 0.03;
 			sizeEx = "0.03";
-			onButtonClick = "[GW_SETTINGS_VEHICLE] spawn flipVehicle; closeDialog 0; false";
+			onButtonClick = "[GW_SETTINGS_VEHICLE, true, true] spawn flipVehicle; closeDialog 0; false";
 			x = (SETTINGS_X + GW_BUTTON_WIDTH + GW_BUTTON_GAP_X) * safezoneW + safezoneX;
 			y = (SETTINGS_Y + (GW_BUTTON_HEIGHT * 8) + (GW_BUTTON_GAP_Y * 8)) * safezoneH + safezoneY;
 			w = (GW_BUTTON_WIDTH - GW_BUTTON_GAP_X) * safezoneW;

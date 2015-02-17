@@ -32,14 +32,23 @@ _vehicle setVariable ["isSaved", true];
 // Apply meta (if exists)
 if (isNil "_meta") then {} else {
     
+    _meta resize 7;
+
     _version = _meta select 0;
     _creator = _meta select 1;
     _prevFuel = _meta select 2;
     _prevAmmo = _meta select 3;
     _stats = _meta select 4;
+    _binds = _meta select 5;
+    _taunt = _meta select 6;
 
-    if (_version < GW_VERSION) then {
-        systemChat 'Warning: Vehicle saved with an older version.';
+    if (!isnil "_version") then {
+
+        _version = if (typename _version == "ARRAY") then { 0 } else { _version };
+
+        if (_version < GW_VERSION) then {
+            systemChat 'Warning: Vehicle saved on older version, re-save, clear, then load to avoid issues.';      
+        };
     };
 
     if (!isNil "_creator") then {
@@ -68,14 +77,39 @@ if (isNil "_meta") then {} else {
     // Iterate through and print each stat
     if (!isNil "_stats") then {       
 
-        _count = 0;
         {
             if (isNil "_x") then {} else {                
-                _vehicle setVariable [GW_STATS_ORDER select (_count), (_stats select (_count))];
+                _vehicle setVariable [GW_STATS_ORDER select (_forEachIndex), (_stats select (_forEachIndex))];
             };
-            _count = _count + 1;
         } ForEach _stats;
 
+    };
+
+    if (!isNil "_binds") then {
+
+        // Set default keybind order       
+        _newBinds = +GW_BINDS_ORDER;
+
+        // Override that order with the custom vehicle binds we have
+        {
+            _str = _x select 0;
+            _tag = _x select 1;
+            {
+                if (_str == (_x select 0)) exitWith {
+                    _newBinds set[_forEachIndex, [_str, _tag]];
+                };
+
+            } Foreach _newBinds;
+
+        } count _binds;
+
+        // SAVE TO VEHICLE
+         _vehicle setVariable ["GW_Binds", _newBinds];       
+
+    };
+
+    if (!isNil "_taunt") then {
+        _vehicle setVariable ["GW_Taunt", _taunt];
     };
 
 };

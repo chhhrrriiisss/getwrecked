@@ -25,7 +25,7 @@ _unit setVariable ['paintTarget', nil];
 GW_PAINT_CANCEL = false;
 
 // Paint vehicle action
-_unit addAction[paintVehicleFormat, {
+_paintAction = _unit addAction[paintVehicleFormat, {
 
 	_unit = _this select 0;
 	_nearby = (ASLtoATL getPosASL _unit) nearEntities [["Car"], 10];
@@ -36,10 +36,10 @@ _unit addAction[paintVehicleFormat, {
 		systemChat 'You dont own this vehicle.';
 	};
 
-}, [], 0, false, false, "", "( ( (vehicle player) == player ) && !GW_EDITING && !GW_LIFT_ACTIVE && ([_target, 9] call validNearby) )"];		
+}, [], 0, false, false, "", "( ( (vehicle player) == player ) && !GW_EDITING && !GW_LIFT_ACTIVE && (!isNil { [_target, 9] call validNearby }) )"];		
 
 // Cancel action
-_unit addAction['Cancel', {
+_cancelAction = _unit addAction['Cancel', {
 
 	if (!GW_PAINT_CANCEL) then { GW_PAINT_CANCEL = true; };
 
@@ -55,7 +55,10 @@ while {time < _timeout && alive _unit && GW_CURRENTZONE == "workshopZone" && (is
 };
 
 // Wipe player actions
-removeAllActions _unit;
+_unit removeAction _paintAction;
+_unit removeAction _cancelAction;
+_unit spawn setPlayerActions;
+
 _target = _unit getVariable 'paintTarget';
 
 // Check we're all good to paint

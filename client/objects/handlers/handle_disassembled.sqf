@@ -4,18 +4,19 @@
 //      Return: None
 //
 
-deleteVehicle (_this select 1);
-deleteVehicle (_this select 2);
+systemchat format['%1', _this];
+// deleteVehicle (_this select 1);
+// deleteVehicle (_this select 2);
 
-_pos = getPosATL _unit;
-_type = if ((typeOf _unit) == "groundWeaponHolder") then { _unit getVariable "type" } else { typeOf _unit };
+// _pos = getPosATL _unit;
+// _type = if ((typeOf _unit) == "groundWeaponHolder") then { _unit getVariable "type" } else { typeOf _unit };
 
-if (!isServer) then {
+// if (!isServer) then {
 
-	pubVar_spawnObject = [_type, _pos];
-	publicVariableServer "pubVar_spawnObject"; 	
+// 	pubVar_spawnObject = [_type, _pos];
+// 	publicVariableServer "pubVar_spawnObject"; 	
 
-} else {	
-	[_pos, 0, _type, 0, "NONE", false] call createObject;
-};
+// } else {	
+// 	[_pos, 0, _type, 0, "NONE", true] call createObject;
+// };
 

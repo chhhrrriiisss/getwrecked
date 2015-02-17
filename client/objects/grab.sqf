@@ -11,8 +11,8 @@ _unit = [_this,1, objNull, [objNull]] call BIS_fnc_param;
 
 if (isNull _obj || isNull _unit) exitWith {};
 
-// If the object isn't local, make it local so all this jazz runs better
-if ( !local _obj ) then {
+// If the object isn't local and isn't attached to anything, make it local so all this jazz runs better
+if ( !local _obj && isNull attachedTo _obj) then {
 
 	// Store prev location and hide current object
 	_obj hideObject true;
@@ -44,7 +44,7 @@ if ( !local _obj ) then {
 
 	// Create a new one, locally
 	_newObj = nil;
-	_newObj = [_pos, _dir, _type, nil, "CAN_COLLIDE", false] call createObject; 	
+	_newObj = [_pos, _dir, _type, nil, "CAN_COLLIDE", true] call createObject; 	
 
 	// Re-add the object properties depending on if its a supply box, or normal object
 	if (_isSupply) then {
@@ -75,6 +75,18 @@ if ( !local _obj ) then {
 			false,
 			false 
 		] call BIS_fnc_MP;   
+		
+		// Special event handler to prevent launching vehicles
+		_newObj addEventHandler['EpeContactStart', {
+
+		 	if ((_this select 0) distance (getMarkerPos "workshopZone_camera") < 300) then {
+		 		_v = _this select 1;
+		 		_isVehicle = _v getVariable ["isVehicle", false];
+		 		if (_isVehicle) then {
+		 			[[_v,[0,0,0]],"setVelocityLocal",_v,false ] call BIS_fnc_MP;  
+		 		};
+		 	};
+ 		}];
 
 		// Make sure we cant hop in static turrets
 		_newObj lockDriver true;
@@ -82,11 +94,23 @@ if ( !local _obj ) then {
    		_obj lockTurret [[0,0], true];
 	};
 
+
     _obj = _newObj;
 
 };
 
 
+// Disable simulation server side as a default
+[		
+	[
+		_obj,
+		false
+	],
+	"setObjectSimulation",
+	false,
+	false 
+] call BIS_fnc_MP;  
+	
 _unit setVariable['editingObject', _obj];
 
 // If a snapping state hasnt been set, default to false
@@ -94,41 +118,30 @@ if (isNil { _unit getVariable 'snapping' }) then {	_unit setVariable ['snapping'
 
 GW_EDITING = true;
 
-// Disable simulation server side if its active
-if (simulationEnabled _obj) then {
-
-	_obj enableSimulation false;
-
-	[		
-		[
-			_obj,
-			false
-		],
-		"setObjectSimulation",
-		false,
-		false 
-	] call BIS_fnc_MP;  
-
-};
-
-Sleep 0.5;
-
-// Wait for simulation to be enabled on the item before moving it
+// Wait for simulation to be disabled on the item before moving it
 _timeout = time + 5;
 waitUntil{	
 	if ( (time > _timeout) || !(simulationEnabled _obj) ) exitWith { true };
 	false
 };
 
+Sleep 0.5;
+
 // Used to dynamically change the loop period depending if snapping is active
 _moveInterval = 0.01;
 _snappingInterval = 0.1;
 
-while {alive _unit && alive _obj && GW_EDITING && _unit == (vehicle player)} do {
+GW_HOLD_ROTATE_POS = [];
+_startAngle = 360;
+
+for "_i" from 0 to 1 step 0 do {
+
+	if (!alive _unit || !alive _obj || !GW_EDITING || _unit != (vehicle player)) exitWith {};
 
 	// Continually prevent damage and simulation (wierd stuff happens otherwise...)
 	if (simulationEnabled _obj) then { _obj enableSimulation false; };
 	_obj setDammage 0;
+	_obj setVectorUp [0,0,1];
 
 	// Use the camera height as a tool to manipulate the object height
 	_cameraHeight = (positionCameraToWorld [0,0,0]) select 2;
@@ -137,15 +150,57 @@ while {alive _unit && alive _obj && GW_EDITING && _unit == (vehicle player)} do 
 	_pos = ATLtoASL _pos;
 
 	_snapping = _unit getVariable ['snapping', false];	
-	
-	// If snapping is enabled, snap! Else, just set the new position.
-	if (_snapping && GW_EDITING) then { [_pos, _obj] spawn snapObj; };
-	if (!_snapping && GW_EDITING) then { _obj setPosASL _pos; };	
+
+	// Use the camera yaw to spin the vehicle when toggle key is down
+	if (GW_HOLD_ROTATE) then {
+
+		if (count GW_HOLD_ROTATE_POS > 0) then {
+
+			['ROTATE USING CAMERA', 3, cameraRotateIcon, nil, "flash"] spawn createAlert;   
+
+			_center = worldToScreen getPos _obj;
+			_adjustedCenter = ((_center select 0)+1);
+			if (isNil "_adjustedCenter") then { _adjustedCenter = 0; };
+
+			_obj setDir ([(360 * _adjustedCenter) + (_startAngle)] call normalizeAngle);			
+
+		} else { _startAngle = getDir _obj; };
+
+		GW_HOLD_ROTATE_POS = (ASLtoATL getPosASL _obj);
+
+	} else {
+
+		// Reset player's direction post hold rotate
+		if (count GW_HOLD_ROTATE_POS > 0) then {			
+
+			_dirTo = [_unit, _obj] call dirTo;	
+			_unit setDir _dirTo;
+			_obj setPos GW_HOLD_ROTATE_POS;
+
+			GW_HOLD_ROTATE_POS = [];
+
+		} else {
+
+	 		// If snapping is enabled, snap! Else, just set the new position.
+			if (_snapping && GW_EDITING) then { [_pos, _obj] spawn snapObj; };
+			if (!_snapping && GW_EDITING) then { _obj setPosASL _pos; };	
+
+		};
+
+	};
 
 	// Dynamically adjust the sleep time to reduce errors during snapping
 	_interval = if (_snapping) then { _snappingInterval } else { _moveInterval };
 	Sleep _interval;
 
+};
+
+if (!alive _obj) then {
+
+	removeAllActions _unit;
+	_unit spawn setPlayerActions;
+	GW_EDITING = false;
+	_unit setVariable['editingObject', nil];
 };
 
 true

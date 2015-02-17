@@ -6,12 +6,12 @@
 
 private ["_find", "_arr","_foundArr", "_data"];
 
-_find = [_this,0, "", [""]] call BIS_fnc_param;
-_arr = [_this,1, [], [[]]] call BIS_fnc_param;
+_find = _this select 0;
+_arr = _this select 1;
 
 if (_find == "" || count _arr == 0) exitWith { nil };
 
-_foundArr = [];
+_data = [];
 {		
 	_found = false;
 
@@ -25,7 +25,6 @@ _foundArr = [];
 	if (_found) exitWith {
 
 		_count = count _x;
-		_data = [];
 
 		// Spit out all the data
 		for "_i" from 0 to _count step 1 do {
@@ -36,14 +35,15 @@ _foundArr = [];
 
 		};		
 
-		_foundArr = _data;	 
+		false
 	};
 
-} ForEach _arr;
+	false
+} count _arr;
 
 // Exit with data
-if (count _foundArr > 0) exitWith {
-	_foundArr
+if (count _data > 0) exitWith {
+	_data
 };
 
 nil

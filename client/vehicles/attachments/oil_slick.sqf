@@ -11,6 +11,7 @@ _vehicle = [_this,1, objNull, [objNull]] call BIS_fnc_param;
 
 if (isNull _obj || isNull _vehicle) exitWith {};
 
+
 // Creates a detector that runs intersect checks on all points in the oil array
 createOilDetector = {
 	 
@@ -28,11 +29,11 @@ createOilDetector = {
 			_t = (_x select 1);
 
 			_p = if (typename _o == "OBJECT") then { getPosATL _o } else { _o };
-			_p set [2, 1];
-			_p = (ATLtoASL _p);
+			_p set [2, 1];		
 
 			if ( ((ASLtoATL _p) distance [0,0,0]) < 100 || ((ASLtoATL _lastPos) distance [0,0,0]) < 100) then {} else {
-				[_lastPos, _p, objNull, 0] spawn burnIntersects;	
+				_p = (ATLtoASL _p);
+				[_lastPos, _p, objNull, 100] spawn burnIntersects;					
 				if (GW_DEBUG) then { [_lastPos, _p, 1] spawn debugLine; };		
 			};
 
@@ -56,11 +57,12 @@ createOilDetector = {
 			if (typename _o == "OBJECT") then {
 				deleteVehicle _o; 
 				GW_WARNINGICON_ARRAY = GW_WARNINGICON_ARRAY - [_o];
-				GW_DEPLOYLIST = GW_DEPLOYLIST - [_o];			};
+				GW_DEPLOYLIST = GW_DEPLOYLIST - [_o];			
+				GW_OIL_ARRAY deleteAt _count;
+			};
 
-			GW_OIL_ARRAY set [_count, 'x'];		
 		};
-
+		
 		_count = _count + 1;
 
 		false
@@ -130,41 +132,53 @@ if (!isNil "GW_OIL_ARRAY") then {
 
 _cost = (['OIL'] call getTagData) select 1;
 
-while {alive _vehicle && alive player && _fuel > 0.01 && !isNil "GW_OIL_ACTIVE"} do {
+[_vehicle, player, _fuel, _cost] spawn {
 
-	_fuel = (fuel _vehicle + (_vehicle getVariable ["fuel", 0])) - _cost;
+	_v = _this select 0;
+	_u = _this select 1;
+	_f = _this select 2;
+	_c = _this select 3;
 
-	if (_fuel <= 0.01) exitWith {		
-		["LOW FUEL!", 0.5, warningIcon, colorRed, "warning"] spawn createAlert;  
+	while {alive _v && alive _u && _f > 0.01 && !isNil "GW_OIL_ACTIVE"} do {
+
+		_f = (fuel _v + (_v getVariable ["fuel", 0])) - _c;
+
+		if (_f <= 0.01) exitWith {		
+			["LOW FUEL!", 0.5, warningIcon, colorRed, "warning"] spawn createAlert;  
+		};
+
+		if (_f > 1) then {
+			_v setFuel 1;
+			_v setVariable ["fuel", (_f - 1)];
+		} else {
+			_v setFuel _f;
+			_v setVariable ["fuel", 0];
+		};
+
+		// Ok, let's position it behind the vehicle
+		_maxLength = ([_v] call getBoundingBox) select 1;
+		_oPos = _v modelToWorld [0,(_maxLength * -1.5), 0];
+		_oPos set[2,0];
+		_oDir = (random 360);
+
+		// If its the first trigger, start the checker
+		if (isNil "GW_OIL_ARRAY") then {
+			GW_OIL_ARRAY = [];
+		};
+
+		if (isNil "GW_OIL_DETECTOR") then {
+			[_v] spawn createOilDetector;
+		};
+
+		[_oPos, _oDir] call dropOil;	
+
+		Sleep 0.1;
 	};
 
-	if (_fuel > 1) then {
-		_vehicle setFuel 1;
-		_vehicle setVariable ["fuel", (_fuel - 1)];
-	} else {
-		_vehicle setFuel _fuel;
-		_vehicle setVariable ["fuel", 0];
-	};
+	GW_OIL_ACTIVE = nil;
+	GW_LASTPOS = [0,0,0];
 
-	// Ok, let's position it behind the vehicle
-	_maxLength = ([_vehicle] call getBoundingBox) select 1;
-	_oPos = _vehicle modelToWorld [0,(_maxLength * -1.5), 0];
-	_oPos set[2,0];
-	_oDir = (random 360);
 
-	// If its the first trigger, start the checker
-	if (isNil "GW_OIL_ARRAY") then {
-		GW_OIL_ARRAY = [];
-	};
-
-	if (isNil "GW_OIL_DETECTOR") then {
-		[_vehicle] spawn createOilDetector;
-	};
-
-	[_oPos, _oDir] call dropOil;	
-
-	Sleep 0.1;
 };
 
-GW_OIL_ACTIVE = nil;
-GW_LASTPOS = [0,0,0];
+true

@@ -45,8 +45,10 @@ if (!_showButton) then {
 
 _exitWith = false;
 
-// Begin the countdown loop
-while {	(!isNull (findDisplay 94000)) && (time < GW_TIMER_VALUE) && GW_TIMER_ACTIVE} do {
+
+for "_i" from 0 to 1 step 0 do {
+
+	if (isNull (findDisplay 94000) || (time > GW_TIMER_VALUE) || !GW_TIMER_ACTIVE) exitWith {};
 
 	_left = (GW_TIMER_VALUE - time);
 	_seconds = floor (_left);	

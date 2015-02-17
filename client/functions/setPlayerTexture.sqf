@@ -6,6 +6,7 @@
 
 private ['_vehicle', '_tx', '_class', '_file', '_path'];
 
+
 _player = [_this,0, ObjNull, [ObjNull]] call BIS_fnc_param;
 _tx = [_this,1, "", [""]] call BIS_fnc_param;
 

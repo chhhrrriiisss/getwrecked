@@ -4,68 +4,57 @@
 //      Return: Bool (False, as health handled independently)
 //
 
-// Currently disabled
+private ["_obj", "_damage", "_projectile"];
 
-// private ["_obj", "_damage", "_projectile"];
+_obj = _this select 0;
+_damage = _this select 2;
+_projectile = _this select 4;
 
-// _obj = _this select 0;
-// _damage = _this select 2;
-// _projectile = _this select 4;
+_health = _obj getVariable ["GW_Health", 0];
 
-// _health = _obj getVariable ["health", 0];
+_data = [typeof _obj, GW_LOOT_LIST] call getData;
+_originalHealth = 0;
+_tag = if (!isNil "_data") then { _originalHealth = (_data select 3); (_data select 6) } else { _originalHealth = 1; "" };
 
-// // Only handle damage outside of the workshop
-// if (GW_CURRENTZONE != "workshopZone") then {   
+// Only handle damage outside of the workshop
+if ( (GW_CURRENTZONE == "workshopZone" && !isDedicated) || ((count toArray _tag) > 0) ) exitWith {
+	_obj setVariable ["GW_Health", _health, true];
+    _obj setDammage 0;
+    false
+};
 
-//     if (_health > 0) then  {
+// Only handle damage outside of the workshop
+if (_health > 0) then  {
 
-//         if (_projectile == "") then {
+    if (_projectile == "") then {
 
-//             _damage = (_damage * OBJ_COLLISION_DMG_SCALE);
+        _damage = (_damage * OBJ_COLLISION_DMG_SCALE);
 
-//         } else {
+    } else {
 
-//             _scale = switch (_projectile) do
-//             {
-//                 case ("R_PG32V_F"): { OBJ_RPG_DMG_SCALE };
-//                 case ("M_Titan_AT"): { OBJ_TITAN_AT_DMG_SCALE };
-//                 case ("M_NLAW_AT_F"): { OBJ_GUD_DMG_SCALE };
-//                 case ("B_127x99_Ball_Tracer_Red"): { OBJ_LSR_DMG_SCALE };
-//                 case ("B_127x99_Ball_Tracer_Yellow"): { OBJ_HMG_DMG_SCALE };
-//                 case ("B_35mm_AA_Tracer_Yellow"): { OBJ_HMG_HE_DMG_SCALE };
-//                 case ("R_TBG32V_F"): { OBJ_MORTAR_DMG_SCALE };
-//                 case ("G_40mm_HEDP"): { OBJ_GMG_DMG_SCALE };
-//                 case ("Bo_GBU12_LGB"): { OBJ_EXP_DMG_SCALE };          
-//                 default                                { 1 };
-//             };
+        _scale = _projectile call objectDamageData;
+        _damage = (_damage * _scale);
 
-//             _damage = (_damage * _scale);
+    };
+    
+   
+};
 
-//         };
-        
-       
-//     };
+_health = _health - _damage;
 
-//     _health = _health - _damage;
 
-//     _obj setVariable["health", _health, true];
+_name = (_obj getVariable ['name', 'object']);
 
-//     if (_health < 0) then {
 
-//         _obj spawn {
+if (_health < 0) then {
 
-//             playSound3D ["a3\sounds_f\sfx\explosion2.wss", _this, false, getPosASL _this, 1, 1, 40];   
-            
-//             [_this] spawn destroyObj;
+    _obj spawn {       
+        [_this, true] spawn destroyObj;
+    };
 
-//         };
-
-//     };
-
-// } else {    
-//     _obj setVariable ["health", _health];
-//     _obj setDammage 0;
-// };
+} else {	
+	_obj setVariable["GW_Health", _health, true];
+};
 
 
 false

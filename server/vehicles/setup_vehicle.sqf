@@ -4,6 +4,8 @@
 //      Return: None
 //
 
+private ['_data', '_vehicle', '_name', '_respawn', '_recreate', '_defaultAmmo', '_defaultFuel'];
+
 _vehicle = [_this,0, objNull, [objNull]] call BIS_fnc_param;
 _name = [_this,1, "Untitled", [""]] call BIS_fnc_param;
 _respawn = [_this,2, true] call BIS_fnc_param;
@@ -31,12 +33,19 @@ _mass = getMass _vehicle;
 if (isNil "_mass") then { _mass = 5000; };
 
 _data = [typeOf _vehicle, GW_VEHICLE_LIST] call getData;
+if (isNil "_data") exitWith { false };
+
 _defaultAmmo = if (!isNil "_data") then { ((_data select 2) select 3) } else { 1 };
 _defaultFuel = if (!isNil "_data") then { ((_data select 2) select 4) } else { 1 };
+_signature = if (!isNil "_data") then { ((_data select 2) select 7) } else { "Low" };
+_armor = if (!isNil "_data") then { ((_data select 2) select 6) } else { 1 };
 
 // Defaults used locally when compiled on client
 _vehicle setVariable["GW_defaults", [
-
+    
+    ['armor', _armor, true],
+    ['signature', _signature, true],
+    ['health', 100, true],
     ['fuel', 0, false],
     ['ammo', 1, false],
     ['maxAmmo', _defaultAmmo, false],
@@ -49,22 +58,15 @@ _vehicle setVariable["GW_defaults", [
 
 ], true];
 
-{
-    _vehicle setVariable ["GW_hitPoint_" + getText (_x >> "name"), configName _x, true];
-    false
-} count ((typeOf _vehicle) call getHitPoints) > 0;
+[_vehicle] call setVehicleHandlers;
 
 clearWeaponCargoGlobal _vehicle;
 clearMagazineCargoGlobal _vehicle;
 clearItemCargoGlobal _vehicle;
 
-[_vehicle] call setVehicleHandlers;
-
 if (_respawn) then {
-    [_vehicle, GW_ABANDON_DELAY, GW_DEAD_DELAY, _recreate] spawn setVehicleRespawn;
+    [_vehicle, GW_ABANDON_DELAY] spawn setVehicleRespawn;
 };
 
-_vehicle lockDriver false;
-_vehicle lockCargo false;
 
 true

@@ -6,12 +6,16 @@
 
 private ["_obj", "_unit","_orig", "_id", "_veh"];
 
-_unit = [_this,0, objNull, [objNull]] call BIS_fnc_param;
-_orig = [_this,1, objNull, [objNull]] call BIS_fnc_param;
-_forceAttach = [_this,2, false, [false]] call BIS_fnc_param; // Used by the server to bypass notifications
+_unit = if (isNil {_this select 0}) then { objNull } else { (_this select 0) };
+_orig = if (isNil {_this select 1}) then { objNull } else { (_this select 1) };
+_forceAttach = if (isNil {_this select 2}) then { false } else { (_this select 2) };
 
 if (isNull _unit || isNull _orig) exitWith { false };
 if (!alive _unit || !alive _orig) exitWith { false };
+
+// Dont attach supply boxes
+_isSupply = _orig getVariable ["isSupply", false];
+if (_isSupply) exitWith { false };
 
 // Check there's actually a vehicle within range
 _position = (ASLtoATL getPosASL _orig);
@@ -87,25 +91,45 @@ if (!_isOwner && !_forceAttach) exitWith {
 	false
 };
 
+// Is the vehicle overloaded?
+_vMass = getMass _veh;
+_oMass = getMass _orig;
+_modifier = if (!isNil "_data") then { (((_data select 2) select 0) select 0) } else { 1 };
+_maxMass = if (!isNil "_data") then { (((_data select 2) select 0) select 1) } else { 99999 };
+
+if (_vMass + (_oMass * _modifier) > _maxMass) exitWith {
+	["TOO HEAVY!", 1.5, warningIcon, colorRed] spawn createAlert;
+	false
+};
+
 // If there's something already attached.
 if ( !isNull attachedTo _orig ) then {  detach _orig; };
 
 _obj = _orig;
 if (_forceAttach) then {} else { GW_EDITING = false; };
 
-// Obtain vector/angle information for the object
-_pitchBank = _obj call BIS_fnc_getPitchBank;
-_dir = getDir _obj;
-_vehDir = getDir _veh;
-_tarDir = (_dir - _vehDir);
-_tarDir = [_tarDir] call normalizeAngle;
+_wasSimulated = (simulationEnabled _veh);
 
-_vehPitchBank = _veh call BIS_fnc_getPitchBank;
-_tarPitch = [((_pitchBank select 0) - (_vehPitchBank select 0))] call normalizeAngle;
-_tarBank = [((_pitchBank select 1) - (_vehPitchBank select 1))] call normalizeAngle;
+// Disable simulation
+[		
+	[
+		[_obj, _veh],
+		false
+	],
+	"setObjectSimulation",
+	false,
+	false 
+] call BIS_fnc_MP;
 
-// Attach it
+_timeout = time + 3;
+waitUntil{
+	Sleep 0.1;
+	( (time > _timeout) || ( !(simulationEnabled _veh) && !(simulationEnabled _obj)  )  )
+};
+
+_vect = [_obj, _veh] call getVectorDirAndUpRelative;
 _obj attachTo [_veh];
+_obj setVectorDirAndUp _vect;
 
 // Wait for it to be attached
 waitUntil { !isNull attachedTo _obj };	
@@ -115,8 +139,31 @@ if (_forceAttach) then {} else {
 	["OBJECT ATTACHED!", 1, successIcon, nil, "slideDown"] spawn createAlert;	
 };
 
-// Set the object angle using the information we gathered before
-[_obj, [_tarPitch,_tarBank,_tarDir]] call setPitchBankYaw;
+
+if (_wasSimulated) then {
+	// Update the direction by re-enabling simulation on the vehicle
+	[		
+		[
+			_veh,
+			true
+		],
+		"setObjectSimulation",
+		false,
+		false 
+	] call BIS_fnc_MP;
+
+};
+
+// If it wasn't simulated, briefly toggle simulation so we see the upate
+if (!_wasSimulated) then {
+	_veh enableSimulation true;
+	_prevPos = (ASLtoATL visiblePositionASL _veh);
+	_timeout = time + 5;
+	waitUntil { Sleep 0.05; (simulationEnabled _veh || time > _timeout) };
+	Sleep 0.1;
+	_veh enableSimulation false;
+	_veh setPos _prevPos;
+};
 
 // Re-compile vehicle information
 if (_forceAttach) then {} else {
@@ -128,6 +175,7 @@ if (_forceAttach) then {} else {
 
 // Remove all actions from player
 removeAllActions player;
+player spawn setPlayerActions;
 
 true
 

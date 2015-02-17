@@ -8,6 +8,7 @@ private ['_list', '_contents'];
 
 disableSerialization;
 _list = ((findDisplay 98000) displayCtrl 98001);
+_forceIndex = if (isNil { _this select 1}) then { 0 } else { (_this select 1) };
 
 ctrlShow[98001, true]; 
 
@@ -45,4 +46,4 @@ if (count _contents == 0) exitWith {
 	false
 } count _contents > 0;
 
-_list lnbSetCurSelRow 0;
+_list lnbSetCurSelRow _forceIndex;

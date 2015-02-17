@@ -8,7 +8,7 @@ private ['_list', '_sponsor', '_company'];
 
 disableSerialization;
 _list = ((findDisplay 97000) displayCtrl 97001);
-
+_index = if (isNil {_this select 1}) then { 0 } else { (_this select 1) };
 ctrlShow[97001, true];
 
 // Before clearing, loop through and get existing quantities of any
@@ -120,4 +120,4 @@ _filterBy = if (_category > 0) then {
 
 } count GW_LOOT_LIST > 0;
 
-_list lnbSetCurSelRow 0;
+_list lnbsetcurselrow _index;

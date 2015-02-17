@@ -19,7 +19,7 @@ if (count _objects == 0) exitWith {};
 	_rnd = random 100;
 
 	// If its a vehicle and its tyres arent already popped
-	if ( _isVehicle && { !('tyresPopped' in _status) } ) exitWith { 
+	if ( _isVehicle && { !('tyresPopped' in _status) } &&  { !('invTyres' in _status) }) exitWith { 
 
 		_rnd = (random 15) + 15;
 
@@ -27,13 +27,25 @@ if (count _objects == 0) exitWith {};
 		[       
             [
                 _x,
-                ['tyresPopped'],
+                "['tyresPopped']",
                 _rnd
             ],
             "addVehicleStatus",
             _x,
             false 
     	] call BIS_fnc_MP;  
+
+        // Play tyre burst sound
+        [       
+            [
+                _x,
+                'tyreBurst',
+                40
+            ],
+            "playSoundAll",
+            true,
+            false
+        ] call BIS_fnc_MP;   
 
     	// Tag as killed by
     	[_x] call markAsKilledBy;

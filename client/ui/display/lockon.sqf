@@ -4,15 +4,21 @@
 //      Return: None
 //
 
+if (isNil "GW_LASTLOCK_CHECK") then {
+	GW_LASTLOCK_CHECK = time;
+};
+
+if (time - GW_LASTLOCK_CHECK <= 0.1) exitWith { true };
+GW_LASTLOCK_CHECK = time;
+
 private ['_pos', '_icon', '_limit', '_vehDir'];
 
-_nearbyTargets = if (!isNil "GW_CURRENTZONE") then { [GW_CURRENTZONE, true] call findAllInZone } else { [] };
-
+_nearbyTargets = _this;
 if (count _nearbyTargets == 0) exitWith {};
 
 // Some required conditions
-_vehicle = (vehicle player);
-_pos = (ASLtoATL getPosASL _vehicle);
+_vehicle = GW_CURRENTVEHICLE;
+_pos = (ASLtoATL visiblePositionASL _vehicle);
 _isCloaked = if ('cloak' in (_vehicle getVariable ["status", []]) ) then { true } else { false };
 
 // Make sure we have these variables established
@@ -38,12 +44,14 @@ if (isNil "GW_TARGET_DIRECTION") then {	GW_TARGET_DIRECTION = 0; };
 			_dist = _vPos distance _tPos;
 
 			// Is it within lock range and are we looking at it?
-			_inRange = if (_dist < GW_MAXLOCKRANGE) then { true } else { false };
+			_inRange = if (_dist <= GW_MAXLOCKRANGE && _dist >= GW_MINLOCKRANGE) then { true } else { false };
 			_inScope = [GW_TARGET_DIRECTION, _x, GW_LOCKON_TOLERANCE] call checkScope;
 
 			_vPos set [2, (_vPos select 2) + 2];					
 			_tPos set [2, (_tPos select 2) + 2];
 			_hasLos = if (count (lineIntersectsWith [_vPos, _tPos, _vehicle, _x]) == 0) then { true } else { false };
+
+			['Lock on R/S/L', format['%1/%2/%3', _inRange, _inScope, _hasLos]] call logDebug;
 
 			// When its in range, but not in list and alive
 			if (_inScope && _inRange && _hasLos) then {						
@@ -56,6 +64,7 @@ if (isNil "GW_TARGET_DIRECTION") then {	GW_TARGET_DIRECTION = 0; };
 		// If conditions werent met, cleanup
 		if (_fail) then {
 
+
 			if (!isNil "GW_ACQUIREDTARGET") then {
 				if (_x == GW_ACQUIREDTARGET) then {
 					GW_ACQUIREDTARGET = nil;
@@ -64,7 +73,7 @@ if (isNil "GW_TARGET_DIRECTION") then {	GW_TARGET_DIRECTION = 0; };
 					[       
 						[
 							_x,
-							['locking']
+							"['locking']"
 						],
 						"removeVehicleStatus",
 						_x,
@@ -80,10 +89,10 @@ if (isNil "GW_TARGET_DIRECTION") then {	GW_TARGET_DIRECTION = 0; };
 			if (_x in GW_LOCKEDTARGETS) then {			
 				GW_LOCKEDTARGETS = GW_LOCKEDTARGETS - [_x];
 
-				[       
+				[   
 					[
 						_x,
-						['locked', 'locking']
+						"['locked', 'locking']"
 					],
 					"removeVehicleStatus",
 					_x,
@@ -98,7 +107,7 @@ if (isNil "GW_TARGET_DIRECTION") then {	GW_TARGET_DIRECTION = 0; };
 } count _nearbyTargets > 0;
 
 _dist = 9999;
-_closest = (vehicle player);
+_closest = GW_CURRENTVEHICLE;
 
 // Find the closest target from those that are valid
 {
@@ -106,8 +115,9 @@ _closest = (vehicle player);
 	if (isNil "_x") exitWith { GW_VALIDTARGETS = []; };
 
 	_d = _x distance (vehicle player);
-	if (_d < _dist && _x != (vehicle player) && !(_x in GW_LOCKEDTARGETS)) then {
+	if (_d < _dist && _x != GW_CURRENTVEHICLE && !(_x in GW_LOCKEDTARGETS)) then {
 		_closest = _x;
+
 	};
 
 
@@ -123,6 +133,7 @@ if (!GW_ACQUIRE_ACTIVE && !(_closest in GW_LOCKEDTARGETS) && !_isCloaked) then {
 	if ( !("locked" in _status) && !("nolock" in _status) && !("cloak" in _status)) then {
 		[_closest] spawn acquireTarget;
 
+
 	};
 	
 };
@@ -131,7 +142,7 @@ if (!GW_ACQUIRE_ACTIVE && !(_closest in GW_LOCKEDTARGETS) && !_isCloaked) then {
 if (count GW_LOCKEDTARGETS > 0) then {
 
 	_lockedTarget = GW_LOCKEDTARGETS select 0;
-	_inScope = [GW_TARGET_DIRECTION, _lockedTarget, 15] call checkScope;
+	_inScope = [GW_TARGET_DIRECTION, _lockedTarget, GW_LOCKON_TOLERANCE] call checkScope;
 
 	// If the target is still alive and within view scope
 	if (alive _lockedTarget && _inScope) then {
@@ -146,7 +157,7 @@ if (count GW_LOCKEDTARGETS > 0) then {
 			[       
                 [
                     _lockedTarget,
-                    ['locked'],
+                    "['locked']",
                     15
                 ],
                 "addVehicleStatus",
@@ -161,7 +172,7 @@ if (count GW_LOCKEDTARGETS > 0) then {
 		[       
             [
                 _lockedTarget,
-                ['locked']
+                "['locked']"
             ],
             "removeVehicleStatus",
             _lockedTarget,

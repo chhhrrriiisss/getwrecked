@@ -7,21 +7,25 @@
 private ["_obj", "_veh"];
 
 _obj = [_this,0, objNull, [objNull]] call BIS_fnc_param;
+_effect = [_this,1, false, [false]] call BIS_fnc_param;
+
 if (isNull _obj) exitWith {};
 
-// If its attached to something
-if (!isNull attachedTo _obj) then {	
+if (_effect) then {
 
-		removeAllActions _obj;
-		detach _obj;
-		waitUntil { Sleep 0.5; isNull attachedTo _obj; };
-		_obj setDammage 1;
-		deleteVehicle _obj;
+	[
+		[
+			_obj,
+			0.5
+		],
+		"muzzleEffect"
+	] call BIS_fnc_MP;
 
-} else {
-
-	_obj setDammage 1;
-	deleteVehicle _obj;
 };
+
+// If its attached to something
+_obj setDammage 1;
+deleteVehicle _obj;
+
 
 

@@ -25,19 +25,47 @@ GW_EDITING = false;
 ] call BIS_fnc_MP;
 
 // Add the drop vehicle action
-removeAllActions player;
-player addAction [dropVehicleFormat, {
+removeAllActions _unit;
+_unit spawn setPlayerActions;
+
+_unit addAction [dropVehicleFormat, {
 	GW_LIFT_ACTIVE = false;
 }, [], 0, true, false, "", "( (GW_CURRENTZONE == 'workshopZone') && GW_LIFT_ACTIVE )"];
 
-_origPosition = getPosATL _vehicle;
+_origPosition = (ASLtoATL getPosASL _vehicle);
 
-while {alive _vehicle && alive _unit && GW_LIFT_ACTIVE && !GW_EDITING && !(player in _vehicle)} do {
+GW_HOLD_ROTATE_POS = [];
+_startAngle = 360;
+
+for "_i" from 0 to 1 step 0 do {
+
+	if ( !alive _vehicle ||  !alive _unit || !GW_LIFT_ACTIVE || GW_EDITING || (_unit in _vehicle) ) exitWith {};
 
 	// Use the camera height to determine how far we should lift the vehicle
 	_cameraHeight = (positionCameraToWorld [0,0,0]) select 2;
 	_height = (4 - _cameraHeight);
 	if (_height < 0) then {	_height = 0; };
+
+	// Use the camera yaw to spin the vehicle when toggle key is down
+	if (GW_HOLD_ROTATE) then {
+
+		if (count GW_HOLD_ROTATE_POS > 0) then {
+
+			['ROTATE USING CAMERA', 3, cameraRotateIcon, nil, "flash"] spawn createAlert;   
+
+			_center = worldToScreen getPos _vehicle;
+			_adjustedCenter = ((_center select 0)+1);
+			if (isNil "_adjustedCenter") then { _adjustedCenter = 0; };
+
+			_vehicle setDir ([(360 * _adjustedCenter) + (_startAngle)] call normalizeAngle);			
+
+		} else { _startAngle = getDir _vehicle; };
+
+		GW_HOLD_ROTATE_POS = (ASLtoATL getPosASL _vehicle);
+
+	} else {
+		GW_HOLD_ROTATE_POS = []; 
+	};
 
 	_origPosition set[2, _height];
 	_vehicle setPos _origPosition;
@@ -46,59 +74,30 @@ while {alive _vehicle && alive _unit && GW_LIFT_ACTIVE && !GW_EDITING && !(playe
 
 };
 
-_height = (ASLtoATL (getPosASL _vehicle)) select 2;
-_simulation = (simulationEnabled _vehicle);
+if ((ASLtoATL getPosASL _vehicle) select 2 < 1) then {
 
-// If the vehicle is far enough of the deck, disable everything!
-if (_height > 1) then {
+	_vehicle setVariable ['GW_IGNORE_SIM', false];
+	[		
+		[
+			_vehicle,
+			true
+		],
+		"setObjectSimulation",
+		false,
+		false 
+	] call BIS_fnc_MP;
 
-	if (_simulation) then {
+} else {
 
-		[		
-			[
-				_vehicle,
-				false
-			],
-			"setObjectSimulation",
-			false,
-			false 
-		] call BIS_fnc_MP;
+	_vehicle setVariable ['GW_IGNORE_SIM', true];
+	[		
+		[
+			_vehicle,
+			false
+		],
+		"setObjectSimulation",
+		false,
+		false 
+	] call BIS_fnc_MP;
 
-	};
-
-	if (!(lockedDriver _vehicle)) then {
-		_vehicle lockDriver true;
-	};
-
-	if (!(_vehicle lockedCargo 0)) then {
-		_vehicle lockCargo true;
-	};
 };
-
-// If the vehicle is basically on the ground, re-enable everything!
-if (_height <= 1) then {
-
-	if (!_simulation) then {
-
-		[		
-			[
-				_vehicle,
-				true
-			],
-			"setObjectSimulation",
-			false,
-			false 
-		] call BIS_fnc_MP;
-
-	};
-
-	if (lockedDriver _vehicle) then {
-		_vehicle lockDriver false;
-	};
-
-	if (_vehicle lockedCargo 0) then {
-		_vehicle lockCargo false;
-	};
-	
-};
-

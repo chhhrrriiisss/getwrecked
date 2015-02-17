@@ -5,20 +5,14 @@
 
 private ["_veh"];
 
-_veh = _this select 0; 
-_causedBy = _this select 1;
+_vehicle = _this select 0; 
+_projectile = _this select 1;
 
-if (!local _veh) exitWith {};
+// [_vehicle, _projectile] call sendVehicleHit;
 
-_dmg = _this select 2;
+if (!local _vehicle) exitWith {};
 
-[_veh] spawn checkTyres; 
-[_veh, player] call checkEject;
+[_vehicle, ['noservice'], 5] call addVehicleStatus;
+[_vehicle] spawn checkTyres; 
 
-_status = _veh getVariable ["status",[]];
-
-if ("invulnerable" in _status) then {
-
-    _veh setDammage 0;
-};  
-
+false

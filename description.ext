@@ -14,8 +14,8 @@ disabledAI = true;
 class Header
 {
 	gameType = SANDBOX; 
-	minPlayers = 2; 
-	maxPlayers = 8; 
+	minPlayers = 1; 
+	maxPlayers = 12; 
 };
 
 disableChannels[] = {0,2,3,6};
@@ -40,11 +40,17 @@ allowFunctionsLog = 1;
 #include "client\ui\dialogs\message.hpp"
 #include "client\ui\dialogs\timer.hpp"
 
+class CfgFunctions
+{
+	#include "server\Functions.h"
+	#include "global\Functions.h"
+};
 
 class RscTitles 
 {   
    #include "client\ui\hud\hud.hpp"
    #include "client\ui\hud\alert.hpp"
+   #include "client\ui\hud\notification.hpp"
 };
 
 
@@ -52,6 +58,7 @@ class CfgSounds
 {
 	sounds[] = {};
 
+	// Made by Sli
 	class nitro
 	{
 		name = "nitro";
@@ -59,10 +66,19 @@ class CfgSounds
 		titles[] = {};
 	};
 
+	// Made by Sli
 	class nitroAlt
 	{
 		name = "nitroAlt";
 		sound[] = {"\client\sounds\nitro_alt.ogg", 0.75, 1};
+		titles[] = {};
+	};
+
+	// Made by Sli
+	class tyreBurst
+	{
+		name = "tyreBurst";
+		sound[] = {"\client\sounds\tyreBurst.ogg", 0.5, 1};
 		titles[] = {};
 	};
 
@@ -92,5 +108,153 @@ class CfgSounds
 		sound[] = {"\client\sounds\flamethrower.ogg", 1.1, 1};
 		titles[] = {};
 	};
+
+	// Retrieved from the awesome http://www.freesfx.co.uk
+	// Modified by Sli 
+	class railgun
+	{
+		name = "railgun";
+		sound[] = {"\client\sounds\railgun.ogg", 1.1, 1};
+		titles[] = {};
+	};
+
+	// Retrieved from the awesome http://www.freesfx.co.uk
+	// Modified by Sli 
+	class upgrade
+	{
+		name = "upgrade";
+		sound[] = {"\client\sounds\upgrade.ogg", 1, 1};
+		titles[] = {};
+	};
+
+	// Retrieved from the awesome http://www.freesfx.co.uk
+	// Modified by Sli 
+	class oil
+	{
+		name = "oil";
+		sound[] = {"\client\sounds\oil.ogg", 1, 1};
+		titles[] = {};
+	};
+
+	// Retrieved from the awesome http://www.freesfx.co.uk
+	// Modified by Sli 
+	class rep
+	{
+		name = "rep";
+		sound[] = {"\client\sounds\rep.ogg", 1, 1};
+		titles[] = {};
+	};
+
+	// Retrieved from the awesome http://www.freesfx.co.uk
+	// Modified by Sli 
+	class nuke
+	{
+		name = "nuke";
+		sound[] = {"\client\sounds\nuke.ogg", 1, 1};
+		titles[] = {};
+	};
+
+	// Made by Sli
+	class beep
+	{
+		name = "beep";
+		sound[] = {"\client\sounds\beep.ogg", 1, 1};
+		titles[] = {};
+	};
+
+	// Retrieved from the awesome http://www.freesfx.co.uk
+	// Modified by Sli 
+	class squirrel
+	{
+		name = "squirrel";
+		sound[] = {"\client\sounds\squirrel.ogg", 1.1, 1};
+		titles[] = {};
+	};
+
+	// Retrieved from Youtube under public domain
+	// Modified by Sli 
+	class surprise
+	{
+		name = "surprise";
+		sound[] = {"\client\sounds\surprise.ogg", 2, 1};
+		titles[] = {};
+	};
+
+	// Retrieved from the awesome http://www.freesfx.co.uk
+	// Modified by Sli 
+	class buzzer
+	{
+		name = "buzzer";
+		sound[] = {"\client\sounds\buzzer.ogg", 1.1, 1};
+		titles[] = {};
+	};
+
+	// Retrieved from the awesome http://www.freesfx.co.uk
+	// Modified by Sli 
+	class toot
+	{
+		name = "toot";
+		sound[] = {"\client\sounds\toot.ogg", 1.1, 1};
+		titles[] = {};
+	};
+
+	// Retrieved from the awesome http://www.freesfx.co.uk
+	// Modified by Sli 
+	class horn
+	{
+		name = "horn";
+		sound[] = {"\client\sounds\horn.ogg", 1.1, 1};
+		titles[] = {};
+	};
+
+	class batman
+	{
+		name = "batman";
+		sound[] = {"\client\sounds\batman.ogg", 1.1, 1};
+		titles[] = {};
+	};
+
+	class hax
+	{
+		name = "hax";
+		sound[] = {"\client\sounds\hax.ogg", 1.1, 1};
+		titles[] = {};
+	};
+
+	class headshot
+	{
+		name = "headshot";
+		sound[] = {"\client\sounds\headshot.ogg", 1.1, 1};
+		titles[] = {};
+	};
+
+	class herewego
+	{
+		name = "herewego";
+		sound[] = {"\client\sounds\herewego.ogg", 1.1, 1};
+		titles[] = {};
+	};
+
+	class mlg
+	{
+		name = "mlg";
+		sound[] = {"\client\sounds\mlg.ogg", 1.1, 1};
+		titles[] = {};
+	};
+
+	class party
+	{
+		name = "party";
+		sound[] = {"\client\sounds\party.ogg", 1.1, 1};
+		titles[] = {};
+	};
+
+	class sparta
+	{
+		name = "sparta";
+		sound[] = {"\client\sounds\sparta.ogg", 1.1, 1};
+		titles[] = {};
+	};
  
 };
+

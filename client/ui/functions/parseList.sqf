@@ -4,7 +4,7 @@
 //      Return: None
 //
 
-private ['_a'];
+private ['_a', '_bind', '_tag', '_state'];
 
 _a = [_this,0, [], [[]]] call BIS_fnc_param;
 
@@ -31,8 +31,24 @@ _register = [];
 		if (!isNil "_icon") then { _list lnbSetPicture[[_row, 0], _icon]; };
 
 		// Is there an existing bind for this item?
-		_bind = _obj getVariable ["bind", nil];
-		if (!isNil "_bind") then { [_row, _bind] call formatBind; };
+		_bind = _obj getVariable ["GW_KeyBind", ["-1", "1"]];
+
+		if (_tag in GW_WEAPONSARRAY) then { 
+
+			_icon = mouseActiveIcon;
+
+			_state = "1";
+			if (typename _bind == "ARRAY") then { 
+				if ((_bind select 1) == "0") then { _icon = mouseInactiveIcon; _state = "0"; }; 			
+			};
+
+			_list lnbSetData[ [_row, 3], _state];
+			_list lnbSetPicture[[_row, 3], _icon];
+		};
+
+		_key = if (typename _bind == "ARRAY") then { (_bind select 0) } else { _bind };
+		[_row, _key] call formatBind; 		
+		
 
 		// Plug the obj to the mission namespace so we can use it when saving the binds
 		_idString = format['%1', [_row,0]];
@@ -43,6 +59,12 @@ _register = [];
 		// Used for preventing repeats of certain objects
 		_register = _register + [_tag];
 
+		// Additionally add custom bind entries for certain module types
+		if (_tag == "EPL") then {
+
+		};
+
 	};
+	
 	false
 } count _a > 0;	

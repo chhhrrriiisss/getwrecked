@@ -9,7 +9,6 @@ private ['_gun', '_target', '_vehicle'];
 _gun = _this select 0;
 _target = _this select 1;
 
-_repeats = 3;
 _round = "G_40mm_HEDP";
 _soundToPlay = "a3\sounds_f\weapons\Grenades\grenade_launcher_1.wss";
 _fireSpeed = 0.3;
@@ -18,37 +17,23 @@ _range = 400;
 
 [_gun] spawn muzzleEffect;
 
-[
-	[
-		_gun
-	],
-	"muzzleEffect",
-	false,
-	false
-] call BIS_fnc_MP;
+_targetPos = if (typename _target == 'OBJECT') then { getPosASL _target } else { _target };
+_gPos = _gun selectionPosition "otochlaven";
+_gPos = _gun modelToWorld [-0.15,1.7,-0.72];
 
-for "_i" from 1 to _repeats step 1 do {
+_heading = [_gPos,_targetPos] call BIS_fnc_vectorFromXToY;
+_velocity = [_heading, _projectileSpeed] call BIS_fnc_vectorMultiply; 
 
-	_targetPos = if (typename _target == 'OBJECT') then { getPosASL _target } else { _target };
-	_gPos = _gun selectionPosition "otochlaven";
-	_gPos = _gun modelToWorld [-0.15,1.7,-0.72];
+_bullet = createVehicle [_round, _gPos, [], 0, "FLY"];
 
-	_heading = [_gPos,_targetPos] call BIS_fnc_vectorFromXToY;
-	_velocity = [_heading, _projectileSpeed] call BIS_fnc_vectorMultiply; 
+if (GW_DEBUG) then { [_gPos, _targetPos, 3] spawn debugLine; };
 
-	_bullet = createVehicle [_round, _gPos, [], 0, "FLY"];
+[(ATLtoASL _gPos), (ATLtoASL _targetPos), "GMG"] call markIntersects;
 
-	if (GW_DEBUG) then { [_gPos, _targetPos, 3] spawn debugLine; };
+_bullet setVectorDir _heading; 
+_bullet setVelocity _velocity; 
 
-	[(ATLtoASL _gPos), (ATLtoASL _targetPos)] call markIntersects;
-
-	_bullet setVectorDir _heading; 
-	_bullet setVelocity _velocity; 
-
-	playSound3D [_soundToPlay, _gun, false, getPos _gun, 1, 1, 50];		
-
-	Sleep _fireSpeed;
-};
+playSound3D [_soundToPlay, _gun, false, getPos _gun, 1, 1, 50];		
 
 addCamShake [.5, 1,20];
 

@@ -4,6 +4,9 @@
 //      Return: None
 //
 
+waitUntil{!isNil { clientCompileComplete } };
+waitUntil {!isNull player};  
+
 // Retexture all vehicles
 {
 	_texture = _x getVariable "paint";

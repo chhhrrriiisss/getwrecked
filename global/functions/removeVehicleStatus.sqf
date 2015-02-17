@@ -6,11 +6,24 @@
 
 private["_vehicle", "_status"];
  
-_vehicle = [_this,0, objNull, [objNull]] call BIS_fnc_param;	
-_status = [_this,1, [], [[]]] call BIS_fnc_param;	
+_vehicle = _this select 0;
+_status = _this select 1;
 
-if (isNull _vehicle || count _status == 0) exitWith {};
-if (!alive _vehicle || !local _vehicle) exitWith {};
+if (isNull _vehicle) exitWith {};
+if (!alive _vehicle) exitWith {};
+
+// If we're not dealing with the local vehicle, go find it
+if (!local _vehicle) exitWith {
+
+	[       
+		_this,
+		"removeVehicleStatus",
+		_vehicle,
+		false 
+	] call BIS_fnc_MP; 
+};
+
+if (typename _status == "STRING") then { _status = (call compile _status); };
 
 [_vehicle, _status] spawn {	
 	

@@ -18,7 +18,7 @@ if (count _raw > 0) then {
 
 	} ForEach _raw;
 
-	systemChat _string;
+	hint _string;
 	
 } else {
 

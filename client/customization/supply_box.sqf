@@ -14,6 +14,7 @@ setupSupplyBox = {
 	_box setVariable ["mass", 40, true];
 	_box setVariable ["isSupply", true, true];
 	_box setVariable ["name", "Empty Supply Box", true];
+	_box setVariable ["GW_CU_IGNORE", true, true];
 
 	true
 

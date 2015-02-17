@@ -20,7 +20,7 @@ for "_i" from 0 to 100 step 1 do {
 
 	if (isNil "_o" && _endIf) exitWith {}; // End early if the chain is incomplete
 	if (isNil "_o" && !_endIf) then {} else {			
-		_arr = _arr + [_o];	
+		_arr pushback _o;	
 	};
 
 };

@@ -18,12 +18,15 @@ if (isNull _vehicle || isNull _unit) exitWith {};
 _isOwner = [_vehicle, _unit, true] call checkOwner;
 
 // Check the vehicle is ok to use (compiled) and we own it
-if (!alive _vehicle || !alive _unit || !_isOwner) exitWith {};
+if (!alive _vehicle || !alive _unit || !_isOwner) exitWith { GW_SETTINGS_ACTIVE = false; };
 if (isNil { (_vehicle getVariable "firstCompile") } ) exitWith {
-	systemChat 'You need to hop in this car at least once before customizing it.';
+	systemChat 'Something is not right here... try again in a second.';
+	[_vehicle] call compileAttached;
+	GW_SETTINGS_ACTIVE = false;
 };
 
 GW_SETTINGS_VEHICLE = _vehicle;
+GW_SETTINGS_READY = false;
 
 // Compile the vehicle anyway just to be sure
 [_vehicle] call compileAttached;
@@ -41,6 +44,8 @@ _layerStatic cutRsc ["RscStatic", "PLAIN" , 0.5];
 [] spawn generateSettingsList;
 [ [92000, 92004] , GW_SETTINGS_VEHICLE] spawn generateStatsList;
 
+[] spawn generateTauntsList;
+
 _statsTitle = (findDisplay 92000) displayCtrl 92005;
 _name = [(_vehicle getVariable ["name", "UNTITLED"]), 27, "..."] call cropString;
 _name = if (count toArray _name == 0) then { "UNTITLED" } else { _name };
@@ -49,14 +54,22 @@ _statsTitle ctrlCommit 0;
 
 systemChat 'Note: Key binds are saved only when the vehicle is saved.';
 
+// Wait a second before activating taunt preview
+[] spawn {	
+	Sleep 1;
+	GW_SETTINGS_READY = true;
+};
+
 // Menu has been closed, kill everything!
 waitUntil { isNull (findDisplay 92000) };
-
-"dynamicBlur" ppEffectAdjust [0]; 
-"dynamicBlur" ppEffectCommit 0.1; 
 
 // Stop the preview camera
 GW_PREVIEW_CAM_ACTIVE = false;
 GW_SETTINGS_VEHICLE = nil;
 GW_SETTINGS_ACTIVE = false;
+GW_SETTINGS_READY = false;
+
+"dynamicBlur" ppEffectAdjust [0]; 
+"dynamicBlur" ppEffectCommit 0.1; 
+
 

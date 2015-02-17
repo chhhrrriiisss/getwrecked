@@ -6,9 +6,7 @@
 
 private ['_vehicle', '_status'];
 
-_vehicle = [_this,0, objNull, [objNull]] call BIS_fnc_param;
-
-if (isNull _vehicle) exitWith {};
+_vehicle = _this select 0;
 
 _status = _vehicle getVariable ["status", []];
 

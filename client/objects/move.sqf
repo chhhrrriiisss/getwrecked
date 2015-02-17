@@ -29,6 +29,7 @@ if (_unit getVariable ['snapping', false]) then {
 
 // Add all the actions that are available for this object
 removeAllActions _unit;
+_unit spawn setPlayerActions;
 
 // Drop Object
 _unit addAction[dropObjectFormat, {
@@ -119,7 +120,7 @@ _unit addAction[attachObjectFormat, {
 
 	[_unit, _obj] spawn attachObj; 
 
-}, _obj, 5, false, false, "", "(vehicle player) == player && ([_target, 9] call validNearby)"]; 
+}, _obj, 5, false, false, "", "( (vehicle player) == player && (!isNil { [_target, 9] call validNearby }) )"]; 
 
 true
 

@@ -6,8 +6,8 @@
 
 private ["_type", "_reloadTime"];
 
-_type = [_this,0, "", [""]] call BIS_fnc_param;
-_reloadTime = [_this,1, 1, [0]] call BIS_fnc_param;
+_type = _this select 0;
+_reloadTime = _this select 1;
 
 if (_reloadTime == 0) exitWith { false };
 

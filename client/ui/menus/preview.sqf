@@ -13,6 +13,12 @@ _distance = (_closest distance player);
 if (_distance > 15) exitWith {	systemChat 'You need to be closer to use that.'; };	
 _loadAreaPosition = (ASLtoATL getPosASL _closest);
 
+_owner = ( [_closest, 8] call checkNearbyOwnership);
+
+if (!_owner) exitWith {
+    systemchat "Someone else is using this terminal.";
+};
+
 // Get list of all vehicles
 GW_LIBRARY = profileNamespace getVariable ['GW_LIBRARY', []];
 
@@ -63,9 +69,21 @@ GW_PREVIEW_CAM_ACTIVE = false;
 // If we're spawning something
 if (!isNil "GW_PREVIEW_SELECTED" && !isNil "GW_PREVIEW_VEHICLE") then {	
 	[_closest] call clearPad;
-	_closest setVariable ["inUse", [time, GW_PLAYERNAME], true];
-	_closest setVariable ["owner", GW_PLAYERNAME, true];
 	GW_PREVIEW_VEHICLE setPos _loadAreaPosition;
+
+	if (!simulationEnabled GW_PREVIEW_VEHICLE) then {
+
+		[		
+			[
+				GW_PREVIEW_VEHICLE,
+				true
+			],
+			"setObjectSimulation",
+			false,
+			false 
+		] call BIS_fnc_MP;
+
+	};
 };
 
 // Otherwise, clear up
@@ -73,5 +91,5 @@ if (isNil "GW_PREVIEW_SELECTED" && !isNil "GW_PREVIEW_VEHICLE") then {
 	[GW_PREVIEW_VEHICLE, false] call clearPad;
 };
 
-_closest setVariable ['owner', ''];
+_closest setVariable ['owner', '', true];
 

@@ -6,7 +6,7 @@
 
 private ['_v', '_c'];
 
-_v = [_this,0, objNull, [objNull]] call BIS_fnc_param;
+_v = _this select 0;
 
 if (isNull _v) exitWith {};
 

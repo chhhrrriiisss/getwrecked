@@ -1,23 +1,18 @@
 //
-//      Name: pubVar_spawnObject
+//      Name: pubVar_fnc_spawnObject
 //      Desc: Spawn an object at the desired location
 //      Return: None
 //
 
-_this spawn {
+private["_type", "_pos"];
 
-	private["_type", "_pos"];
-	
-	_type = [_this,0, "", [""]] call BIS_fnc_param;	
-	_pos = [_this,1, [], [[]]] call BIS_fnc_param;
-	_exact = [_this,2, false, [false]] call BIS_fnc_param;
+if (isNil { (_this select 0) } || isNil { (_this select 1) }) exitWith {};
 
-	if (_type == "" || count _pos == 0) exitWith {};
+_type = _this select 0;
+_pos = _this select 1;
+_exact = if (isNil { (_this select 2) }) then { false } else { (_this select 2) };
 
-	_frame = if (_exact) then { "CAN_COLLIDE" } else { "NONE" };
+_frame = if (_exact) then { "CAN_COLLIDE" } else { "NONE" };
 
-	_newObj = [_pos, 0, _type, 0, "NONE", false] call createObject;
+_newObj = [_pos, 0, _type, 0, "NONE", true] call createObject;
 
-	[_newObj] spawn setObjectCleanup;
-
-};

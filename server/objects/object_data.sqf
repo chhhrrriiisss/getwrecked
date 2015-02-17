@@ -45,7 +45,7 @@ _obj enableSimulationGlobal false;
 _obj setVariable["name", _name, true];
 _obj setVariable["mass", _mass, true];
 _obj setVariable["isObject", true, true]; 
-_obj setVariable["health", _health, true];
+_obj setVariable["GW_Health", _health, true];
 _obj setVariable["ammo", _ammo, true];
 _obj setVariable["fuel", _fuel, true];
 _obj setVariable["owner", '', true];
@@ -57,6 +57,7 @@ if (count (toArray _modules) > 0) then {
 		_gun = _obj;
 		_marker = _obj getVariable ["targetMarker", _obj];
 		_obj setVariable["weapons", [_type, _gun, _marker], true];
+		_obj setVariable ["GW_KeyBind", (_obj getVariable ["GW_KeyBind", ["-1", "1"]]) , true];
 	};
 
 	if (_modules in GW_TACTICALARRAY) then {

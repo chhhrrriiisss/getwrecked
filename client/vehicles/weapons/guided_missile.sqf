@@ -16,31 +16,31 @@ _vehicle = _this select 2;
 
 // Missile Properties
 _repeats = 1;
-_round = "M_NLAW_AT_F";
+_round = "M_Titan_AT";
 _soundToPlay = "a3\sounds_f\weapons\Launcher\nlaw_final_2.wss";
 _fireSpeed = 1;
-_projectileSpeed = 80;
-_range = 1000;
+_projectileSpeed = 70;
+_range = 2500;
 
 // Flight properties
 _minFlightSpeed = 35;
-_maxFlightSpeed = 180;
-_maxFlightTime = time + 20;
+_maxFlightSpeed = 100;
+_maxFlightTime = time + 12;
 _releaseTime = time;
-yawFactor = 36;
-pitchFactor = 12;
+yawFactor = 72;
+pitchFactor = 25;
 
 // Get initial heading 
 _vehDir = getDir _vehicle;
 _gunDir = [((getDir _gun) + 90)] call normalizeAngle;
-_gPos = [_gun, 2, _gunDir] call BIS_fnc_relPos;
-tPos =[_gun, 1500, _gunDir] call BIS_fnc_relPos;
+_gPos = _gun modelToWorldVisual [2,0,0];
+tPos = _gun modelToWorldVisual [3000, 0, 30];
 
 missileHeading = [_gPos,tPos] call BIS_fnc_vectorFromXToY;
 missileVelocity = [missileHeading, _projectileSpeed] call BIS_fnc_vectorMultiply; 
 
 // Release the hound!
-missile = createVehicle [_round, _gPos, [], 0, "CAN_COLLIDE"];
+missile = createVehicle [_round, _gPos, [], 0, "FLY"];
 missile setVectorUp missileHeading; 
 missile setVelocity missileVelocity;
 
@@ -75,31 +75,31 @@ stopMissile = false;
 alterPath = {
 
 	_key = _this select 1; // The key that was pressed
-	_dir = [missile, tPos] call BIS_fnc_dirTo;
+	_dir = [missile, tPos] call dirTo;
 
 	// esc
-	if (_key == 1) exitWith {
+	if (_key == 1) then {
 		stopCamera = true;
 	};
 
 	// w
-	if (_key == 31) exitWith {
+	if (_key == 31) then {
 		tPos set[2, (tPos select 2) - pitchFactor];
 	};
 
 	// S
-	if (_key == 17) exitWith {
+	if (_key == 17) then {
 		tPos set[2, (tPos select 2) + pitchFactor];
 	};
 
 	// A
-	if (_key == 30) exitWith {		
+	if (_key == 30) then {		
 		_dir = _dir - yawFactor;
 		tPos = [tPos, 15, _dir] call BIS_fnc_relPos;
 	};
 
 	// D
-	if (_key == 32) exitWith {
+	if (_key == 32) then {
 		_dir = _dir + yawFactor;	
 		tPos = [tPos, 15, _dir] call BIS_fnc_relPos;
 
@@ -109,10 +109,10 @@ alterPath = {
 
 _missileControls = (findDisplay 46) displayAddEventHandler ["KeyDown", "_this call alterPath; false;"];
 
-while {!stopMissile && alive missile && time < _maxFlightTime} do {
-
+waitUntil {
+	
 	_lastPos = screenToWorld [0.5, 0.5];
-	[_lastPos, 5] spawn markNearby;	
+	[_lastPos, 5, "GUD"] spawn markNearby;	
 
 	// Calculate its speed
 	_dist = (missile distance _vehicle) / 200;
@@ -142,38 +142,34 @@ while {!stopMissile && alive missile && time < _maxFlightTime} do {
 	if (alive missile) then {	
 
 		_cam camSetTarget missile;
-		_cam camSetRelPos [0,-0.1,0];
+		_cam camSetRelPos [0,-3,0];
 		_cam camPrepareFOV 0.6;
 		_cam camCommit 0;
 
 		_src = getPosASL missile;
-		_des = missile modelToWorld [0,0,15];
-
+		_des = missile modelToWorldVisual [0,0,15];
 		_objs = lineIntersectsWith [_src, _des, (vehicle player), (player), false];
 
 		if (count _objs > 0) then {
 
 			{
-
 				_isVehicle = _x getVariable ["isVehicle", false];
-				_killedBy = _x getVariable ["killedBy", "Nobody"];
+				_killedBy = _x getVariable ["killedBy", ["Nobody", ""]];
 
-				if ( ( _killedBy == "Nobody" || _killedBy != GW_PLAYERNAME ) && _isVehicle) then {		
-
-					[_x] call markAsKilledBy;
-
+				if ( ( (_killedBy select 0) == "Nobody" || (_killedBy select 0) != GW_PLAYERNAME ) && _isVehicle) then {	
+					[_x, "GUD"] call markAsKilledBy;
 				};
-
-			} ForEach _objs;
+				false
+			} count _objs > 0;
 
 		};
 
 
 	};
 
-	Sleep 0.001;
-
+	(stopMissile || !alive missile || time > _maxFlightTime)
 };
+
 
 // Tidy up, restore effects, destroy cam
 _layerStatic cutRsc ["RscStatic", "PLAIN",1];      

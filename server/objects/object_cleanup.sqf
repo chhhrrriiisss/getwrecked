@@ -18,7 +18,9 @@ _active = true;
 
 if (isServer) then {
 
-    While { _active } do {
+    for "_i" from 0 to 1 step 0 do {
+
+        if (!_active) exitWith {};
 
         Sleep 1;
 

@@ -6,7 +6,7 @@
 
 private ['_angle'];
 
-_angle = [_this,0, 0, [0]] call BIS_fnc_param;
+_angle = _this select 0;
 
 if (_angle < -180) then { _angle = _angle + 360; };
 if (_angle > 180) then { _angle = _angle - 360; };

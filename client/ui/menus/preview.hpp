@@ -28,20 +28,6 @@ class GW_Menu
 	class controlsBackground
 	{
 		
-		class Logo : GW_StructuredTextBox
-		{
-			idc = 42005;
-			colorBackground[] = {0,0,0,0};
-			x = (0 - 0.014) * safezoneW + safezoneX;
-			y = (0 - 0.03) * safezoneH + safezoneY;
-			w = (0.22) * safezoneW;
-			h = (0.12) * safezoneH;
-			size = "1";
-
-			text = "<img size='0.33' align='center' image='client\images\logo.paa' />";
-
-		};	
-
 		class MarginBottom : GW_Block
 		{
 			idc = -1;

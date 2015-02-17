@@ -3,7 +3,9 @@ _w = _this select 1;
 
 _r = if (count toArray _n >= _w) then { _n } else { 
 
-	while {count (toArray _n) < _w} do {
+	
+	for "_i" from 0 to 1 step 0 do {
+		if (count (toArray _n) >= _w) exitWith {};
 		_n = format['%1%2','0',_n];
 	};
 

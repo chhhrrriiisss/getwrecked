@@ -6,21 +6,19 @@
 
 private ['_zone', '_arr', '_zoneCenter', '_vehiclesOnly'];
 
-_zone = [_this,0, "", [""]] call BIS_fnc_param;	
-_vehiclesOnly =  [_this,1, false, [false]] call BIS_fnc_param;	
+_zone = _this select 0;
+_vehiclesOnly = if (isNil {_this select 1}) then { false } else { (_this select 1) };
 
-if (_zone == "") exitWith {};
+if (_zone == "") exitWith { [] };
 
 _arr = [];
 
 // Get the camera marker for the specified zone
-_zoneCenter = getMarkerPos format['%1_camera', _zone];
-
 if (count allUnits <= 0) exitWith { [] };
 
 {
-	// If the unit is alive and within range of the marker
-	if (alive _x && { (_x distance _zoneCenter) < 2200 }) then {
+	// If the unit is alive and within the zone
+	if (alive _x && { ([(getPos _x), _zone] call checkInZone) }) then {
 
 		// If the target is in a vehicle, add the vehicle
 		_target = if ( (vehicle _x) == _x) then { _x } else { (vehicle _x) };
@@ -32,8 +30,7 @@ if (count allUnits <= 0) exitWith { [] };
 
 	}; 
 
-	false
-	
+	false	
 	
 } count allUnits > 0;
 

@@ -11,8 +11,11 @@ _list = (findDisplay 97000 displayCtrl 97001);
 _button = (findDisplay 97000 displayCtrl 97003);
 
 _final = [] call calculateTotal;
-_totalCost = _final select 0;
-_totalItems = _final select 1;
+_totalCost = [_final,0, 0, [0]] call BIS_fnc_param;
+_totalItems = [_final,1, 0, [0]] call BIS_fnc_param;
+
+if (_totalItems == 0 || _totalCost == 0) exitWith {};
+
 _inventory = _final select 2;
 
 _index = lnbcurselrow _list;
@@ -25,6 +28,8 @@ if (_totalItems <= 0 && !isNil "_index") then {
 
 	_cost = lnbData [97001, [_index, 4]];
 	_class = lnbData [97001, [_index, 3]];
+
+	systemchat format['%1 / %2', _class, time];
 
 	_totalCost = parseNumber( _cost );
 	_inventory = [[1, _class]];

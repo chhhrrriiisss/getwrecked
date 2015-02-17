@@ -8,7 +8,7 @@ private ['_a'];
 
 _a = _this select 0;
 
-if (_a > 360) then {_a = _a - 360; };
-if (_a < 0) then { _a = 360 + _a; };
+if (_a > 360) exitWith { (_a - 360) };
+if (_a < 0) exitWith { (360 + _a) };
 	
 _a

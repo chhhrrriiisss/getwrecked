@@ -4,10 +4,9 @@
 //      Return: None
 //
 
-private ['_v'];
+private ['_v', '_s'];
 
 _v = _this;
-
 _v setDammage 1;
 
 _this spawn {

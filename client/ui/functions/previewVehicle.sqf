@@ -61,7 +61,7 @@ GW_PREVIEW_VEHICLE = nil;
 
 _name = toUpper ( _name );
 _nameArray = toArray (_name);
-_name = if (count _nameArray > 22) then { toString ( _nameArray resize 22 ) } else { _name };
+_name = [_name, 28, ''] call cropString; 
 
 // Fade out
 _title ctrlShow false;	
@@ -78,7 +78,7 @@ waitUntil {
 
 if (loadError || time > _timeout) then {
 	_title ctrlShow true;	
-	_title ctrlSetText 'ERROR LOADING VEHICLE';
+	_title ctrlSetText 'ERROR LOADING';
 	_title ctrlCommit 0;
 
 } else {
@@ -87,11 +87,11 @@ if (loadError || time > _timeout) then {
 	45000 cutText ["", "BLACK IN", 0.35];  
 	[ [42000, 42004] , GW_PREVIEW_VEHICLE] call generateStatsList;
 
-};
+	_title ctrlShow true;	
+	_title ctrlSetText _name;
+	_title ctrlCommit 0;
 
-_title ctrlShow true;	
-_title ctrlSetText _name;
-_title ctrlCommit 0;
+};
 
 // Clear the last vehicle
 if (!isNil "_prevVehicle") then {

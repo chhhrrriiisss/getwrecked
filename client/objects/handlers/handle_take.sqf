@@ -4,6 +4,8 @@
 //      Return: None
 //
 
+systemchat format['%1', _this];
+
 // private ['_obj', '_position', '_unit'];
 
 // _unit = _this select 0;   

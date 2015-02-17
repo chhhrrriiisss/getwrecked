@@ -10,14 +10,16 @@ if (GW_SETTINGS_ACTIVE || GW_PREVIEW_CAM_ACTIVE) exitWith {};
 if (GW_WAITSAVE) exitWith {  systemChat 'Save currently in progress. Please wait.'; };
 GW_WAITSAVE = true;
 
-_startTime = time;
+_saveTarget = _this select 0;
 
-_saveTarget = [_this,0, "", [""]] call BIS_fnc_param;
+_onExit = {
+    systemChat (_this select 0);
+    GW_WAITSAVE = false;
+};
 
 // Prevent abuse
-if (_saveTarget == 'default' || _saveTarget == 'last' || _saveTarget == 'GW_LASTLOAD' || _saveTarget == 'GW_LIBRARY') exitWith {
-    systemChat 'Sorry that name is reserved.';
-    GW_WAITSAVE = false;
+if (_saveTarget == 'default' || _saveTarget == 'last' || _saveTarget == 'GW_LASTLOAD' || _saveTarget == 'GW_LIBRARY' || _saveTarget == 'VEHICLE') exitWith {
+    ['Sorry that name is reserved, try saving as something else!'] call _onExit;
 };
 
 // Find the closest pad and abort if we're too far away
@@ -26,91 +28,78 @@ _closest = [saveAreas, _pos] call findClosest;
 _distance = (_closest distance player);
 
 if (_distance > 15) exitWith {
-    systemChat 'You need to be closer to use that.';
-    GW_WAITSAVE = false;
-};
-
-_isOwner = [_closest, player, true] call checkOwner; 
-if (!_isOwner) exitWith {
-    systemChat 'This terminal is already in use.';
+    ['You need to be a bit closer to use this!'] spawn _onExit;
 };
 
 _target = _closest;
+
+_owner = ( [_target, 8] call checkNearbyOwnership);
+
+if (!_owner) exitWith {
+     ["You don't own this vehicle."] spawn _onExit;
+};
 
 // Find the closest valid vehicle on pad
 _targetPos = getPosASL _target;
 _nearby = (position _target) nearEntities [["Car"], 8];
 
 if ( count _nearby == 0) exitWith {
-    systemChat 'No vehicle to save';
+    ['No vehicle to save!'] call _onExit;
     GW_WAITSAVE = false;
 };
 
 if ( (count _nearby) > 1) exitWith {
-    systemChat 'Too many vehicles on the pad. Please clear it first.';
-    GW_WAITSAVE = false;
+    ['Too many vehicles on the pad, please clear it!'] spawn _onExit;
 };
 
-_closest = _nearby select 0;
+GW_SAVE_VEHICLE = _nearby select 0;
 
+_isOwner = [GW_SAVE_VEHICLE, player, true] call checkOwner;
+if (!_isOwner) exitWith {
+    ["You don't own this vehicle!"] spawn _onExit;
+};
 
-if (!simulationEnabled _closest) then {
+// Check it's a valid vehicle and if not wait for it to be compiled
+_allowUpgrade = GW_SAVE_VEHICLE getVariable ['isVehicle', false];
 
+if (!_allowUpgrade) then {
+    [GW_SAVE_VEHICLE] call compileAttached;    
+};
+
+// Disable simulation on vehicle
+if (!simulationEnabled GW_SAVE_VEHICLE) then {
     [       
         [
-            _closest,
+            GW_SAVE_VEHICLE,
             true
         ],
         "setObjectSimulation",
         false,
         false 
-    ] call BIS_fnc_MP;  
-
+    ] call BIS_fnc_MP;
 };
 
-// Wait for simulation to be enabled
+// Wait for simulation enabled and vehicle compiled
 _timeout = time + 3;
 waitUntil{ 
     Sleep 0.1;
-    if ( (time > _timeout) || simulationEnabled _closest ) exitWith { true };
+    if ( (time > _timeout) || (simulationEnabled GW_SAVE_VEHICLE && { ((getPos GW_SAVE_VEHICLE) select 2 < 1) } && {GW_SAVE_VEHICLE getVariable ['isVehicle', false]} ) ) exitWith { true };
     false
 };
 
 if (time > _timeout) exitWith {
-    systemChat 'Vehicle needs to be placed on the ground to be saved.';
-    GW_WAITSAVE = false;
+    ['Error saving, simulation not enabled or vehicle not compiled properly!'] spawn _onExit;
 };
 
-// Check it's a valid vehicle and if not wait for it to be compiled
-_allowUpgrade = _closest getVariable ['isVehicle', false];
-
-if (!_allowUpgrade) then {
-    [_closest] call compileAttached;    
-};
-
-_timeout = time + 3;
-waitUntil{ 
-    Sleep 0.1;
-    _valid = _closest getVariable ['isVehicle', false];
-    if ( (time > _timeout) || _valid ) exitWith { true };
-    false
-};
-
-if (time > _timeout) exitWith {
-    systemChat 'Please hop in this vehicle at least once before saving.';
-    GW_WAITSAVE = false;
-};
 
 // Wait just a second
 Sleep 0.01;
 
-_vehicle = _closest;
-
 // Kick out anyone who is inside
-_crew =  (crew _vehicle);
+_crew =  (crew GW_SAVE_VEHICLE);
 if ( (count _crew) > 0) then {
     {
-        _x action ["eject", _vehicle];
+        _x action ["eject", GW_SAVE_VEHICLE];
     } ForEach _crew;   
 };
 
@@ -118,14 +107,13 @@ if ( (count _crew) > 0) then {
 _timeout = time + 5;
 waitUntil{ 
     Sleep 0.1;
-    _crew =  (crew _vehicle);
+    _crew =  (crew GW_SAVE_VEHICLE);
     if ( (time > _timeout) || ((count _crew) <= 0) ) exitWith { true };
     false
 };
 
 if (time > _timeout) exitWith {
-    systemChat 'Error saving... you must exit the vehicle first.';
-    GW_WAITSAVE = false;
+    ['Error saving, you have to exit the vehicle first!'] spawn _onExit;
 };
 
 // Actuall saving now
@@ -134,21 +122,20 @@ systemChat 'Saving...';
 // Find a temporary area to park our vehicle
 _temp = [tempAreas, nil, nil] call findEmpty;
 if (_temp distance [0,0,0] <= 200) exitWith {
-    systemChat 'Error saving. Try again in a few seconds.';
-    GW_WAITSAVE = false;
+    ['Error saving, try again maybe?'] spawn _onExit;
 };
 
 // Store the vehicle location for reference and align to new location
 _tempPos = getPosASL _temp;
-_vehicle setDir 0;
-_vehicle setPosASL _tempPos;
+GW_SAVE_VEHICLE setDir 0;
+GW_SAVE_VEHICLE setPosASL _tempPos;
 
 // Wait for the vehicle to align
 _timeout = time + 5;
 waitUntil {
-    _vel = [0,0,0] distance (velocity _vehicle);
-    _dist = ((getPosASL _vehicle) distance _tempPos);
-    _dir = floor( getDir _vehicle );
+    _vel = [0,0,0] distance (velocity GW_SAVE_VEHICLE);
+    _dist = ((getPosASL GW_SAVE_VEHICLE) distance _tempPos);
+    _dir = floor( getDir GW_SAVE_VEHICLE );
 
     if ( time > _timeout || (_vel == 0 && _dist < 1 && _dir == 0)  ) exitWith { true };
     false
@@ -156,14 +143,13 @@ waitUntil {
 
 // Took too long to align, abort to avoid errors
 if (time > _timeout) exitWith {
-    systemChat 'Error saving. Try again in a few seconds.';
-    GW_WAITSAVE = false;
-    _vehicle setPosASL _targetPos;
+    ['Error saving, try again maybe?'] spawn _onExit;
+    GW_SAVE_VEHICLE setPosASL _targetPos;
 };
 
 
-_class = typeOf _vehicle;
-_name = _vehicle getVariable ["name", 'Untitled'];
+_class = typeOf GW_SAVE_VEHICLE;
+_name = GW_SAVE_VEHICLE getVariable ["name", 'Untitled'];
 if (isNil "_name") then {  _name = 'Untitled'; };
 
 // Check the name and save target is valid
@@ -186,29 +172,33 @@ if (_name == "Untitled") then {
 
     _result = ['SAVE', _name, 'INPUT'] call createMessage;
 
-    if (count toArray _result > 0) then {
-        _name = _result;
-        _saveTarget = _result;
+    if (typename _result == "STRING") then {
+
+        if (count toArray _result > 0) then {
+            _name = _result;
+            _saveTarget = _result;
+        };
+        
     } else {
         _abort = true;
     };    
 };
 
 if (_abort) exitWith {
-    systemChat 'Save aborted.';
-    GW_WAITSAVE = false;
-    _vehicle setPosASL _targetPos;
+    ['Save aborted by user.'] spawn _onExit;
+    GW_SAVE_VEHICLE setPosASL _targetPos;
 };
 
+_startTime = time;
 
-_paint = _vehicle getVariable ["paint",""];
+_paint = GW_SAVE_VEHICLE getVariable ["paint",""];
 
 // Grab position
-_pos = (ASLtoATL getPosASL _vehicle);
+_pos = (ASLtoATL getPosASL GW_SAVE_VEHICLE);
 _oldPos = _pos call positionToString;
-_oldDir = getDir _vehicle;
+_oldDir = getDir GW_SAVE_VEHICLE;
 
-_attachments = attachedObjects _vehicle;
+_attachments = attachedObjects GW_SAVE_VEHICLE;
 
 _attachArray = [];
 
@@ -217,7 +207,11 @@ _pruneList = [
     'Land_PenBlack_F',
     'Land_Barrel_F', // old emp
     'B_HMG_01_F', // old hmg model
-    'Land_BarrelTrash_F'
+    'Land_BarrelTrash_F',
+    'Land_New_WiredFence_5m_F',
+    "Land_Sack_F", 
+    "Land_CnCBarrierMedium4_F", 
+    "Land_WaterTank_F" 
 ];
 
 
@@ -241,12 +235,14 @@ if (count _attachments > 0) then {
         if (_x isKindOf "StaticWeapon") then { 
             _boundingCenter = boundingCenter _x;
             _actualCenter = [-(_boundingCenter select 0), -(_boundingCenter select 1), -(_boundingCenter select 2)];
-            _pos = (_x modelToWorld _actualCenter);
+            _pos = (_x modelToWorldVisual _actualCenter);
 
             _p = _pos;
         };
-                
-        _p = _vehicle worldToModel _p;
+        
+         _p = GW_SAVE_VEHICLE worldToModel _p;
+
+
         
         // Delete the object if we're having issues with it (or its old)
         if (!alive _x || (_p distance _pos) > 999999 || (typeOf _x) in _pruneList ) then {
@@ -257,7 +253,7 @@ if (count _attachments > 0) then {
 
             _p =  _p call positionToString;
             _c = typeOf _x;   
-            _k = _x getVariable ["bind", -1];  
+            _k = _x getVariable ["GW_KeyBind",  ["-1", "1"]];
 
             if (_c == 'groundWeaponHolder') then { _c = _x getVariable "type"; };
 
@@ -273,23 +269,29 @@ if (count _attachments > 0) then {
 };
 
 // Get various meta and random data about the vehicle
-_creator = _vehicle getVariable ['creator', GW_PLAYERNAME];
-_prevAmmo = _vehicle getVariable ["ammo", 1];
-_prevFuel = (fuel _vehicle) + (_vehicle getVariable ["fuel", 0]);
+_creator = GW_SAVE_VEHICLE getVariable ['creator', GW_PLAYERNAME];
+_prevAmmo = GW_SAVE_VEHICLE getVariable ["ammo", 1];
+_prevFuel = (fuel GW_SAVE_VEHICLE) + (GW_SAVE_VEHICLE getVariable ["fuel", 0]);
+_vehicleBinds = GW_SAVE_VEHICLE getVariable ['GW_Binds', GW_BINDS_ORDER];
+_taunt = GW_SAVE_VEHICLE getVariable ['GW_Taunt', []];
 
 _meta = [
     GW_VERSION, // Current version of GW
     _creator, // Original author of vehicle
     _prevFuel, // Prior Fuel
-    _prevAmmo  // Prior Ammo
-    // Stats would go here, but they are handled locally and seperately  
+    _prevAmmo,  // Prior Ammo
+    [], // Stats would go here, but they are handled locally and seperately  
+    _vehicleBinds,
+    _taunt
 ];
 
 _data = [_class, _name, _paint, _oldPos, _oldDir, _attachArray, _meta];    
+
 _success = [_saveTarget, _data] call registerVehicle;
+GW_LASTLOAD = _saveTarget;
 
 // Force a sync of the vehicles stats
-['', _vehicle, '', true] spawn logStat;  
+['', GW_SAVE_VEHICLE, '', true] spawn logStat;  
 
 if (_success) then {
     _totalTime = time - _startTime;
@@ -300,12 +302,13 @@ if (_success) then {
 };
 
 // Return the vehicle to the pad
-_vehicle setVariable ["name", _saveTarget, true];
-_vehicle setVariable ["isSaved", true];
-_vehicle setPosASL _targetPos;
-_vehicle setDammage 0;
-
-GW_WAITSAVE = false;
+GW_SAVE_VEHICLE setVariable ["name", _saveTarget, true];
+GW_SAVE_VEHICLE setVariable ["isSaved", true];
+GW_SAVE_VEHICLE setPosASL _targetPos;
+GW_SAVE_VEHICLE setDammage 0;
 
 // Make it so other people can use the pad
 _closest setVariable ["owner", "", true];
+
+// Then re-disable simulation
+[''] spawn _onExit;

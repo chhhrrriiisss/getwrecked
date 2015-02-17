@@ -28,7 +28,7 @@ if (count _nearby == 0) exitWith {};
 				[       
 	                [
 	                    _x,
-	                    ['forked'],
+	                    "['forked']",
 	                    10
 	                ],
 	                "addVehicleStatus",

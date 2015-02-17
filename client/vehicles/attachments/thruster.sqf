@@ -9,7 +9,7 @@ private ["_vehicle", "_obj"];
 _obj = [_this,0, objNull, [objNull]] call BIS_fnc_param;
 _vehicle = [_this,1, objNull, [objNull]] call BIS_fnc_param;
 
-if (isNull _obj || isNull _vehicle) exitWith {};
+if (isNull _obj || isNull _vehicle) exitWith { false };
 
 _extraFuel = _vehicle getVariable ["fuel", 0];
 _fuel = (fuel _vehicle) + _extraFuel;
@@ -17,15 +17,28 @@ _mass = getMass _vehicle;
 
 _cost = (['THR'] call getTagData) select 1;
 
-if (_fuel < _cost) then {
+_s = if (_fuel < _cost) then {
 
 	["LOW FUEL ", 0.3, warningIcon, colorRed, "warning"] spawn createAlert;
+
+	[       
+	    [
+	        _vehicle,
+	        "['nofuel']",
+	        3
+	    ],
+	    "addVehicleStatus",
+	    _vehicle,
+	    false 
+	] call BIS_fnc_MP;  
+
+	false
 
 } else {
 	
 	// Get object position
-	_oPos = (ATLtoASL (visiblePosition _obj));
-	_vPos = (ATLtoASL (visiblePosition _vehicle));
+	_oPos = (visiblePositionASL _obj);
+	_vPos = (visiblePositionASL _vehicle);
 	_cPos = getCenterOfMass _vehicle;		
 
 	// Actual center of vehicle
@@ -49,6 +62,7 @@ if (_fuel < _cost) then {
 	_newVelocity = _velocity;
 	_newVelocity = _velocity vectorAdd _thrusterVelocity;		
 
+
 	if ((_newVelocity select 2) > _maxPower) then {
 		_newVelocity set[2, _maxPower];
 	};
@@ -59,12 +73,13 @@ if (_fuel < _cost) then {
 	// Check we're not going too fast
 	if (_totalVelocity > _limit) exitWith {
 		["THRUSTER FAILURE!   ", 0.3, warningIcon, colorRed, "warning"] spawn createAlert;
+		false
 	};	
 
 	// If we're too high
 	_pos = (getPosATL _vehicle);
 	_alt = (_pos select 2);		
-	if (_alt > 50) exitWith {};		
+	if (_alt > 80) exitWith { false };		
 		
 	// Fuel calculation
 	_final = _fuel - _cost;	
@@ -87,17 +102,13 @@ if (_fuel < _cost) then {
 	] call BIS_fnc_MP;
 
 	_vehicle setVelocity _newVelocity;
-
-	// // If the angle is significant enough, tilt vehicle to simulate instability
-	if (_dist > 1.5) then {
-		_oVector = vectorUp _obj;
-		_vehicleVector = vectorUp _vehicle;
-		_newVector = _oVector vectorAdd _heading;
-		_vehicle setVectorUp _newVector; // pitch: 120, bank: -78, yaw: 37
-	};		
 	
 	playSound3D ["a3\sounds_f\weapons\rockets\new_rocket_4.wss", _vehicle, false, _vPos, 1, 1, 50];
 	playSound3D ["a3\sounds_f\weapons\rockets\new_rocket_6.wss", _vehicle, false, _vPos, 1, 1, 50];
+
+	true
 };
+
+_s 
 
 

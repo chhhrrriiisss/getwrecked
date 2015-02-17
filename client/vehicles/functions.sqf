@@ -14,7 +14,7 @@ calcMass = {
 	_vMass = (getMass _v);
 
 	_d = [(typeof _v), GW_VEHICLE_LIST] call getData;
-	_modifier = if (!isNil "_d") then { ((_d select 2) select 0) } else { 1 };
+	_modifier = if (!isNil "_d") then { (((_d select 2) select 0) select 0) } else { 1 };
 	_oMass = ( _o getVariable ["mass", 0] );	
 	_oMass = _oMass * _modifier;
 	_newMass = _vMass + _oMass;
@@ -176,20 +176,20 @@ setVehicleActions = {
 	
 	_vehicle = _this select 0;
 
+	_vehicle setVariable ['hasActions', true];
+
 	// Lock ons
 	if (_vehicle getVariable ["lockOns", false]) then {
 
 		_vehicle addAction["<t color='#ff1100' style='0'>Disable Auto-Lock</t>", {
-			GW_LOCKEDTARGETS = [];
-			(_this select 0) setVariable ["lockOns", false];
-			["DISABLED! ", 0.5, clearIcon, colorRed, "warning"] spawn createAlert;   
+
+			[(_this select 0), false] call toggleLockOn;
 
 		}, [], 0, false, false, "", " (_target getVariable 'lockOns') && player in _target && (player == (driver _target))"];	
 
 		_vehicle addAction["<t color='#ff1100' style='0'>Enable Auto-Lock</t>", {
-			GW_LOCKEDTARGETS = [];
-			(_this select 0) setVariable ["lockOns", true];
-			["ENABLED! ", 1.5, lockingIcon, nil, "slideDown"] spawn createAlert;   
+
+			[(_this select 0), true] call toggleLockOn;			
 
 		}, [], 0, false, false, "", " !(_target getVariable 'lockOns') && player in _target && (player == (driver _target))"];	
 
@@ -206,15 +206,7 @@ setVehicleActions = {
 	// Detonate explosives
 	_vehicle addAction ["<t color='#ff1100' style='0'>Detonate Explosives</t>", {
 
-		_v = (_this select 0);
-		_targets = _v getVariable ["GW_detonateTargets", []];
-
-		{
-			_x setVariable ["triggered", true];
-
-		} ForEach _targets;
-
-		_v setVariable ["GW_detonateTargets", []];
+		[(_this select 0)] call detonateTargets;
 
 	}, [], 0, false, false, "", "( (player in _target) && (player == (driver _target)) && (count (_target getVariable ['GW_detonateTargets', []]) > 0) )"];
 
@@ -226,7 +218,7 @@ setVehicleActions = {
 		[       
 			[
 				(_this select 0),
-				['cloak']
+				"['cloak']"
 			],
 			"removeVehicleStatus",
 			false,
@@ -235,19 +227,19 @@ setVehicleActions = {
 
 	}, [], 0, false, false, "", "( (player in _target) && (player == (driver _target)) && ( 'cloak' in (_target getVariable ['status', []]) ) )"];
 
-	// Editor (Lift Object)
-	_vehicle addAction [liftVehicleFormat, {
-		
-		[(_this select 0), (_this select 1)] spawn liftVehicle;
+	// Open the settings menu
+	_vehicle addAction[settingsVehicleFormat, {
 
-	}, [], 0, false, false, "", "( (GW_CURRENTZONE == 'workshopZone') && !(player in _target) && !GW_EDITING && !GW_LIFT_ACTIVE && ((player distance _target) < 7) && ([_target, player, false] call checkOwner) && !(GW_PAINT_ACTIVE) )"];
+		[(_this select 0), player] spawn settingsMenu;
 
-	// Editor (Lift Object)
-	_vehicle addAction [settingsVehicleFormat, {
-		
-		[(_this select 0), (_this select 1)] spawn settingsMenu;
+	}, [], 0, false, false, "", "( !GW_EDITING && player in _target && !GW_LIFT_ACTIVE && !(GW_PAINT_ACTIVE))"];		
 
-	}, [], 0, false, false, "", "( !GW_EDITING && !GW_LIFT_ACTIVE && ((player distance _target) < 7) && ([_target, player, false] call checkOwner) && !(GW_PAINT_ACTIVE) )"];
+	// Open the settings menu
+	_vehicle addAction[unflipVehicleFormat, {
+
+		[(_this select 0), true, true] spawn flipVehicle;
+
+	}, [], 0, false, false, "", "( GW_CURRENTZONE != 'workshopZone' && !(canMove _target) )"];		
 
 	// Horn override (and used for firing with mouse)
 	_vehicle addAction ["", {}, "", 0, false, true, "DefaultAction"];

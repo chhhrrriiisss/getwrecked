@@ -11,7 +11,15 @@ GW_NEW_ACTIVE = true;
 
 _pad = [_this,0, objNull, [objNull]] call BIS_fnc_param;
 
-if (isNull _pad) exitWith {};
+if (isNull _pad) exitWith {  GW_NEW_ACTIVE = false;  };
+
+// Check ownership
+_owner = ( [_pad, 8] call checkNearbyOwnership);
+
+if (!_owner) exitWith {
+    systemchat "Someone else is using this terminal.";
+    GW_NEW_ACTIVE = false;
+};
 
 disableSerialization;
 if(!(createDialog "GW_New")) exitWith { GW_NEW_ACTIVE = false; }; //Couldn't create the menu

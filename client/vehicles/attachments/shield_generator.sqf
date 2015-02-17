@@ -6,10 +6,11 @@
 
 private ["_obj", "_oPos", "_vehicle"];
 
-_obj = [_this,0, objNull, [objNull]] call BIS_fnc_param;
-_vehicle = [_this,1, objNull, [objNull]] call BIS_fnc_param;
+_obj = _this select 0;
+_vehicle = _this select 1;
 
-if (isNull _obj || isNull _vehicle) exitWith {};
+if (isNull _obj || isNull _vehicle) exitWith { false };
+if (!alive _obj || !alive _vehicle) exitWith { false };
 
 _oPos = (ASLtoATL getPosASL _obj);
 
@@ -31,7 +32,7 @@ if ( !("invulnerable" in _status) ) then {
 	[       
 		[
 			_vehicle,
-			['invulnerable'],
+			"['invulnerable']",
 			10
 		],
 		"addVehicleStatus",
@@ -39,16 +40,8 @@ if ( !("invulnerable" in _status) ) then {
 		false 
 	] call BIS_fnc_MP;  
 
-
-	_currentPaint = _vehicle getVariable ["paint", ''];		
-	if (_currentPaint == '') exitWith {};
-
-	// Swap the paint temporarily if we have a custom texture on
-	[_vehicle, _currentPaint] spawn {
-		[[(_this select 0),'Shield'],"setVehicleTexture",true,false] call BIS_fnc_MP;
-		Sleep 10;
-		[[(_this select 0), (_this select 1)],"setVehicleTexture",true,false] call BIS_fnc_MP;
-	};
+	// Swap vehicle texture temporarily
+	[_vehicle, 'client\images\vehicle_textures\special\shield.jpg', 10, { ("invulnerable" in ( (vehicle player) getVariable ['status', []])) } ] spawn swapVehicleTexture;
 
 };
 

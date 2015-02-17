@@ -1,16 +1,14 @@
-/*
-
-	Get In Handler
-
-*/
+//
+//      Name: handleGetIn
+//      Desc: Handler for jumping in vehicles
+//      Return: None
+//
 
 private ['_vehicle', '_position', '_unit'];
 
 _vehicle = _this select 0;   
 _position = _this select 1;
 _unit = _this select 2;		
-
-GW_INVULNERABLE = true;
 
 // If we're a passenger and driver is vacant, move to slow
 if ( _position != "driver" ) then {

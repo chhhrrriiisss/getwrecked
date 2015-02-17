@@ -42,7 +42,9 @@ GW_PREVIEW_CAM_LASTPOS = [0,0,0];
 showCinemaBorder false;
 showChat false;
 
-while {GW_PREVIEW_CAM_ACTIVE} do {	
+for "_i" from 0 to 1 step 0 do {
+
+	if (!GW_PREVIEW_CAM_ACTIVE) exitWith {};
 
 	// If there's a target available
 	if (!isNil "GW_PREVIEW_CAM_TARGET") then {	

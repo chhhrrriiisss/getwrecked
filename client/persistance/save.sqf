@@ -235,7 +235,7 @@ if (count _attachments > 0) then {
         if (_x isKindOf "StaticWeapon") then { 
             _boundingCenter = boundingCenter _x;
             _actualCenter = [-(_boundingCenter select 0), -(_boundingCenter select 1), -(_boundingCenter select 2)];
-            _pos = (_x modelToWorldVisual _actualCenter);
+            _pos = (_x modelToWorld _actualCenter);
 
             _p = _pos;
         };
@@ -245,7 +245,7 @@ if (count _attachments > 0) then {
 
         
         // Delete the object if we're having issues with it (or its old)
-        if (!alive _x || (_p distance _pos) > 999999 || (typeOf _x) in _pruneList ) then {
+        if (!alive _x || (_p distance _pos) > 999999  || (typeOf _x) in _pruneList ) then {
 
            deleteVehicle _x;
 

@@ -11,7 +11,7 @@ _this spawn {
 	_gun = _this select 0;
 	_target = _this select 1;
 
-	_repeats = 1;
+	_repeats = 0;
 	_round = "M_Titan_AT";
 	_soundToPlay = "a3\sounds_f\weapons\Mortar\mortar_05.wss";
 	_fireSpeed = 1;
@@ -23,7 +23,7 @@ _this spawn {
 
 	if (count GW_LOCKEDTARGETS <= 0) then {
 
-		for [{_i=1},{_i<=_repeats},{_i=_i+1}] do {
+		for "_i" from 0 to _repeats step 1 do {
 
 			_targetPos = if (typename _target == 'OBJECT') then { (ASLtoATL getPosASL _target) } else { _target };
 			_gPos = _gun selectionPosition "otochlaven";

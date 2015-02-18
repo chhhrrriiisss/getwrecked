@@ -170,9 +170,11 @@ if (_success) then {
 		playSound3D ["a3\sounds_f\weapons\Reloads\missile_reload.wss", _vehicle, false, getPos _vehicle, 3, 1, 100];
 	};
 
-	_newAmmo = _ammo - _cost;
-	if (_newAmmo < 0) then { _newAmmo = 0; };
-	_vehicle setVariable["ammo", _newAmmo];
+	if (_type != "FLM") then {
+		_newAmmo = _ammo - _cost;
+		if (_newAmmo < 0) then { _newAmmo = 0; };
+		_vehicle setVariable["ammo", _newAmmo];
+	};
 };
 
 GW_WAITUSE = false;

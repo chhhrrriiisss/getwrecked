@@ -34,5 +34,5 @@ if (_isWater) then {
 _wallInside setVectorDirAndUp [(_this select 3), _normal];
 _wallOutside setVectorDirAndUp [(_this select 4), _normal];
 
-_wallInside setObjectTextureGlobal [0,GW_boundaryTexture];
-_wallOutside setObjectTextureGlobal [0,GW_boundaryTexture];
+_wallInside setObjectTextureGlobal [0,"client\images\stripes_fade.paa"];
+_wallOutside setObjectTextureGlobal [0,"client\images\stripes_fade.paa"];

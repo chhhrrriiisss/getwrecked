@@ -35,4 +35,6 @@ Permission must be sought from the Author for its commercial use, any modificati
 
 Nuclear Explosion by [Moerderhoschi](http://www.armaholic.com/page.php?id=23963)
 
+Recurring Cleanup Script by [MDCCLXXVI](http://www.armaholic.com/page.php?id=27333)
+
 Chat command interceptor by [Conroy](http://www.armaholic.com/page.php?id=26377)

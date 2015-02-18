@@ -85,6 +85,9 @@ _this spawn {
 						_bomb = createVehicle ["M_PG_AT", _tPos, [], 0, "CAN_COLLIDE"];		
 						_bomb setVelocity [0,0,-100];
 						Sleep 0.01;			
+
+						[_tPos, 25, 25] call shockwaveEffect;
+
 						deleteVehicle _obj;
 
 					} else {

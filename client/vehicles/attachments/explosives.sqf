@@ -47,6 +47,9 @@ _obj attachTo [_holder, [0,0,0.1]];
 	// Recompile the vehicle to account for dropping one bag
 	[_this select 2] call compileAttached;
 
+	// Refresh hud bars
+	GW_HUD_REFRESH = true;
+
 };
 
 _releaseTime = time;
@@ -108,16 +111,24 @@ GW_DEPLOYLIST = GW_DEPLOYLIST + [_obj];
 
 		_bomb = createVehicle ["Bo_GBU12_LGB", _pos, [], 0, "FLY"];		
 		_bomb setVelocity [0,0,-10];
+		[_pos, 20, 55] call shockwaveEffect;
 
-		_nearby = _pos nearEntities [["Car"], 15];	
+		_nearby = _pos nearEntities [["Car"], 20];	
 
 		if (count _nearby > 0) then {
 			{
-				if (_x != (_v)) then { [_x, "EPL"] call markAsKilledBy; };
 				_status = _x getVariable ['status', []];
-				_d = if ('nanoarmor' in _status) then { 0.05 } else { (random (0.25) + 0.75) };
-				_x setDammage ((getdammage _x) + _d);
-				_x call updateVehicleDamage;
+
+				if ('invulnerable' in _status) then {} else {
+
+					if (_x != (_v)) then { [_x, "EPL"] call markAsKilledBy; };
+					
+					_d = if ('nanoarmor' in _status) then { 0.05 } else { (random (0.25) + 0.5) };
+					_x setDammage ((getdammage _x) + _d);
+					_x call updateVehicleDamage;
+
+				};
+				
 				false
 				
 			} count _nearby > 0;

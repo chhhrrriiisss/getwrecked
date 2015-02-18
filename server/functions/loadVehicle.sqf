@@ -1,8 +1,8 @@
-/*
-
-    Loads a vehicle with given data
-
-*/
+//
+//      Name: loadVehicle
+//      Desc:  Generate a vehicle on server side using raw data
+//      Return: None
+//
 
 private['_class', '_name', '_camo', '_source', '_o', '_k'];
 

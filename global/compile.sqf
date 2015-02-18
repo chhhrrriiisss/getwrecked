@@ -94,7 +94,7 @@ getTagData = {
 		case "MAG":	{  [45, 0]	};
 		case "GRP":	{  [1, 0]	};
 		case "CAL":	{  [30, 0.1] };
-		case "EPL":	{  [0.5, 0]	};
+		case "EPL":	{  [1, 0]	};
 		case "JMR":	{  [0, 0]	};
 
 		case "HMG": {  [0.15, 0.002]	};

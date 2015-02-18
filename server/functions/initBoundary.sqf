@@ -6,8 +6,6 @@
 
 if (!isServer) exitWith {};
 
-GW_boundaryTexture = "client\images\stripes_fade.paa";
-
 if (isNil "GW_boundariesSpawned") then {
 	
 	GW_boundariesSpawned = true;	  

@@ -116,6 +116,7 @@ _layerStatic = ("BIS_layerStatic" call BIS_fnc_rscLayer);
 
 GW_HUD_VEHICLE_ACTIVE = false;
 GW_HUD_NORMAL_ACTIVE = false;
+GW_HUD_REFRESH = false;
 
 for "_i" from 0 to 1 step 0 do {
 
@@ -158,9 +159,22 @@ for "_i" from 0 to 1 step 0 do {
 		};
 
 		// Open vehicle HUD
-		if (!GW_HUD_VEHICLE_ACTIVE) then {
+		if (!GW_HUD_VEHICLE_ACTIVE || GW_HUD_REFRESH) then {
 
-			_layerStatic cutRsc ["RscStatic", "PLAIN" , 1];
+			if (GW_HUD_REFRESH) then {
+				GW_HUD_REFRESH = false;
+				_count = 0;
+				{
+				
+					[[(_vHudBars select _count), (_vHudSidebar select _count), (_vHudIcons select _count)], [['fade', 0, 1, 0]], "quad"] spawn createTween;	
+					_count = _count + 1;
+
+					false
+				} count _vHudBars > 0;
+
+			} else { _layerStatic cutRsc ["RscStatic", "PLAIN" , 1]; };
+
+			
 
 			GW_HUD_VEHICLE_ACTIVE = true;				
 
@@ -460,63 +474,71 @@ for "_i" from 0 to 1 step 0 do {
 			_tag = _x;
 			_hasType = [_tag, _vehicle] call hasType;
 
-			// If there's more than one of these items, get the timeout to check all tags of that type
-			_state = [_tag, time] call checkTimeout;
-			_totalOnTimeout = (_state select 2);
+			// If the type is missing
+			if (_hasType <= 0) then {
+				systemchat format['missing %1', _tag];
 
-			// Determine what's the correct reload time for the number of modules
-			_reloadTime = ([_tag] call getTagData) select 0;		
-			_adjustedReloadTime = (_reloadTime * _hasType);
-			_timeLeft = (_state select 0);
+			} else {
 
-			_pos = if ((_state select 1) && {_timeLeft > 0} && {!isNil "_reloadTime"} && {_tag != "EPL"}) then {
-				(1 - (_timeLeft / _adjustedReloadTime)) 
-			} else { 1 };
+				// If there's more than one of these items, get the timeout to check all tags of that type
+				_state = [_tag, time] call checkTimeout;
+				_totalOnTimeout = (_state select 2);
 
-			_pos = switch (_tag) do {
+				// Determine what's the correct reload time for the number of modules
+				_reloadTime = ([_tag] call getTagData) select 0;		
+				_adjustedReloadTime = (_reloadTime * _hasType);
+				_timeLeft = (_state select 0);
 
-				case "CLK": { (_actualAmmo / 100) };
-				case "OIL": { (_actualFuel / 100) };
-				case "FLM": { (_actualFuel / 100) };
-				case "THR": { (_actualFuel / 100) };
-				case "NTO": { (_actualFuel / 100) };
-				default { _pos };
+				_pos = if ((_state select 1) && {_timeLeft > 0} && {!isNil "_reloadTime"} && {_tag != "EPL"}) then {
+					(1 - (_timeLeft / _adjustedReloadTime)) 
+				} else { 1 };
 
-			};
-			
-			_data = [_tag, GW_LOOT_LIST] call getData;
-			_icon = if (!isNil "_data") then { (_data select 9) } else { "" };
+				_pos = switch (_tag) do {
 
-			_bindKeys = '';
-			{
-				_exit = false;
-				if ((_x select 0) == _tag) then {
-
-					_exit = if (_tag == "EPL") then { true } else { false };
-					_b = (_x select 1) getVariable ["GW_KeyBind", ["-1", "1"]];
-					_b = if (typename _b != "ARRAY") then { [str _b, "1"] } else { _b };
-					_k = if (typename (_b select 0) != "STRING") then { 
-						"-1"
-					} else { 
-						if ((_b select 0) == "-1") exitWith { "-1" };
-						([parseNumber(_b select 0)] call codeToKey) 
-					};					
-					_k = if (_k != "-1") then { format[' [ %1 ]', _k] } else { '' };			
-					_bindKeys = format['%1%2', _bindKeys, _k];
+					case "CLK": { (_actualAmmo / 100) };
+					case "OIL": { (_actualFuel / 100) };
+					case "FLM": { (_actualFuel / 100) };
+					case "THR": { (_actualFuel / 100) };
+					case "NTO": { (_actualFuel / 100) };
+					default { _pos };
 
 				};
-				if (_exit) exitWith {};
+				
+				_data = [_tag, GW_LOOT_LIST] call getData;
+				_icon = if (!isNil "_data") then { (_data select 9) } else { "" };
 
-			} count (_vehicle getVariable [ (_tag call {
-				if (_tag in GW_WEAPONSARRAY) exitWith { 'weapons' };
-				if (_tag in GW_TACTICALARRAY) exitWith { 'tactical' };
-				''
-			}), []]) > 0;
+				_bindKeys = '';
+				{
+					_exit = false;
+					if ((_x select 0) == _tag) then {
 
-			(_vHudIcons select _c) ctrlSetStructuredText parseText ( format["<img size='1.2' align='center' valign='middle' shadow='0' image='%3' /><t size='0.5' shadow='0' valign='middle' align='center' color='#ffc730'> %1</t>", _bindKeys, { if (count toArray _bindKeys > 0) exitWith { 'right' }; 'center' }, _icon] );	
-			(_vHudBars select _c) progressSetPosition _pos;		
+						_exit = if (_tag == "EPL") then { true } else { false };
+						_b = (_x select 1) getVariable ["GW_KeyBind", ["-1", "1"]];
+						_b = if (typename _b != "ARRAY") then { [str _b, "1"] } else { _b };
+						_k = if (typename (_b select 0) != "STRING") then { 
+							"-1"
+						} else { 
+							if ((_b select 0) == "-1") exitWith { "-1" };
+							([parseNumber(_b select 0)] call codeToKey) 
+						};					
+						_k = if (_k != "-1") then { format[' [ %1 ]', _k] } else { '' };			
+						_bindKeys = format['%1%2', _bindKeys, _k];
 
-			_c = _c + 1;
+					};
+					if (_exit) exitWith {};
+
+				} count (_vehicle getVariable [ (_tag call {
+					if (_tag in GW_WEAPONSARRAY) exitWith { 'weapons' };
+					if (_tag in GW_TACTICALARRAY) exitWith { 'tactical' };
+					''
+				}), []]) > 0;
+
+				(_vHudIcons select _c) ctrlSetStructuredText parseText ( format["<img size='1.2' align='center' valign='middle' shadow='0' image='%3' /><t size='0.5' shadow='0' valign='middle' align='center' color='#ffc730'> %1</t>", _bindKeys, { if (count toArray _bindKeys > 0) exitWith { 'right' }; 'center' }, _icon] );	
+				(_vHudBars select _c) progressSetPosition _pos;		
+
+				_c = _c + 1;
+
+			};
 
 			false
 

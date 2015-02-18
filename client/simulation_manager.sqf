@@ -21,7 +21,7 @@ for "_i" from 0 to 1 step 0 do {
 
 	_currentPos = positionCameraToWorld [0,0,0];
 
-	if ( (_currentPos distance _lastPos > CHECK_DISTANCE) && !GW_PREVIEW_CAM_ACTIVE && !GW_LIFT_ACTIVE) then {
+	if ( (_currentPos distance _lastPos > CHECK_DISTANCE) && !GW_PREVIEW_CAM_ACTIVE && !GW_LIFT_ACTIVE && !GW_WAITLOAD) then {
 		
 		_lastPos = _currentPos;
 

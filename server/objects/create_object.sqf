@@ -1,9 +1,8 @@
-/*
-	
-	createObject
-
-
-*/
+//
+//      Name: createObject
+//      Desc: Create a get wrecked item and apply object data
+//      Return: None
+//
 
 private ['_pos', '_dir', '_type', '_cycle', '_collide', '_handlers'];
 

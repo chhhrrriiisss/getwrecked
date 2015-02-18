@@ -14,7 +14,6 @@ createSupplyDrop = compile preprocessFile "server\zones\createSupplyDrop.sqf";
 
 // Object
 setObjectData = compile preprocessFile "server\objects\object_data.sqf";
-setObjectCleanup = compile preprocessFile "server\objects\object_cleanup.sqf";
 
 // Vehicle
 setVehicleRespawn = compile preprocessFile "server\vehicles\vehicle_respawn.sqf";

@@ -199,6 +199,7 @@ nitroEffect = compile preprocessFile "client\effects\nitro.sqf";
 muzzleEffect = compile preprocessFile "client\effects\muzzle.sqf";
 flameEffect = compile preprocessFile "client\effects\flame.sqf";
 nukeEffect = compile preprocessFile "client\effects\nuke.sqf";
+shockwaveEffect = compile preprocessFile "client\effects\shockwave.sqf";
 
 // Zone Functions
 returnToZone =  compile preprocessFile "client\functions\returnToZone.sqf";

@@ -33,7 +33,7 @@ MISSION_ROOT = call {
 call compile preprocessFile "global\compile.sqf";
 [] execVM "briefing.sqf";
 
-hint "v0.8.0 RC10";
+hint "v0.8.0c RLS";
 
 99999 cutText ["Loading...", "BLACK", 0.01]; 
 

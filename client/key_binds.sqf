@@ -27,16 +27,8 @@ initBinds = {
 	setMouseDown = {			
 		if ((_this select 1) == 0) then {  
 
-			GW_LMBDOWN = true; 
-			
-			if (GW_SETTINGS_ACTIVE && !isNil "GW_MOUSEX" && !isNil "GW_MOUSEY" && GW_MOUSEX > 0.4 ) then {
-				disableSerialization;
-				_list = ((findDisplay 92000) displayCtrl 92001);
-				_index = lnbcurselrow _list;
-				if (_index in reservedIndexes) exitWith {};
-				[_list, _index, true] spawn setBind;
-			};
-			
+			GW_LMBDOWN = true; 		
+	
 		};
 		
 	};

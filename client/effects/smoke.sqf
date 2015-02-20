@@ -3,11 +3,11 @@
 //      Desc: Large white clouds of smoke in a trail
 //   
 
-_target = [_this,0, objNull, [objNull]] call BIS_fnc_param;
-_duration = [_this,1, 1, [0]] call BIS_fnc_param;
-_color = [_this,2, [1, 1, 1, 1], [[]]] call BIS_fnc_param;
-_scale = [_this,3, 1, [0]] call BIS_fnc_param;
-_offset = [_this,4, 0, [0]] call BIS_fnc_param;
+_target = [_this,0, objNull, [objNull]] call filterParam;
+_duration = [_this,1, 1, [0]] call filterParam;
+_color = [_this,2, [1, 1, 1, 1], [[]]] call filterParam;
+_scale = [_this,3, 1, [0]] call filterParam;
+_offset = [_this,4, 0, [0]] call filterParam;
 
 if (isNull _target || _duration < 0) exitWith {};
 _pos = visiblePosition _target;

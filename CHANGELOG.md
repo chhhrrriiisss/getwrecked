@@ -1,7 +1,14 @@
 # [Get Wrecked](http://getwrecked.info) Changelog
-## Last Updated: [18-02-2015] ##
+## Last Updated: [19-02-2015] ##
 
 Note: Some changes that are deemed spoilers are hidden from this log 
+
+**v0.8c** [Public alpha hotfix 2]
+
+- Fixed - Nuke not dealing any damage
+- Fixed - Magnetic coil script error
+- Fixed - Changed settings menu mouse bind back to double click to toggle
+- Fixed - Emergency parachutes can be deployed multiple times while active
 
 **v0.8b** [Public alpha hotfix]
 

@@ -6,11 +6,14 @@
 
 private ["_vehicle", "_player", "_newPos"];
 
-_obj = [_this,0, objNull, [objNull]] call BIS_fnc_param;
-_vehicle = [_this,1, objNull, [objNull]] call BIS_fnc_param;
+_obj = [_this,0, objNull, [objNull]] call filterParam;
+_vehicle = [_this,1, objNull, [objNull]] call filterParam;
 
 if (isNull _vehicle) exitWith { false };
 if (!local _vehicle) exitWith { false };
+
+if (isNil "GW_CHUTE_ACTIVE") then { GW_CHUTE_ACTIVE = false; };
+if (GW_CHUTE_ACTIVE) exitWith { false };
 
 _pos = (ASLtoATL getPosASL _vehicle);
 _alt = _pos select 2;
@@ -61,6 +64,8 @@ if (_alt < 4) exitWith { ['TOO LOW!', 0.25, warningIcon, colorRed, "flash"] spaw
 		_time = time + 5;
 		waitUntil {time > _time};
 		if (!isNull (_this select 1)) then {deleteVehicle (_this select 1)};
+
+		GW_CHUTE_ACTIVE = false;
 
 	};
 };

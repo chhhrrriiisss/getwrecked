@@ -167,6 +167,7 @@ findUnit = compile preprocessFile 'global\functions\findUnit.sqf';
 allPlayers = compile preprocessFile 'global\functions\allPlayers.sqf';
 getBoundingBox = compile preprocessFile 'global\functions\getBoundingBox.sqf';
 getData = compile preprocessFile 'global\functions\getData.sqf';
+filterParam = compile preprocessFile 'global\functions\filterParam.sqf';
 
 // Utility
 getVectorDirAndUpRelative = compile preprocessFile 'global\functions\getVectorDirAndUpRelative.sqf';

@@ -6,22 +6,38 @@
 
 private ['_a', '_bind', '_tag', '_state'];
 
-_a = [_this,0, [], [[]]] call BIS_fnc_param;
+_a = [_this,0, [], [[]]] call filterParam;
 
 if (count _a == 0) exitWith {};
 
 _register = [];
 {
 	_tag = (_x select 0);
-	_obj = (_x select 1);
-	_type = if (typeOf (_x select 1) == "groundWeaponHolder") then { (_x select 1) getVariable "type" } else { typeOf (_x select 1) };
+	_obj = (_x select 1);	
 
-	_data = [_type, GW_LOOT_LIST] call getData;
+	// For bags of explosives and teleport devices, ignore additional entries
+	if (true) then {
 
-	// For bags of explosives, ignore additional entries
-	if (isNil "_data" || (_tag in _register && _tag == 'EPL') ) then {} else {
+		// Is it actually legit?
+		_data = [_tag, GW_LOOT_LIST] call getData;
+		if (isNil "_data") exitWith {};
+		
+		// Used for preventing repeats of certain objects
+		_register pushBack _tag;
 
-		_name = _data select 1;	
+		_totalAdded = { _x == _tag } count _register;
+		_totalExists = [_tag, GW_SETTINGS_VEHICLE] call hasType;
+
+		// Only add an entry for the last item of that type
+		if (_totalAdded < _totalExists && (_tag == 'EPL' || _tag == 'TPD')) exitWith {};
+
+		// Determine the amount on the vehicle 
+		_amount = if (_tag in _register && (_tag == 'EPL' || _tag == 'TPD')) then {
+			if (_totalExists <= 1) exitWIth { '' };
+			(format ['(x%1) ', {_x == _tag} count _register])
+		} else { '' };
+	
+		_name = format['%2 %1 ', _amount, _data select 1];
 		_icon = _data select 9;
 
 		_list lnbAddRow["", _name, "", ""];			
@@ -55,14 +71,6 @@ _register = [];
 		missionNamespace setVariable [_idString, _obj];
 
 		_list lnbSetData[ [_row, 1], _tag];
-
-		// Used for preventing repeats of certain objects
-		_register = _register + [_tag];
-
-		// Additionally add custom bind entries for certain module types
-		if (_tag == "EPL") then {
-
-		};
 
 	};
 	

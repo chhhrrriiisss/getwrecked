@@ -6,8 +6,8 @@
 
 private ["_vehicle", "_obj"];
 
-_obj = [_this,0, objNull, [objNull]] call BIS_fnc_param;
-_vehicle = [_this,1, objNull, [objNull]] call BIS_fnc_param;
+_obj = [_this,0, objNull, [objNull]] call filterParam;
+_vehicle = [_this,1, objNull, [objNull]] call filterParam;
 
 if (isNull _obj || isNull _vehicle) exitWith { false };
 
@@ -44,7 +44,7 @@ _vehicle setDammage 0;
 		0.5
 	],
 	"muzzleEffect"
-] call BIS_fnc_MP;
+] call gw_fnc_mp;
 
 ["REPAIRED!", 1, emergencyRepairIcon, nil, "slideDown"] spawn createAlert;
 

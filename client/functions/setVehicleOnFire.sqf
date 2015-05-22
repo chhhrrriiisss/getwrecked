@@ -6,9 +6,9 @@
 
 private ['_target', '_chance'];
 
-_target = _this select 0;
-_chance = if (isNil {_this select 1}) then { 15 } else { (_this select 1) }; // Chance of setting something alight default 15%
-_minDuration = if (isNil {_this select 2}) then { 3 } else { (_this select 2) }; // Default minimum duration of fire
+_target = [_this, 0, objNull, [objNull]] call filterParam;
+_chance = [_this, 1, 15, [0]] call filterParam; // Chance of setting something alight default 15%  
+_minDuration = [_this, 2, 3, [0]] call filterParam; // Default minimum duration of fire
 
 if (isNull _target) exitWith {};
 
@@ -34,7 +34,7 @@ if ( !('inferno' in _status) && !('nofire' in _status) && _isVehicle && _rnd < _
         "addVehicleStatus",
         _target,
         false 
-	] call BIS_fnc_MP;  
+	] call gw_fnc_mp;  
 
 	[
 		[
@@ -42,6 +42,6 @@ if ( !('inferno' in _status) && !('nofire' in _status) && _isVehicle && _rnd < _
 			_rnd
 		],
 		"burnEffect"
-	] call BIS_fnc_MP;
+	] call gw_fnc_mp;
 
 };

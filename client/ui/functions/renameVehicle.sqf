@@ -7,7 +7,7 @@
 private ['_cur', '_result'];
 
 _cur = GW_SETTINGS_VEHICLE getVariable ["name", ''];
-_result = ['RENAME VEHICLE', _cur, 'INPUT'] call createMessage;
+_result = ['RENAME VEHICLE', _cur, 'INPUT', [generateName, randomizeIcon]] call createMessage;
 
 if (typename _result == "STRING") then {
 	if (count toArray _result > 0 && _result != _cur) then {

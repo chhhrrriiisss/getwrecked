@@ -12,7 +12,7 @@ _this spawn {
 	_target = _this select 1;
 
 	_repeats = 0;
-	_round = "M_Titan_AT";
+	_round = "R_TBG32V_F";
 	_soundToPlay = "a3\sounds_f\weapons\Mortar\mortar_05.wss";
 	_fireSpeed = 1;
 	_projectileSpeed = -500;
@@ -25,7 +25,8 @@ _this spawn {
 
 		for "_i" from 0 to _repeats step 1 do {
 
-			_targetPos = if (typename _target == 'OBJECT') then { (ASLtoATL getPosASL _target) } else { _target };
+			// _targetPos = if (typename _target == 'OBJECT') then { (ASLtoATL getPosASL _target) } else { _target };
+			_targetPos = screenToWorld [0.5, 0.5];
 			_gPos = _gun selectionPosition "otochlaven";
 			_gPos = _gun modelToWorld _gPos;
 			_gPos set [2, (_gPos select 2) + 3];
@@ -47,6 +48,8 @@ _this spawn {
 
 			Sleep 1;
 			deleteVehicle _launch;
+
+			_targetPos = [_targetPos, 5, 5] call setVariance;
 
 			[_targetPos, _projectileSpeed] call mortarImpact;
 
@@ -95,7 +98,7 @@ _this spawn {
 
 				_dist = (_targetPos distance _gPos) / 1000;
 
-				Sleep 0.15;
+				Sleep 0.1;
 				deleteVehicle _launch;
 
 				[_targetPos, (_projectileSpeed * 2)] call mortarImpact;

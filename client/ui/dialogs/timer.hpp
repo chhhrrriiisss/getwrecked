@@ -71,7 +71,7 @@ class GW_Timer
 		{
 			idc = GW_Timer_Title_ID;
 			text = "";
-
+			
 			x = (0.1) * safezoneW + safezoneX;
 			y = (0.44) * safezoneH + safezoneY;
 			w = 0.8  * safezoneW;

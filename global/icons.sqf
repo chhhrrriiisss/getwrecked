@@ -17,6 +17,7 @@ steelpanelIcon = ICON_ROOT + "objects\steelpanel.paa";
 metalfenceIcon = ICON_ROOT + "objects\lightmetalfence.paa";
 palletsIcon = ICON_ROOT + "objects\pallets.paa";
 barrierIcon = ICON_ROOT + "objects\barrier.paa";
+emfIcon =  ICON_ROOT + "objects\emf.paa";
 
 // Weapon Icons
 hmgIcon =  ICON_ROOT + "weapons\hmg.paa";
@@ -28,6 +29,10 @@ lockonIcon =  ICON_ROOT + "hud\rpgTarget.paa";
 laserIcon =  ICON_ROOT + "weapons\laser.paa";
 railgunIcon =  ICON_ROOT + "weapons\railgun.paa";
 flameIcon =  ICON_ROOT + "weapons\flame.paa";
+rpdIcon =  ICON_ROOT + "weapons\rpd.paa";
+harIcon =  ICON_ROOT + "weapons\har.paa";
+crrIcon =  ICON_ROOT + "weapons\crr.paa";
+dotIcon = 'A3\ui_f\data\map\GroupIcons\selector_selectedfriendly_ca.paa';
 
 // Tactical Icons
 nitroIcon =  ICON_ROOT + "tactical\nitro.paa";
@@ -43,6 +48,8 @@ shieldIcon =  ICON_ROOT + "tactical\shield.paa";
 cloakIcon =  ICON_ROOT + "tactical\cloak.paa";
 magneticIcon =  ICON_ROOT + "tactical\magneticcoil.paa";
 thrusterIcon =  ICON_ROOT + "tactical\verticalthruster.paa";
+elmIcon = ICON_ROOT + "tactical\elm.paa";
+tpdIcon = ICON_ROOT + "tactical\tpd.paa";
 
 // Menus
 createIcon = ICON_ROOT + "menus\create.paa";
@@ -53,6 +60,7 @@ linkIcon = ICON_ROOT + "menus\link.paa";
 mouseActiveIcon = ICON_ROOT + "menus\mouseActive.paa";
 mouseInactiveIcon = ICON_ROOT + "menus\mouseInactive.paa";
 hornIcon = ICON_ROOT + "menus\horn.paa";
+randomizeIcon = ICON_ROOT + "menus\randomize.paa";
 
 // Economy 
 lockIcon = ICON_ROOT + "menus\padlock.paa";
@@ -72,6 +80,7 @@ refuelActiveIcon = ICON_ROOT + "hud\refuel_active.paa";
 saveAreaIcon = ICON_ROOT + "hud\saveArea.paa";
 buyAreaIcon = ICON_ROOT + "hud\buyArea.paa";
 lootAreaIcon = ICON_ROOT + "hud\lootArea.paa"; 
+hiddenIcon =  ICON_ROOT + "hud\hidden.paa";
 
 activeIconA = ICON_ROOT + "hud\active_a.paa";
 activeIconB = ICON_ROOT + "hud\active_b.paa";
@@ -84,13 +93,6 @@ balanceIcon = ICON_ROOT + "hud\balance.paa";
 randomIcon = ICON_ROOT + "hud\random4.paa";
 objectTag = MISSION_ROOT + 'client\images\tag.paa';
 uiBar = MISSION_ROOT + 'client\images\uiBar.paa';
-
-nukeSign = MISSION_ROOT + 'client\images\signage\supply_nuke.jpg';
-armorSign = MISSION_ROOT + 'client\images\signage\supply_armor.jpg';
-damageSign = MISSION_ROOT + 'client\images\signage\supply_damage.jpg';
-randomSign = MISSION_ROOT + 'client\images\signage\supply_random.jpg';
-speedSign = MISSION_ROOT + 'client\images\signage\supply_speed.jpg';
-jammerSign = MISSION_ROOT + 'client\images\signage\supply_jammer.jpg';
 
 damageSupplyIcon = ICON_ROOT + "hud\damageSupply.paa";
 speedSupplyIcon = ICON_ROOT + "hud\speedSupply.paa";
@@ -120,11 +122,19 @@ rotateCCWIcon =  ICON_ROOT + "menus\rotateccw.paa";
 tiltForwardIcon =  ICON_ROOT + "menus\tiltForward.paa";
 tiltBackwardIcon =  ICON_ROOT + "menus\tiltBackward.paa";
 dropIcon =  ICON_ROOT + "menus\drop.paa";
+suspendIcon =  ICON_ROOT + "menus\suspend.paa";
 attachIcon =  ICON_ROOT + "menus\attach.paa";
 detachIcon =  ICON_ROOT + "menus\detach.paa";
 snappingIcon =  ICON_ROOT + "menus\snapping.paa";
 noSnappingIcon =  ICON_ROOT + "menus\nosnapping.paa";
 cameraRotateIcon =  ICON_ROOT + "menus\cameraRotate.paa";
+
+nukeSign = MISSION_ROOT + 'client\images\signage\supply_nuke.jpg';
+armorSign = MISSION_ROOT + 'client\images\signage\supply_armor.jpg';
+damageSign = MISSION_ROOT + 'client\images\signage\supply_damage.jpg';
+randomSign = MISSION_ROOT + 'client\images\signage\supply_random.jpg';
+speedSign = MISSION_ROOT + 'client\images\signage\supply_speed.jpg';
+jammerSign = MISSION_ROOT + 'client\images\signage\supply_jammer.jpg';
 
 // Action Menu Formatting
 settingsVehicleFormat = "<img size='3' color='#ffffff' shadow='0' image='" + ICON_ROOT + "menus\settings.paa' align='left' /> <t size='1.1' shadow='0' align='left'>SETTINGS  </t>";
@@ -143,7 +153,10 @@ dropObjectFormat = "<img size='3' color='#ffffff' shadow='0' image='" + ICON_ROO
 snapObjectFormat = "<img size='3' color='#ffffff' shadow='0' image='" + ICON_ROOT + "menus\snapping.paa' align='left' /> <t size='1.1' shadow='0' align='left'>SNAPPING</t>";
 nosnapObjectFormat = "<img size='3' color='#ffffff' shadow='0' image='" + ICON_ROOT + "menus\nosnapping.paa' align='left' /> <t size='1.1' shadow='0' align='left'>DISABLE SNAPPING </t>";
 liftVehicleFormat = "<img size='3' color='#ffffff' shadow='0' image='" + ICON_ROOT + "menus\lift.paa' align='left' /> <t size='1.1' shadow='0' align='left'>LIFT  </t>";
+hideVehicleFormat = "<img size='3' color='#ffffff' shadow='0' image='" + ICON_ROOT + "hud\hidden.paa' align='left' /> <t size='1.1' shadow='0' align='left'>HIDE  </t>";
+showVehicleFormat = "<img size='3' color='#ffffff' shadow='0' image='" + ICON_ROOT + "tactical\cloak.paa' align='left' /> <t size='1.1' shadow='0' align='left'>SHOW  </t>";
 dropVehicleFormat = "<img size='3' color='#ffffff' shadow='0' image='" + ICON_ROOT + "menus\drop.paa' align='left' /> <t size='1.1' shadow='0' align='left'>DROP  </t>";
+suspendVehicleFormat = "<img size='3' color='#ffffff' shadow='0' image='" + ICON_ROOT + "menus\suspend.paa' align='left' /> <t size='1.1' shadow='0' align='left'>SUSPEND  </t>";
 paintVehicleFormat = "<img size='3' color='#ffffff' shadow='0' image='" + ICON_ROOT + "menus\paint.paa' align='left' /> <t size='1.1' shadow='0' align='left'>PAINT  </t>";
 
 // Terminal formatting

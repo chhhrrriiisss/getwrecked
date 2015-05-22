@@ -9,9 +9,9 @@ private ["_type", "_vehicle", "_reloadTime"];
 if (GW_WAITUSE) exitWith {};
 GW_WAITUSE = true;
 
-_type = [_this,0, "", [""]] call BIS_fnc_param;
-_vehicle = [_this,1, objNull, [objNull]] call BIS_fnc_param;
-_module = [_this,2, objNull, [objNull]] call BIS_fnc_param;
+_type = [_this,0, "", [""]] call filterParam;
+_vehicle = [_this,1, objNull, [objNull]] call filterParam;
+_module = [_this,2, objNull, [objNull]] call filterParam;
 
 if (isNull _vehicle || _type == "") exitWith { GW_WAITUSE = false; };
 
@@ -104,10 +104,12 @@ _success = if (!isNil "_obj") then {
 		case "MIN": { dropMines };
 		case "PAR": { emergencyParachute };
 		case "EPL": { dropExplosives };
+		case "TPD": { dropTeleport };
 		case "CLK": { cloakingDevice };
 		case "MAG": { magneticCoil };
 		case "JMR": { dropJammer };
-
+		case "LPT": { dropLimpets };
+		case "ELM": { activateElectromagnet };
 	};
 
 	([_obj, _vehicle] call _command)

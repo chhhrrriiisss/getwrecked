@@ -9,7 +9,7 @@ private ['_vehicle', '_unit'];
 if (GW_NEW_ACTIVE) exitWith {};
 GW_NEW_ACTIVE = true;
 
-_pad = [_this,0, objNull, [objNull]] call BIS_fnc_param;
+_pad = [_this,0, objNull, [objNull]] call filterParam;
 
 if (isNull _pad) exitWith {  GW_NEW_ACTIVE = false;  };
 
@@ -35,6 +35,10 @@ _layerStatic cutRsc ["RscStatic", "PLAIN" , 0.5];
 "dynamicBlur" ppEffectEnable true;
 "dynamicBlur" ppEffectAdjust [0.3]; 
 "dynamicBlur" ppEffectCommit 0.25; 
+
+
+_saveAndCloseButton = (findDisplay 96000) displayCtrl 96003;
+ctrlSetFocus _saveAndCloseButton;
 
 // Menu has been closed, kill everything!
 waitUntil { isNull (findDisplay 96000) };

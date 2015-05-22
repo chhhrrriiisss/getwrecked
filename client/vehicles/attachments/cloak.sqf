@@ -4,9 +4,9 @@
 //      Return: None
 //
 
-private ['_vehicle', '_status', '_vehVel'];
+private ['_vehicle', '_status', '_vehVel', '_timeout'];
 
-_vehicle = [_this,1, objNull, [objNull]] call BIS_fnc_param;
+_vehicle = [_this,1, objNull, [objNull]] call filterParam;
 
 if (isNull _vehicle) exitWith { false };
 
@@ -52,7 +52,7 @@ playSound3D ["a3\sounds_f\sfx\special_sfx\sparkles_wreck_3.wss", _vehicle, false
     "setVisibleAttached",
     false,
     false 
-] call BIS_fnc_MP;  
+] call gw_fnc_mp;  
 
 player action ["engineoff", _vehicle];
 
@@ -74,17 +74,13 @@ waitUntil{
 	_prevFuel = fuel _v;
 	_v setFuel 0;
 
-	for "_i" from 0 to 1 step 0 do {
+	waitUntil {
 
-		if (!alive _v || _vA <= 0 || isEngineOn _v || GW_LMBDOWN || fireKeyDown != '') exitWith {};
-
-		Sleep 2;	
+		_status = _v getVariable ["status", []];
 
 		// Take ammo each tick
 		_vA = _v getVariable ["ammo", 0];
-		_vA = _vA - _c;
-		if (_vA < 0) then { _vA = 0; };
-		_v setVariable ["ammo", _vA];
+		_v setVariable ["ammo", ([_vA - _c, 0, 99999] call limitToRange)];
 
 		[
 			[
@@ -92,37 +88,45 @@ waitUntil{
 				2,
 				_s
 			],
-		"cloakEffect"
-		] call BIS_fnc_MP;
+			"cloakEffect",
+			true,
+			false
+		] call gw_fnc_mp;
 
-		_nearby = _p nearEntities [["car"], 10];
+		_pos = (ASLtoATL visiblePositionASL (_this select 0));
+		_nearby = _pos nearEntities [["car"], 10];
+
 		_found = false;
 
-		if (count _nearby > 1) then {
-			{
+		if ({	
+			_found = if (_x != _v) then {
+				_isVehicle = _x getVariable ["isVehicle", false];
+				_crew = count (crew _x);
+				if (_isVehicle && _crew > 0) exitWith { true };
+				false
+			} else { false };
 
-				if (_x != _v) then {
+			if (_found) exitWith {1};
+			false
+		} count _nearby isEqualTo 1) exitWith { true };
+		
+		Sleep 2;	
 
-					_isVehicle = _x getVariable ["isVehicle", false];
-					_crew = count (crew _x);
-
-					if (_isVehicle && _crew > 0) then {
-						_found = true;
-					};
-
-				};
-
-				if (_found) exitWith {};
-
-			} ForEach _nearby;
-		};
-
-		_status = _v getVariable ["status", []];
-		if ( !('cloak' in _status) || _found ) exitWith {};
+		(!alive _v || !alive player || _vA <= 0 || isEngineOn _v || GW_LMBDOWN || fireKeyDown != '' || !('cloak' in _status) || _found)
 
 	};
 
 	_v setFuel _prevFuel;
+
+	[       
+	    [
+	        _v,
+	        false
+	    ],
+	    "setVisibleAttached",
+	    false,
+	    false 
+	] call gw_fnc_mp;  
 
 	[       
 	    [
@@ -133,7 +137,7 @@ waitUntil{
 	    "addVehicleStatus",
 	    _v,
 	    false 
-	] call BIS_fnc_MP;  
+	] call gw_fnc_mp;  
 
 	_layerStatic = ("BIS_layerStatic" call BIS_fnc_rscLayer);
 	_layerStatic cutRsc ["RscStatic", "PLAIN" , 2];
@@ -146,19 +150,22 @@ waitUntil{
 		"removeVehicleStatus",
 		_v,
 		false 
-	] call BIS_fnc_MP;  
+	] call gw_fnc_mp;  
 
-	playSound3D ["a3\sounds_f\sfx\special_sfx\sparkles_wreck_1.wss", _v, false, _p, 2, 1, 150];	
 
 	[       
-	    [
-	        _v,
-	        false
-	    ],
-	    "setVisibleAttached",
-	    false,
-	    false 
-	] call BIS_fnc_MP;  
+		[
+			_v,
+			1,
+			2
+		],
+		"magnetEffect",
+		true,
+		false 
+	] call gw_fnc_mp;  
+
+	playSound3D ["a3\sounds_f\sfx\special_sfx\sparkles_wreck_1.wss", _v, false, _p, 2, 1, 150];	
+	
 
 };
 

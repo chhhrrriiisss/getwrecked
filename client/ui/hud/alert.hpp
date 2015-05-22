@@ -64,8 +64,6 @@ class GW_Alert
 				shadow = 0;
 			};
 
-
-
 			text = "";
 		};
 
@@ -87,28 +85,6 @@ class GW_Alert
 			w = (GW_ALERT_WIDTH * 1.25) * safezoneW;
 			h = (GW_ALERT_HEIGHT * 2) * safezoneH;
 		};
-
-		// class AlertTitle : GW_RscStructuredText
-		// {
-		// 	idc = 11111;
-		// 	type = CT_STRUCTURED_TEXT; // CT_STATIC
-  //     		style = ST_CENTER;
-		// 	text = "TEST";
-
-		//  	size = 0.05;
-		//  	sizeEx = "0.05";
-		//  	colorText[] = {1,1,1,1};
-		//  	colorBackground[] = {0,0,0,0.25};
-		//  	shadow = 0;
-
-		// 	x = (ALERT_X) * safezoneW + safezoneX;
-		// 	y = (ALERT_Y) * safezoneH + safezoneY;
-		// 	w = (GW_BUTTON_WIDTH * 1.25) * safezoneW;
-		// 	h = (GW_BUTTON_HEIGHT * 2) * safezoneH;
-
-		// 	class Attributes {
-		// 		align = "left";
-		// 	};
-		// };					
+				
 	};
 };

@@ -79,6 +79,7 @@ class GW_Buy
 			idc = 97012;
 			colorBackground[] = {0,0,0,0.7};
 			onLBSelChanged  = "[_this select 1] spawn changeCategory;";
+			
 			x = (NEW_X + GW_BUTTON_WIDTH + GW_BUTTON_GAP_X) * safezoneW + safezoneX;
 			y = (NEW_Y + GW_BUTTON_HEIGHT + GW_BUTTON_GAP_Y ) * safezoneH + safezoneY;
 			w = (GW_BUTTON_WIDTH - GW_BUTTON_GAP_X) * safezoneW;
@@ -95,7 +96,7 @@ class GW_Buy
 			h = ((GW_BUTTON_HEIGHT * 7) - (GW_BUTTON_GAP_Y * 4)) * safezoneH;
 			
 			text = "";
-			sizeEx = "0.035";
+		
 			columns[] = {0.03, 0.1, 0.25, 0.52, 0.76};
 			drawSideArrows = false;
 			idcLeft = -1;

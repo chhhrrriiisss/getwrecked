@@ -26,7 +26,7 @@ _title = ((findDisplay 52000) displayCtrl 52001);
 _list = ((findDisplay 52000) displayCtrl 52002);	
 
 _title ctrlShow true;
-_title ctrlSetText toUpper (GW_SPAWN_LOCATION);
+_title ctrlSetText toUpper (_this select 1);
 _title ctrlCommit 0;
 
 GW_LASTLOCATION = GW_SPAWN_LOCATION;

@@ -1,24 +1,36 @@
-//
-//      Name: shareVehicle
-//      Desc: Allows a vehicle to be shared by adding it to the local share array
-//      Return: None
-//
+_name = [_this,0, "", [""]] call filterParam;
+_target = [_this,1, [], ["", []]] call filterParam;
 
-private ['_source', '_string', '_data'];
+if (_name isEqualTo "") exitWith {};
 
-_source =  [_this,0, "", [""]] call BIS_fnc_param;
-_string = [_this,1, "", [""]] call BIS_fnc_param;
-_data = [_this,2, [], [[]]] call BIS_fnc_param;
+_library = profileNamespace getVariable ['GW_LIBRARY', []];
+if (count _library == 0) exitWith {};
 
-if ((count _data == 0) || _string == "" || _source == "") exitWith {};
-if (_source == GW_PLAYERNAME) exitWith {};
+_ref = nil;
+{
+	if (_x in _library) exitWith { _ref = _x; }
+} count [
+	_name,
+	toLower(_name),
+	toUpper(_name)
+];
 
-if (!isDedicated) then {
+if (isNil "_ref") exitWith {};
 
-	systemChat format["%1 wants to share: %2", _source, _string];
-	systemChat format["Use !list add %1 to accept", _string];
+_raw = profileNameSpace getVariable [_ref, []];
+if (count _raw == 0) exitWith {};
 
-	// Add the data to the local share array
-	_arr = [_string, _data];
-	GW_SHAREARRAY pushBack _arr;
-};
+_targets = if !(typename _target isEqualTo "ARRAY") then { [_target] } else { _target };
+
+{
+	_u = [_x] call findUnit;
+
+	[
+		[_raw, name player],
+		'copyVehicle',
+		_u,
+		false
+	] call gw_fnc_mp;	
+
+	false
+} count _targets > 0;

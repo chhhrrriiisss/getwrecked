@@ -80,7 +80,7 @@ _this spawn {
 			"setObjectSimulation",
 			false,
 			false 
-		] call BIS_fnc_MP;
+		] call gw_fnc_mp;
 
 		_o setDir _oDir;
 

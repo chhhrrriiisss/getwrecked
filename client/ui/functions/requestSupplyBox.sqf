@@ -6,7 +6,7 @@
 
 private ['_inventory', '_objs'];
 
-_inventory = [_this,0, [], [[]]] call BIS_fnc_param;
+_inventory = [_this,0, [], [[]]] call filterParam;
 if (count _inventory <= 0) exitWith {};
 
 // Is there an existing box nearby?
@@ -38,9 +38,9 @@ if (!isNil "GW_NEW_SUPPLY_BOX" ) then {
 		systemChat 'Supply box full, some items may have been lost.'
 	};	
 
-	GW_NEW_SUPPLY_BOX setVariable ["GW_Inventory", _contents];
-	GW_NEW_SUPPLY_BOX setVariable ["name", format["%1's Supply Box", ([GW_PLAYERNAME, 8, ''] call cropString) ], true];
-	GW_NEW_SUPPLY_BOX setVariable ["owner", GW_PLAYERNAME, true];		
+	GW_NEW_SUPPLY_BOX setVariable ["GW_Inventory", _contents, true];
+	GW_NEW_SUPPLY_BOX setVariable ["GW_Owner", name player, true];		
+	GW_NEW_SUPPLY_BOX setVariable ["GW_CU_IGNORE", false, true];	
 
 	GW_NEW_SUPPLY_BOX spawn newItemsSupplyBox;
 

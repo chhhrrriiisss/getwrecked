@@ -1,0 +1,121 @@
+<!-- 
+
+	This stringtable is a WIP and it is likely to contain some errors. 
+	If you see one, or would like to help translate, please email hello@getwrecked.info or message @getwreckeda3!
+
+	Translations:
+	English/French - Sli	
+
+-->
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project name="GetWrecked">
+
+	<!-- Mission load -->
+	<Package name="Init">				
+		<Key ID="str_gw_loading">
+			<English>Loading...</English>
+			<French>Chargement...</French>
+		</Key>
+
+		<Key ID="str_gw_welcome">
+			<English>Welcome to Get Wrecked!</English>
+			<French>Bienvenue à Get Wrecked!</French>
+		</Key>		
+
+		<Key ID="str_gw_welcome_guide">
+			<English>A guide is available at getwrecked.info</English>
+			<French>Un guide est disponible au getwrecked.info</French>
+		</Key>
+
+	</Package>
+
+	<!-- Warnings -->
+	<Package name="Warnings">
+		<Key ID="str_gw_version_mismatch">
+			<English>Warning: Vehicle saved with an older version, please re-save, clear and load to fix errors!</English>
+			<French>Attention: Véhicule sauvé avec une version antérieure, se il vous plaît ré-enregistrer, claire et charger à nouveau pour corriger les erreurs!</French>
+		</Key>
+	</Package>
+	
+	<!-- Alert Dialogs -->
+	<Package name="Alerts">					
+
+		<Key ID="str_gw_wheels_disabled">
+			<English>WHEELS DISABLED!</English>
+			<French>PNEUS DÉSACTIVÉS!</French>
+		</Key>
+
+		<Key ID="str_gw_invulnerable">
+			<English>INVULNERABLE!</English>
+			<French>INVULNERABLÉ!</French>
+		</Key>
+
+		<Key ID="str_gw_fire_detected">
+			<English>FIRE DETECTED!</English>
+			<French>FEU DÉTECTÉ!</French>
+		</Key>
+
+		<Key ID="str_gw_lock_detected">
+			<English>LOCK DETECTED!</English>
+			<French>VERROUILLER DÉTECTÉ!</French>
+		</Key>
+
+		<Key ID="str_gw_disabled">
+			<English>DISABLED!</English>
+			<French>DÉSACTIVÉ!</French>
+		</Key>
+
+		<Key ID="str_gw_connection_lost">
+			<English>CONNECTION LOST!</English>
+			<French>CONNEXION TERMINÉ!</French>
+		</Key>	
+
+		<Key ID="str_gw_no_vehicle_found">
+			<English>NO VEHICLE FOUND!</English>
+			<French>AUCUN VÉHICLE TROUVÉ!</French>
+		</Key>
+		<Key ID="str_gw_cannot_attach">
+			<English>CANNOT ATTACH!</English>
+			<French>NE PEUT PAS JOINDRE!</French>
+		</Key>
+
+		<Key ID="str_gw_too_many_weapons">
+			<English>TOO MANY WEAPONS!</English>
+			<French>TROP D'ARMES!</French>
+		</Key>
+
+		<Key ID="str_gw_too_many_modules">
+			<English>TOO MANY MODULES!</English>
+			<French>TROP D'ÉLÉMENTS!</French>
+		</Key>
+
+		<Key ID="str_gw_permission_error">
+			<English>PERMISSION ERROR!</English>
+			<French>ERREUR D'AUTORISATION!</French>
+		</Key>
+
+		<Key ID="str_gw_too_heavy">
+			<English>TOO HEAVY!</English>
+			<French>TROP LOURD!</French>
+		</Key>
+
+		<Key ID="str_gw_object_attached">
+			<English>OBJECT ATTACHED!</English>
+			<French>OBJET ATTACHÉ!</French>
+		</Key>
+
+		<Key ID="str_gw_object_detached">
+			<English>OBJECT DETACHED!</English>
+			<French>OBJET DÉTACHÉ!</French>
+		</Key>
+
+		<Key ID="str_gw_out_of_zone">
+			<English>OUT OF ZONE! (%1s)</English>
+			<French>SORTIE DE LA ZONE! (%1s)</French>
+		</Key>
+
+	
+
+	</Package>
+</Project>

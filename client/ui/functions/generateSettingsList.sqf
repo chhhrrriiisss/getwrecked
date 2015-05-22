@@ -61,7 +61,8 @@ call addReservedIndex;
 	_string = _tag call {
 		if (_this == "HORN") exitWith { [hornIcon, "Play Taunt"] };
 		if (_this == "UNFL") exitWith { [rotateCCWIcon, "Push Vehicle"] };
-		if (_this == "EPLD" && ((['EPL', GW_SETTINGS_VEHICLE] call hasType) > 0) ) exitWith { [warningIcon, "Detonate Explosives"] };		
+		if (_this == "EPLD" && ( ((['EPL', GW_SETTINGS_VEHICLE] call hasType) > 0) || count (GW_SETTINGS_VEHICLE getVariable ['GW_detonateTargets', []]) > 0)   ) exitWith { [warningIcon, "Detonate Explosives"] };		
+		if (_this == "TELP" && ( ((['TPD', GW_SETTINGS_VEHICLE] call hasType) > 0) || count (GW_SETTINGS_VEHICLE getVariable ['GW_teleportTargets', []]) > 0)   ) exitWith { [tpdIcon, "Activate Teleport"] };
 		if (_this == "LOCK" && {
 
 			// Check we have at least one lock on on this vehicle
@@ -72,6 +73,7 @@ call addReservedIndex;
 		if (_this == "OILS" && ((['OIL', GW_SETTINGS_VEHICLE] call hasType) > 0) ) exitWith { [oilslickIcon, "Stop Oil Slick"] };
 		if (_this == "DCLK" && ((['CLK', GW_SETTINGS_VEHICLE] call hasType) > 0) ) exitWith { [cloakIcon, "Deactivate Cloak"] };
 		if (_this == "PARC" && ((['PAR', GW_SETTINGS_VEHICLE] call hasType) > 0) ) exitWith { [ejectIcon, "Cut Parachute"] };
+		
 		[warningIcon, ""]
 	};
 
@@ -79,7 +81,9 @@ call addReservedIndex;
 	_string = _string select 1;
 	
 	// Dont bother adding an entry for a weapon we don't have
-	if (count toArray _string == 0) then {} else {
+	if (true) then {
+
+		if (count toArray _string == 0) exitWith {};
 	
 		_list lnbAddRow["", _string, ""];
 		_row = ((((lnbSize 92001) select 0)) -1);
@@ -95,11 +99,14 @@ call addReservedIndex;
 		// Plug the vehicle to the mission namespace so we can use it when saving the binds
 		_idString = format['%1', [_row,0]];
 		missionNamespace setVariable [_idString, GW_SETTINGS_VEHICLE];
-
 	};
 
-} ForEach _bindsList;
+	false
+
+} count _bindsList;
 
 // Always add a blank row to pad bottom
 _list lnbAddRow["", "", " "];		
 call addReservedIndex;
+
+_list ctrlSetTooltip "Double click, then press key to set bind.";

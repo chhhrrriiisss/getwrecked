@@ -10,10 +10,7 @@ setupSupplyBox = {
 
 	_box = _this;
 
-	_box setVariable ["owner", "", true];
-	_box setVariable ["mass", 40, true];
-	_box setVariable ["isSupply", true, true];
-	_box setVariable ["name", "Empty Supply Box", true];
+	_box setVariable ["GW_Owner", "", true];
 	_box setVariable ["GW_CU_IGNORE", true, true];
 
 	true
@@ -25,11 +22,11 @@ createSupplyBox = {
 		
 	private ['_box', '_pos'];
 
-	_pos = [_this,0, [], [[]]] call BIS_fnc_param;
+	_pos = [_this,0, [], [[]]] call filterParam;
 
 	if (count _pos == 0) exitWith { diag_log "Failed to create supply box - invalid position."; };
 
-	_box = createVehicle ["Land_PaperBox_closed_F", _pos, [], 0, 'CAN_COLLIDE']; 
+	_box = createVehicle [GW_SUPPLY_CLASS, _pos, [], 0, 'CAN_COLLIDE']; 
 	_box setDir (random 360);
 	_box call setupSupplyBox;
 
@@ -49,9 +46,7 @@ initSupply = {
 	if (count _objs <= 0) exitWith { true };
 
 	{	
-		if ((typeOf _x) == "Land_PaperBox_closed_F") then {
-			_x call setupSupplyBox;
-		};
+		if ( (_x call isSupplyBox)) then { _x call setupSupplyBox; };
 		false
 	} count _objs > 0;
 

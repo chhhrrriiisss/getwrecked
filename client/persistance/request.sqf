@@ -22,8 +22,9 @@ if (GW_WAITLOAD) exitWith {
 
 GW_WAITLOAD = true;
 
-_target = [_this,0, [0,0,0], [objNull, []]] call BIS_fnc_param;
-_loadTarget = [_this,1, [], ["", []]] call BIS_fnc_param;
+_target = [_this,0, [0,0,0], [objNull, []]] call filterParam;
+_loadTarget = [_this,1, [], ["", []]] call filterParam;
+_forceServerLoad = [_this,2, false, [false]] call filterParam;
 
 if (typename _target == 'OBJECT') then {
     _target = (ASLtoATL getPosASL _target);
@@ -54,57 +55,34 @@ if ( (_temp distance [0,0,0]) <= 200) exitWith {
     GW_WAITLOAD = false;
 };
 
-// Convert array to string for transfer to server
-removeNull = {
+// Optionally make the server spawn it
+if (_forceServerLoad) exitWith {
 
-    {
-        if (isNil "_x") then { _this set [_forEachIndex, []] } else {
-            if (typename _x == "ARRAY") then {
-                _this set[_forEachIndex, (_x call removeNull)];
-            };
-        };
+    [
+        [player, _target, _raw],
+        'loadVehicle',
+        false,
+        false
+    ] call gw_fnc_mp;   
 
-    } ForEach _this;
+    GW_WAITLOAD = false;
+    loadError = false;
+};  
 
-    _this
+_done = [player, _target, _raw] spawn loadVehicle;
+
+_timeout = time + 15;
+waitUntil {    
+    ( (scriptDone _done) || (time > _timeout))
 };
 
-_packet = format['%1', (_raw call removeNull)];
-
-// Ok, we're good to go, send a request to the server
-if (GW_DEBUG) then { systemChat 'Sending load request... '; };
-
-[       
-    [
-        player,
-        _target,
-        _packet
-    ],
-    "loadVehicle",
-    false,
-    false 
-] call BIS_fnc_MP; 
-
 // Make it easier to spawn this vehicle next time
-if (typename _loadTarget != "ARRAY") then {
+if (typename _loadTarget != "ARRAY" && time < _timeout) then {
     GW_LASTLOAD = _loadTarget;
     profileNamespace setVariable ['GW_LASTLOAD', GW_LASTLOAD];
     saveProfileNamespace;   
 };
 
-// Start a timeout so we can abort if nothing comes back
-_timeout = time + 25;
-waitUntil { 
-    Sleep 1;
-    if ( !GW_WAITLOAD || (time > _timeout) ) exitWith { true };  
-    false
-};
-
-// If we're still waiting, reset GW_WAITLOAD
-if (GW_WAITLOAD) then {
-    loadError = true;
-    systemChat 'Timeout waiting for load.';
-    GW_WAITLOAD = false;
-};
-
-
+if (time > _timeout) then { loadError = true; };
+    
+GW_WAITLOAD = false;

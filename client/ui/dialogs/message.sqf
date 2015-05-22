@@ -10,9 +10,10 @@ if (GW_DIALOG_ACTIVE) then {
 	closeDialog 93000;
 };
 
-_dialogString = [_this,0, "CONFIRM", [""]] call BIS_fnc_param;
-_msgString = [_this,1, "", [""]] call BIS_fnc_param;
-GW_DIALOG_TYPE = [_this,2, "CONFIRM", [""]] call BIS_fnc_param;
+_dialogString = [_this,0, "CONFIRM", [""]] call filterParam;
+_msgString = [_this,1, "", [""]] call filterParam;
+GW_DIALOG_TYPE = [_this,2, "CONFIRM", [""]] call filterParam;
+_functionToCall = [_this,3, [nil, ''], [[]]] call filterParam;
 
 // Function used globally to close the dialog with "confirm"
 confirmCurrentDialog = {
@@ -65,6 +66,29 @@ _title = ((findDisplay 93000) displayCtrl 93002);
 _input = ((findDisplay 93000) displayCtrl 93001);
 _marginTop = ((findDisplay 93000) displayCtrl 93003);
 _marginBottom = ((findDisplay 93000) displayCtrl 93004);
+_functionIcon = ((findDisplay 93000) displayCtrl 93010);
+_function = ((findDisplay 93000) displayCtrl 93011);
+
+if (isNil { (_functionToCall select 0) }) then { 
+	_function ctrlSetFade 1;
+	_function ctrlEnable false;
+	_function ctrlCommit 0;
+	_functionIcon ctrlSetFade 1;
+	_functionIcon ctrlCommit 0;
+	ctrlSetFocus _input;
+	executeMessageFunction = { true };
+} else {
+	_function ctrlShow true;
+	_function ctrlSetFade 0;
+	_function ctrlEnable true;
+	_function ctrlCommit 0;
+	ctrlSetFocus _function;
+	_functionIcon ctrlSetStructuredText	parseText  ( format["<img size='1.4' color='#ffffff' align='center' valign='middle' image='%1' />", (_functionToCall select 1)] );
+	_functionIcon ctrlSetFade 0;
+	_functionIcon ctrlCommit 0;
+
+	executeMessageFunction = (_functionToCall select 0);
+};
 
 // If no menu with margins active, remove margins
 if (!GW_DEATH_CAMERA_ACTIVE && !GW_PREVIEW_CAM_ACTIVE && !GW_SPAWN_ACTIVE) then {

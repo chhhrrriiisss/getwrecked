@@ -149,7 +149,7 @@ class GW_Menu
 		{
 			idc = GW_FilterList_ID;
 			colorBackground[] = {0,0,0,0.7};
-			onLBSelChanged  = "[_this select 1] spawn changeVehicle;";
+			onLBSelChanged  = "[_this select 1] spawn previewVehicle;";
 			x = (0.015) * safezoneW + safezoneX;
 			y = (MARGIN_BOTTOM) * safezoneH + safezoneY;
 			w = (GW_BUTTON_WIDTH) * safezoneW;

@@ -6,7 +6,7 @@
 
 private ["_obj", "_oPos"];
 
-_obj = [_this,0, objNull, [objNull]] call BIS_fnc_param;
+_obj = [_this,0, objNull, [objNull]] call filterParam;
 
 if (isNull _obj) exitWith { false };
 
@@ -35,7 +35,7 @@ if (count _statusList > 0) then {
 		"removeVehicleStatus",
 		_veh,
 		false 
-	] call BIS_fnc_MP;   
+	] call gw_fnc_mp;   
 
 } else {
 	["SMOKE ACTIVATED!", 1, smokeIcon, nil, "default"] spawn createAlert;
@@ -49,9 +49,7 @@ playSound3D ["a3\sounds_f\sfx\explosion3.wss", _obj, false, _oPos, 2, 1, 100];
 		8
 	],
 	"smokeEffect"
-] call BIS_fnc_MP;
-
-Sleep 0.01;
+] call gw_fnc_mp;
 
 [       
 	[
@@ -62,7 +60,7 @@ Sleep 0.01;
 	"addVehicleStatus",
 	_veh,
 	false 
-] call BIS_fnc_MP;  
+] call gw_fnc_mp;  
 
 
 true

@@ -5,20 +5,23 @@
 
 private ['_target', '_pos', '_duration'];
 
-_target = [_this,0, objNull, [objNull]] call BIS_fnc_param;
-_noise = [_this, 2, true, [false]] call BIS_fnc_param;
+_target = [_this,0, objNull, [objNull]] call filterParam;
+_duration = [_this, 1, 1, [0]] call filterParam;
+_noise = [_this, 2, true, [false]] call filterParam;
 
 if (isNull _target) exitWith {};
-_pos = visiblePositionASL _target;
-if ((visiblePositionASL player) distance _pos > GW_EFFECTS_RANGE) exitWith {};
+
+_pos = (ASLtoATL visiblePositionASL _target);
+_isVisible = [_pos, _duration] call effectIsVisible;
+
+// Mix the sound up a bit
+if ((random 100) > 50 && _noise) then { _target say3D "nitro"; } else { _target say3D "nitroAlt"; };
+
+if (!_isVisible) exitWith {};
 
 // Size of vehicle changes drop height of refraction
 _height = ([_target] call getBoundingBox) select 2;
 _pos set[2, (_pos select 2) + _height];
-_duration = _this select 1;
-
-// Mix the sound up a bit
-if ((random 100) > 50 && _noise) then { _target say3D "nitro"; } else { _target say3D "nitroAlt"; };
 
 _source  = "#particlesource" createvehiclelocal _pos;
 _source setParticleCircle [0, [0, 0, 0]];

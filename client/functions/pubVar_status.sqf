@@ -4,8 +4,8 @@
 //      Return: None
 //
 
-_status = if (isNil { _this select 0 }) then { -1 } else { (_this select 0) };
-_value = if (isNil { _this select  1}) then { [] } else { (_this select 1) };
+_status = [_this, 0, -1, [0]] call filterParam;
+_value = [_this, 1, [], [[]]] call filterParam;
 
 if (_status == -1) exitWith {};
 

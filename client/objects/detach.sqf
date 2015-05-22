@@ -6,8 +6,8 @@
 
 private ["_obj", "_unit","_id"];
 
-_obj = [_this,0, objNull, [objNull]] call BIS_fnc_param;
-_unit = [_this,1, objNull, [objNull]] call BIS_fnc_param;
+_obj = [_this,0, objNull, [objNull]] call filterParam;
+_unit = [_this,1, objNull, [objNull]] call filterParam;
 
 if (isNull _obj || isNull _unit) exitWith { false };
 if (!alive _obj) exitWith { deleteVehicle _obj;	false };
@@ -30,7 +30,7 @@ _wasSimulated = (simulationEnabled _veh);
 	"setObjectSimulation",
 	false,
 	false 
-] call BIS_fnc_MP;
+] call gw_fnc_mp;
 
 _timeout = time + 3;
 waitUntil{
@@ -51,17 +51,19 @@ if (_wasSimulated) then {
 		"setObjectSimulation",
 		false,
 		false 
-	] call BIS_fnc_MP;
+	] call gw_fnc_mp;
 };
 
 removeAllActions _obj;
 
-["OBJECT DETACHED!", 1, successIcon, nil, "slideDown"] spawn createAlert;
+[localize "str_gw_object_detached", 1, successIcon, nil, "slideDown", ""] spawn createAlert;
 [_obj, _unit] spawn moveObj;
 
 // Re-compile vehicle information
 [_veh] call compileAttached;
 
+// Snap the vehicle back to the closest save point
+[_veh] call snapToPad;
 
 true
 

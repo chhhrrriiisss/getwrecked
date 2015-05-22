@@ -1,29 +1,25 @@
 //
 //      Name: logKill
-//      Desc: Handles a successful kill message recieved from client
+//      Desc: Handles a successful kill message received from client
 //      Return: None
 //
 
 private["_type", "_key", "_value"];
 
-_victim = [_this,0,"",[""]] call bis_fnc_param;
-_killer = [_this,1,"",[""]] call bis_fnc_param;
-_killersVehicle = [_this,2,[],[[]]] call bis_fnc_param;
-_value = [_this,3,0,[0]] call bis_fnc_param;
-_method = [_this,4,"",[""]] call bis_fnc_param;
+_victim = [_this,0,"",[""]] call filterParam;
+_killer = [_this,1,"",[""]] call filterParam;
+_killersVehicle = [_this,2,[],[[]]] call filterParam;
+_value = [_this,3,0,[0]] call filterParam;
+_method = [_this,4,"",[""]] call filterParam;
 
 if (_victim == "" || _killer == "") exitWith {};
-
-if (isNil "GW_MESSAGELOGGED") then { GW_MESSAGELOGGED = time - 4; };
-if (time < (GW_MESSAGELOGGED + 3)) exitWith {};
-GW_MESSAGELOGGED = time;
 
 // What dealt the final blow?
 _str = ([_method, GW_LOOT_LIST] call getData) select 1;
 _method = if (!isNil "_str") then { _str } else { "" };
 
 _method = if (count toArray _method > 0) then { (format["'s %1", _method]) } else { "" };
-_string = format["%1 was destroyed by %2%3", _victim, _killer, _method];
+_string = format["%1 was destroyed by %2%3", _victim, (_killersVehicle select 0), _method];
 GW_SERVER_LASTKILL = format['%1/%2/%3', _victim, _killer, _method];
 
 // Log the message on all clients
@@ -40,12 +36,13 @@ if (!isNil "_killerTarget") then {
 
     [       
         [
-            _value
+            _value,
+            (_killersVehicle select 0)
         ],
         "assignKill",
         _killerTarget,
         false 
-    ] call BIS_fnc_MP;  
+    ] call gw_fnc_mp;  
     
 };	
 

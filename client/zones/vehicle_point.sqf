@@ -36,7 +36,7 @@ if (_type == "REPAIR" && _currentDmg > 0 && _lowVelocity) exitWith {
 		"playSoundAll",
 		true,
 		false
-	] call BIS_fnc_MP;	
+	] call gw_fnc_mp;	
 
 	_vehicle setDamage ((getDammage _vehicle) - 0.05);
 
@@ -63,7 +63,7 @@ if (_type == "REFUEL" && _currentFuel < _maxFuel && _lowVelocity ) exitWith {
 		"playSoundAll",
 		true,
 		false
-	] call BIS_fnc_MP;	
+	] call gw_fnc_mp;	
 
 	_increment = (_maxFuel * 0.05);
 
@@ -96,7 +96,7 @@ if (_type == "REARM" && _currentAmmo < _maxAmmo && _lowVelocity ) exitWith {
 	"playSoundAll",
 	true,
 	false
-	] call BIS_fnc_MP;	 
+	] call gw_fnc_mp;	 
 
 	_increment = _maxAmmo * 0.1;
 

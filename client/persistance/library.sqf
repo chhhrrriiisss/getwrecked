@@ -6,8 +6,8 @@
 
 private['_action', '_target'];
 
-_action = [_this,0, "", [""]] call BIS_fnc_param;
-_target = [_this,1, "", [""]] call BIS_fnc_param;
+_action = [_this,0, "", [""]] call filterParam;
+_target = [_this,1, "", [""]] call filterParam;
 
 if (_action == "") exitWith {};
 
@@ -64,40 +64,40 @@ if (_action == 'add') exitWith {
 };
 
 // Share vehicle with other players on the server
-if (_action == 'share') exitWith {
+// if (_action == 'share') exitWith {
 
-	_arr = toArray(_target);
+// 	_arr = toArray(_target);
 
-    for "_i" from 0 to 5 do {
-	    _arr set [0, "x"];
-	    _arr = _arr - ["x"];
-	};
+//     for "_i" from 0 to 5 do {
+// 	    _arr set [0, "x"];
+// 	    _arr = _arr - ["x"];
+// 	};
 
-	_string = toString(_arr);
+// 	_string = toString(_arr);
 
-	_raw = profileNamespace getVariable ['GW_LIBRARY', []];
-	if (count _raw == 0) exitWith { systemChat 'List is empty.'; };
+// 	_raw = profileNamespace getVariable ['GW_LIBRARY', []];
+// 	if (count _raw == 0) exitWith { systemChat 'List is empty.'; };
 
-	_found = false;
+// 	_found = false;
 	
-	{
-		if (_x == _string) exitWith {			
-			_found = true;
-		};
-	} ForEach _raw;
+// 	{
+// 		if (_x == _string) exitWith {			
+// 			_found = true;
+// 		};
+// 	} ForEach _raw;
 
-	if (!_found) exitWith { systemChat 'Couldnt find in list.';  };	
+// 	if (!_found) exitWith { systemChat 'Couldnt find in list.';  };	
 
-	_data = profileNamespace getVariable [_string, nil];
+// 	_data = profileNamespace getVariable [_string, nil];
 
-	if (isNil "_data") exitWith {
-		systemChat 'No data for that vehicle.';
-	};
+// 	if (isNil "_data") exitWith {
+// 		systemChat 'No data for that vehicle.';
+// 	};
 
-	[[GW_PLAYERNAME, _string, _data], "shareVehicle", true, true] call BIS_fnc_MP; 
+// 	[[name player, _string, _data], "shareVehicle", true, true] call gw_fnc_mp; 
 
-	systemChat format['%1 was shared successfully.', _string];
-};
+// 	systemChat format['%1 was shared successfully.', _string];
+// };
 
 // Delete target vehicle
 if (_action == 'delete') exitWith {

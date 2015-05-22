@@ -10,7 +10,7 @@ _vehicle = (vehicle player);
 
 // Disable VEhicle
 [_vehicle, ['emp', 'nuke'], 15] call addVehicleStatus;
-profileNamespace setVariable ['killedByNuke', (ASLtoATL getPosASL _crate)];
+profileNamespace setVariable ['killedByNuke', (ASLtoATL visiblePositionASL _crate)];
 saveProfileNamespace;
 
 _fuel = fuel _vehicle;

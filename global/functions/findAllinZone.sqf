@@ -6,26 +6,23 @@
 
 private ['_zone', '_arr', '_zoneCenter', '_vehiclesOnly'];
 
-_zone = _this select 0;
-_vehiclesOnly = if (isNil {_this select 1}) then { false } else { (_this select 1) };
+_zone = [_this, 0, "", [""]] call filterParam;
+_vehiclesOnly = [_this, 1, false, [false]] call filterParam;
 
-if (_zone == "") exitWith { [] };
+if (_zone isEqualTo "") exitWith { [] };
+if (count allUnits isEqualTo 0) exitWith { [] };
 
 _arr = [];
 
-// Get the camera marker for the specified zone
-if (count allUnits <= 0) exitWith { [] };
-
 {
 	// If the unit is alive and within the zone
-	if (alive _x && { ([(getPos _x), _zone] call checkInZone) }) then {
+	if (alive _x && ([(ASLtoATL getPosASL _x), _zone] call checkInZone)) then {
 
-		// If the target is in a vehicle, add the vehicle
-		_target = if ( (vehicle _x) == _x) then { _x } else { (vehicle _x) };
+		_inVehicle = if ((vehicle _x) isEqualTo _x) then { false } else { _x = vehicle _x; true };
 
 		// If we're only looking for vehicles, do nothing
-		if (_vehiclesOnly && (vehicle _x) == _x) then {} else {
-			_arr pushback _target;
+		if (_vehiclesOnly && !_inVehicle) then {} else {
+			_arr pushback _x;
 		};
 
 	}; 

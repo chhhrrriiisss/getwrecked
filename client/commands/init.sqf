@@ -5,7 +5,6 @@
 //		Modified by Sli for Get Wrecked
 //
 
-
 // Get the list of available commands
 [] call compile preProcessFilelineNumbers "client\commands\commands.sqf";
 
@@ -15,7 +14,7 @@ GW_executeCommand = {
 
 	private ["_chatArr","_seperator","_commandDone","_command","_argument"];
 
-		_chatArr = [_this,0,[]] call BIS_fnc_param;
+		_chatArr = [_this,0,[]] call filterParam;
 
 		// Remove leading intercept character
 		_chatArr set [0,-1];

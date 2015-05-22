@@ -6,9 +6,9 @@
 
 private ["_arr", "_pos", "_dist", "_closest"];
 
-_arr = [_this,0, [], [[]]] call BIS_fnc_param;
-_search = [_this,1, ["Car"], [[]]] call BIS_fnc_param;
-_range = [_this,2, 15, [0]] call BIS_fnc_param;
+_arr = [_this,0, [], [[]]] call filterParam;
+_search = [_this,1, ["Car"], [[]]] call filterParam;
+_range = [_this,2, 15, [0]] call filterParam;
 
 if (count _arr == 0) exitWith {};
 

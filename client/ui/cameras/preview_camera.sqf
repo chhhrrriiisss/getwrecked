@@ -15,10 +15,10 @@ GW_PREVIEW_CAM_TARGET = _this select 0;
 waitUntil { !isNil "GW_PREVIEW_CAM_TARGET" };
 
 // Collect camera defaults
-GW_PREVIEW_CAM_RANGE = [_this,1, 10, [0]] call BIS_fnc_param;
-GW_PREVIEW_CAM_THETA = [_this,2, 0, [0]] call BIS_fnc_param;
-GW_PREVIEW_CAM_PHI = [_this,3, 1, [0]] call BIS_fnc_param;
-GW_PREVIEW_CAM_HEIGHT = [_this,4, 1, [0]] call BIS_fnc_param;
+GW_PREVIEW_CAM_RANGE = [_this,1, 10, [0]] call filterParam;
+GW_PREVIEW_CAM_THETA = [_this,2, 0, [0]] call filterParam;
+GW_PREVIEW_CAM_PHI = [_this,3, 1, [0]] call filterParam;
+GW_PREVIEW_CAM_HEIGHT = [_this,4, 1, [0]] call filterParam;
 GW_PREVIEW_CAM_POS = if (typename GW_PREVIEW_CAM_TARGET == "OBJECT") then { (getPosASL GW_PREVIEW_CAM_TARGET) } else { GW_PREVIEW_CAM_TARGET };
 GW_PREVIEW_CAM_POS set[2, GW_PREVIEW_CAM_HEIGHT];
 

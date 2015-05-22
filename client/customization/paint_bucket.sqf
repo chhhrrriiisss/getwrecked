@@ -15,9 +15,6 @@ setupPaint = {
 
 	// Set bucket properties
 	_bucket setVariable ["color", _rnd, true];
-	_bucket setVariable["isPaint", true, true];
-	_bucket setVariable["name", format['%1 Paint', _rnd], true];	
-	_bucket setVariable["mass", 200, true];	
 	_bucket enableSimulationGlobal true;
 
 	// Create the paint texture
@@ -35,11 +32,11 @@ setupPaint = {
 
 // Use the workshop zone as a reference point
 _pos = getMarkerPos "workshopZone_camera";
-_objs = _pos nearEntities 125;
+_objs = _pos nearEntities 150;
 
 if (count _objs <= 0) exitWith { true };
 {	
-	if ((typeOf _x) == "Land_Bucket_painted_F") then {	_x call setupPaint;	};
+	if ((_x call isPaint)) then { _x call setupPaint; };
 	false
 } count _objs > 0;
 

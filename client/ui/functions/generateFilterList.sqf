@@ -29,7 +29,7 @@ _count = 0;
 			// Name is valid
 			if (count toArray (_data select 1) > 0) then {
 
-				_name = [toUpper (_data select 1), 22, ''] call cropString;
+				_name = [toUpper (_data select 1), 28, ''] call cropString;
 				
 				lbAdd[42003, format[' %1', _name] ];	
 				lbSetData[42003, (lbSize 42003)-1, _count];

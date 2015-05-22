@@ -24,22 +24,24 @@ _outOfBounds =_unit getVariable ["outofbounds", false];
 "filmGrain" ppEffectAdjust [0.1, 0.5, 2, 0, 0, true];  
 "filmGrain" ppEffectCommit 1;
 
-for "_i" from 0 to 1 step 0 do {
-
-	if (time > _timeout || !_outOfBounds || !alive _unit || isNil "GW_CURRENTZONE") exitWith {};
+waitUntil {
 
 	_outOfBounds = _unit getVariable ["outofbounds", false];	
 	_timeLeft = ceil (_timeout - time);
-	_str = format["OUT OF ZONE! (%1s)", _timeLeft];
+	_str = format[localize "str_gw_out_of_zone", _timeLeft];
 
 	[_str, 0.5, warningIcon, colorRed, "warning"] spawn createAlert;     
 
 	Sleep 0.5;
+
+	(time > _timeout || !_outOfBounds || !alive _unit || isNil "GW_CURRENTZONE")
 };
 
 // Kill the player and vehicle if we're still out of zone
 if (_outOfBounds) then {
-	(vehicle player) call destroyInstantly;		
+	_name = (vehicle player) getVariable ['name', ''];
+	['outofbounds', _name, 1] call logStat; 
+	(vehicle player) call destroyInstantly;			 
 };
 
 // Restore all ppEffects

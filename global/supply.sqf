@@ -34,7 +34,7 @@ GW_SUPPLY_TYPES = [
 				"playSoundAll",
 				true,
 				false
-			] call BIS_fnc_MP;	 
+			] call gw_fnc_mp;	 
 
 			[ format['RECEIVED $%1!', ([_amount] call numberToCurrency)], 2, successIcon, nil, "slideDown"] spawn createAlert; 
 		}
@@ -57,9 +57,9 @@ GW_SUPPLY_TYPES = [
 				"playSoundAll",
 				true,
 				false
-			] call BIS_fnc_MP;	 
+			] call gw_fnc_mp;	 
 
-			[[_vehicle,'Pink'],"setVehicleTexture",true,false] call BIS_fnc_MP;
+			[[_vehicle,'Pink'],"setVehicleTexture",true,false] call gw_fnc_mp;
 		}
 	],
 
@@ -82,11 +82,11 @@ GW_SUPPLY_TYPES = [
 
 			[
 				[
-				_vehicle,
-				3
+					_vehicle,
+					3
 				],
 				"magnetEffect"
-			] call BIS_fnc_MP;
+			] call gw_fnc_mp;
 
 			_vehicle setPos _newPos;
 			
@@ -124,7 +124,7 @@ GW_SUPPLY_TYPES = [
 				3
 				],
 				"magnetEffect"
-			] call BIS_fnc_MP;
+			] call gw_fnc_mp;
 
 			if ((_newPos select 2) < 0) then { _newPos set [2, 0]; };
 			_vehicle setPos _newPos;
@@ -151,7 +151,7 @@ GW_SUPPLY_TYPES = [
 					"addVehicleStatus",
 					_x,
 					false 
-				] call BIS_fnc_MP; 	
+				] call gw_fnc_mp; 	
 
 				false
 
@@ -175,7 +175,7 @@ GW_SUPPLY_TYPES = [
 					[0.812,0.208,0.22,0.05]
 				],
 				"shieldEffect"
-			] call BIS_fnc_MP;
+			] call gw_fnc_mp;
 
 			[(vehicle player), ['extradamage'], 30] call addVehicleStatus;
 			['EXTRA DAMAGE', 30, damageSupplyIcon, { ("extradamage" in ((vehicle player) getVariable ['status', []])) }] spawn createNotification;
@@ -269,7 +269,7 @@ GW_SUPPLY_TYPES = [
 					"nukeEffect",
 					_x,
 					false
-				] call BIS_fnc_MP;				
+				] call gw_fnc_mp;				
 
 				false
 

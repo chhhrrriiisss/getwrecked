@@ -6,8 +6,8 @@
 
 private ["_obj", "_unit","_id"];
 
-_obj = [_this,0, objNull, [objNull]] call BIS_fnc_param;
-_unit = [_this,1, objNull, [objNull]] call BIS_fnc_param;
+_obj = [_this,0, objNull, [objNull]] call filterParam;
+_unit = [_this,1, objNull, [objNull]] call filterParam;
 
 if (isNull _obj || isNull _unit) exitWith { false };
 
@@ -22,11 +22,6 @@ GW_EDITING = true;
 // Grab that sucker!
 [_obj, _unit] spawn grabObj;
 
-// Notify if snapping is already enabled
-if (_unit getVariable ['snapping', false]) then {
-	["SNAPPING ACTIVE!", 1, snappingIcon, nil, 'default'] spawn createAlert;   
-};
-
 // Add all the actions that are available for this object
 removeAllActions _unit;
 _unit spawn setPlayerActions;
@@ -34,8 +29,8 @@ _unit spawn setPlayerActions;
 // Drop Object
 _unit addAction[dropObjectFormat, {
 
-	_unit = [_this,0, objNull, [objNull]] call BIS_fnc_param;
-	_obj = _unit getVariable ['editingObject', nil];
+	_unit = [_this,0, objNull, [objNull]] call filterParam;
+	_obj = _unit getVariable ['GW_EditingObject', nil];
 	if (isNil "_obj" || isNull _unit) exitWith {};
 
 	[_unit, _obj] call dropObj;
@@ -43,8 +38,13 @@ _unit addAction[dropObjectFormat, {
 }, _obj, 0, false, false, "", "(vehicle player) == player"];
 
 // Supply boxes can only be moved and dropped
-_isSupply = _obj getVariable ["isSupply", false];
+_isSupply = _obj call isSupplyBox;
 if (_isSupply) exitWith {};
+
+// Notify if snapping is already enabled
+if (_unit getVariable ['snapping', false]) then {
+	["SNAPPING ACTIVE!", 1, snappingIcon, nil, 'default'] spawn createAlert;   
+};
 
 // Disable Snapping 
 _unit addAction[nosnapObjectFormat, {
@@ -69,7 +69,7 @@ _unit addAction[snapObjectFormat, {
 // 	_unit addAction[tiltForwardObjectFormat, {
 
 // 		_unit = _this select 0;
-// 		_obj = _unit getVariable ['editingObject', nil];
+// 		_obj = _unit getVariable ['GW_editingObject', nil];
 // 		if (isNil "_obj" || isNull _unit) exitWith {};
 
 // 		[_obj, [-10, 0]] call tiltObj;
@@ -79,7 +79,7 @@ _unit addAction[snapObjectFormat, {
 // 	_unit addAction[tiltBackwardObjectFormat, {
 
 // 		_unit = _this select 0;
-// 		_obj = _unit getVariable ['editingObject', nil];
+// 		_obj = _unit getVariable ['GW_editingObject', nil];
 // 		if (isNil "_obj" || isNull _unit) exitWith {};
 
 // 		[_obj, [10, 0]] call tiltObj;
@@ -91,8 +91,8 @@ _unit addAction[snapObjectFormat, {
 // Rotate Object CW
 _unit addAction[rotateCWObjectFormat, {
 
-	_unit = [_this,0, objNull, [objNull]] call BIS_fnc_param;
-	_obj = _unit getVariable ['editingObject', nil];
+	_unit = [_this,0, objNull, [objNull]] call filterParam;
+	_obj = _unit getVariable ['GW_EditingObject', nil];
 	if (isNil "_obj" || isNull _unit) exitWith {};
 
 	[_obj, 22.5] call rotateObj;
@@ -103,8 +103,8 @@ _unit addAction[rotateCWObjectFormat, {
 // Rotate Object CCW
 _unit addAction[rotateCCWObjectFormat, {
 
-	_unit = [_this,0, objNull, [objNull]] call BIS_fnc_param;
-	_obj = _unit getVariable ['editingObject', nil];
+	_unit = [_this,0, objNull, [objNull]] call filterParam;
+	_obj = _unit getVariable ['GW_EditingObject', nil];
 	if (isNil "_obj" || isNull _unit) exitWith {};
 
 	[_obj, -22.5] call rotateObj;
@@ -114,13 +114,13 @@ _unit addAction[rotateCCWObjectFormat, {
 // Attach object to a nearby vehicle
 _unit addAction[attachObjectFormat, {
 
-	_unit = [_this,0, objNull, [objNull]] call BIS_fnc_param;
-	_obj = _unit getVariable ['editingObject', nil];
+	_unit = [_this,0, objNull, [objNull]] call filterParam;
+	_obj = _unit getVariable ['GW_EditingObject', nil];
 	if (isNil "_obj" || isNull _unit) exitWith {};
 
 	[_unit, _obj] spawn attachObj; 
 
-}, _obj, 5, false, false, "", "( (vehicle player) == player && (!isNil { [_target, 9] call validNearby }) )"]; 
+}, _obj, 5, false, false, "", "( (vehicle player) == player && (!isNil { [_target, 12, 180] call validNearby }) )"]; 
 
 true
 

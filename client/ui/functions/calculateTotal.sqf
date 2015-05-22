@@ -9,7 +9,7 @@
 private ['_total', '_size', '_value', '_cost', '_subtotal', '_total'];
 
 _total = 0;
-_size = [(lnbSize 97001),0, -1, [0]] call BIS_fnc_param;
+_size = [(lnbSize 97001),0, -1, [0]] call filterParam;
 _itemCount = 0;
 _inventory = [];
 
@@ -56,6 +56,9 @@ disableSerialization;
 _text = ((findDisplay 97000) displayCtrl 97005);
 _text ctrlSetText format['TOTAL: $%1', ([_total] call numberToCurrency)];
 _text ctrlCommit 0;
+
+// Cost multiplier
+_total = _total * GW_ITEM_COST; 
 
 [_total, _itemCount, _inventory]
 

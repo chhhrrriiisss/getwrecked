@@ -10,8 +10,8 @@ private ['_vehicle', '_unit'];
 if (GW_SETTINGS_ACTIVE || GW_TIMER_ACTIVE) exitWith {};
 GW_SETTINGS_ACTIVE = true;
 
-_vehicle = [_this,0, objNull, [objNull]] call BIS_fnc_param;
-_unit = [_this,1, objNull, [objNull]] call BIS_fnc_param;
+_vehicle = [_this,0, objNull, [objNull]] call filterParam;
+_unit = [_this,1, objNull, [objNull]] call filterParam;
 
 if (isNull _vehicle || isNull _unit) exitWith {};
 
@@ -47,7 +47,7 @@ _layerStatic cutRsc ["RscStatic", "PLAIN" , 0.5];
 [] spawn generateTauntsList;
 
 _statsTitle = (findDisplay 92000) displayCtrl 92005;
-_name = [(_vehicle getVariable ["name", "UNTITLED"]), 27, "..."] call cropString;
+_name = [(_vehicle getVariable ["name", "UNTITLED"]), 32, "..."] call cropString;
 _name = if (count toArray _name == 0) then { "UNTITLED" } else { _name };
 _statsTitle ctrlSetText _name;
 _statsTitle ctrlCommit 0;
@@ -61,7 +61,7 @@ systemChat 'Note: Key binds are saved only when the vehicle is saved.';
 };
 
 // Menu has been closed, kill everything!
-waitUntil { isNull (findDisplay 92000) };
+waitUntil { (isNull (findDisplay 92000) || (!alive GW_SETTINGS_VEHICLE)) };
 
 // Stop the preview camera
 GW_PREVIEW_CAM_ACTIVE = false;
@@ -71,5 +71,6 @@ GW_SETTINGS_READY = false;
 
 "dynamicBlur" ppEffectAdjust [0]; 
 "dynamicBlur" ppEffectCommit 0.1; 
+
 
 

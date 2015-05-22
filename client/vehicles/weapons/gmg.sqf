@@ -24,16 +24,16 @@ _gPos = _gun modelToWorld [-0.15,1.7,-0.72];
 _heading = [_gPos,_targetPos] call BIS_fnc_vectorFromXToY;
 _velocity = [_heading, _projectileSpeed] call BIS_fnc_vectorMultiply; 
 
-_bullet = createVehicle [_round, _gPos, [], 0, "FLY"];
+_bullet = createVehicle [_round, _gPos, [], 0, "CAN_COLLIDE"];
 
-if (GW_DEBUG) then { [_gPos, _targetPos, 3] spawn debugLine; };
+if (GW_DEBUG) then { [_gPos, _targetPos, 0.01] spawn debugLine; };
 
 [(ATLtoASL _gPos), (ATLtoASL _targetPos), "GMG"] call markIntersects;
 
 _bullet setVectorDir _heading; 
 _bullet setVelocity _velocity; 
 
-playSound3D [_soundToPlay, _gun, false, getPos _gun, 1, 1, 50];		
+playSound3D [_soundToPlay, _gun, false, (ASLtoATL visiblePositionASL _gun), 7, 1, 100];		
 
 addCamShake [.5, 1,20];
 

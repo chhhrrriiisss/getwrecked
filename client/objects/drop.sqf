@@ -6,9 +6,8 @@
 
 private ["_obj", "_unit"];
 
-_unit = [_this,0, objNull, [objNull]] call BIS_fnc_param;
-_obj = [_this,1, objNull, [objNull]] call BIS_fnc_param;
-
+_unit = [_this,0, objNull, [objNull]] call filterParam;
+_obj = [_this,1, objNull, [objNull]] call filterParam;
 
 if (isNull _obj || isNull _unit) exitWith { false };
 
@@ -21,11 +20,10 @@ GW_EDITING = false;
 
 // Add the appropriate actions for the object
 [_obj] spawn setTagAction;
-_isSupply = _obj getVariable ["isSupply", false];
-if (_isSupply) then { [_obj] spawn setSupplyAction; } else { [_obj] spawn setMoveAction; };
+_isSupply = _obj call isSupplyBox;
+if (_isSupply) then { [_obj] spawn setSupplyAction; } else { [_obj] spawn setMoveAction; _obj setVariable ['GW_Owner', '', true]; };
 
-_unit setVariable['editingObject', nil];
-_obj setVariable['owner', '', true];
+_unit setVariable ['GW_EditingObject', nil];
 
 // Wait a second before aligning the object
 Sleep 0.5;
@@ -43,7 +41,7 @@ if (count _objs <= 0 || (typeOf _obj == "Land_PaperBox_closed_F")) exitWith { tr
 
 // If there's a supply box nearby, place the item in it
 {
-	_isSupply = _x getVariable ["isSupply", false];
+	_isSupply = _x call isSupplyBox;
 	_isOwner = [_x, player, false] call checkOwner;
 
 	if (_isSupply && _isOwner) exitWith {

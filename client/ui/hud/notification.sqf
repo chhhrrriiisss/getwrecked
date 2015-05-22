@@ -18,10 +18,10 @@ if (GW_NOTIFICATION_ACTIVE) then {
 	GW_NOTIFICATION_ACTIVE = true;
 };
 
-_text = [_this,0, "", [""]] call BIS_fnc_param;
-_duration = [_this,1, 1, [0]] call BIS_fnc_param;
-_icon = [_this,2, blankIcon, [""]] call BIS_fnc_param;
-_condition = [_this,3, { true } , [{}]] call BIS_fnc_param;
+_text = [_this,0, "", [""]] call filterParam;
+_duration = [_this,1, 1, [0]] call filterParam;
+_icon = [_this,2, blankIcon, [""]] call filterParam;
+_condition = [_this,3, { true } , [{}]] call filterParam;
 
 disableSerialization;
 150000 cutRsc ["GW_Notification", "PLAIN"];

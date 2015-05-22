@@ -6,9 +6,9 @@
 
 private ["_obj", "_unit","_orig", "_id", "_veh"];
 
-_unit = if (isNil {_this select 0}) then { objNull } else { (_this select 0) };
-_orig = if (isNil {_this select 1}) then { objNull } else { (_this select 1) };
-_forceAttach = if (isNil {_this select 2}) then { false } else { (_this select 2) };
+_unit = [_this, 0, objNull, [objNull]] call filterParam;
+_orig = [_this, 1, objNull, [objNull]] call filterParam;
+_forceAttach = [_this, 2, false, [false]] call filterParam;
 
 if (isNull _unit || isNull _orig) exitWith { false };
 if (!alive _unit || !alive _orig) exitWith { false };
@@ -26,7 +26,7 @@ if (_forceAttach) then {
 };
 
 if (count _nearby <= 0) exitWith {
-	["NO VEHICLE FOUND!", 1.5, warningIcon, colorRed] spawn createAlert;
+	[localize "str_gw_no_vehicle_found", 1.5, warningIcon, colorRed] spawn createAlert;
 	false
 };
 
@@ -56,7 +56,7 @@ _veh = _closest;
 _allowUpgrade = _veh getVariable ['isVehicle', false];
 
 if (!_allowUpgrade && !_forceAttach) exitWith {
-	["CANT ATTACH!", 1.5, warningIcon, colorRed] spawn createAlert;
+	[localize "str_gw_cannot_attach", 1.5, warningIcon, colorRed] spawn createAlert;
 	false
 };
 
@@ -71,23 +71,28 @@ if (isNil "_data") exitWith { false };
 _maxWeapons = (_data select 2) select 1;
 _maxModules = (_data select 2) select 2;
 
-_currentWeapons = count (_veh getVariable ["weapons", []]);
-_currentModules = count (_veh getVariable ["tactical", []]);
+_currentWeapons = 0; 
+_currentModules = 0;
 
-if (!isNil { _orig getVariable "weapons" } && _currentWeapons >= _maxWeapons) exitWith {
-	["TOO MANY WEAPONS!", 1.5, warningIcon, colorRed] spawn createAlert;
+{
+	if (_x call isWeapon) then { _currentWeapons = _currentWeapons + 1; };
+	if (_x call isModule) then { _currentModules = _currentModules + 1; };
+} count (attachedObjects _veh) > 0;
+
+if (_orig call isWeapon && _currentWeapons >= _maxWeapons) exitWith {
+	[localize "str_gw_too_many_weapons", 1.5, warningIcon, colorRed, "default", "beep_warning"] spawn createAlert;
 	false
 };
 
-if (!isNil { _orig getVariable "tactical" } && _currentModules >= _maxModules) exitWith {
-	["TOO MANY MODULES!", 1.5, warningIcon, colorRed] spawn createAlert;
+if  (_orig call isModule && _currentModules >= _maxModules) exitWith {
+	[localize "str_gw_too_many_modules", 1.5, warningIcon, colorRed, "default", "beep_warning"] spawn createAlert;
 	false
 };
 
 // Do we own this vehicle?
 _isOwner = [_veh, player, false] call checkOwner;
 if (!_isOwner && !_forceAttach) exitWith {
-	["PERMISSION ERROR!", 1.5, warningIcon, colorRed] spawn createAlert;    	
+	[localize "str_gw_permission_error", 1.5, warningIcon, colorRed, "default", "beep_warning"] spawn createAlert;    	
 	false
 };
 
@@ -96,11 +101,6 @@ _vMass = getMass _veh;
 _oMass = getMass _orig;
 _modifier = if (!isNil "_data") then { (((_data select 2) select 0) select 0) } else { 1 };
 _maxMass = if (!isNil "_data") then { (((_data select 2) select 0) select 1) } else { 99999 };
-
-if (_vMass + (_oMass * _modifier) > _maxMass) exitWith {
-	["TOO HEAVY!", 1.5, warningIcon, colorRed] spawn createAlert;
-	false
-};
 
 // If there's something already attached.
 if ( !isNull attachedTo _orig ) then {  detach _orig; };
@@ -119,7 +119,7 @@ _wasSimulated = (simulationEnabled _veh);
 	"setObjectSimulation",
 	false,
 	false 
-] call BIS_fnc_MP;
+] call gw_fnc_mp;
 
 _timeout = time + 3;
 waitUntil{
@@ -129,14 +129,23 @@ waitUntil{
 
 _vect = [_obj, _veh] call getVectorDirAndUpRelative;
 _obj attachTo [_veh];
-_obj setVectorDirAndUp _vect;
 
-// Wait for it to be attached
-waitUntil { !isNull attachedTo _obj };	
+_timeout = time + 3;
+waitUntil {
+	
+	_attached = if (!isNull attachedTo _obj) then { if ((attachedTo _obj) isEqualTo _veh) exitWith { true }; false } else { false };
+	(_attached || (time > _timeout))
+};
+
+_obj setVectorDirAndUp _vect;
+_obj setVectorUp [0,0,1];
+
+// Set ownership to prevent non-owner detachment
+_obj setVariable ['GW_Owner', name player, true];
 
 // If its being force added ignore message
 if (_forceAttach) then {} else {
-	["OBJECT ATTACHED!", 1, successIcon, nil, "slideDown"] spawn createAlert;	
+	[localize "str_gw_object_attached", 1, successIcon, nil, "slideDown", ""] spawn createAlert;	
 };
 
 
@@ -150,16 +159,16 @@ if (_wasSimulated) then {
 		"setObjectSimulation",
 		false,
 		false 
-	] call BIS_fnc_MP;
+	] call gw_fnc_mp;
 
 };
 
-// If it wasn't simulated, briefly toggle simulation so we see the upate
-if (!_wasSimulated) then {
+// If it wasn't simulated, briefly toggle simulation so we see the update
+if (!_wasSimulated) then {	
 	_veh enableSimulation true;
-	_prevPos = (ASLtoATL visiblePositionASL _veh);
 	_timeout = time + 5;
-	waitUntil { Sleep 0.05; (simulationEnabled _veh || time > _timeout) };
+	waitUntil { (simulationEnabled _veh || time > _timeout) };
+	_prevPos = ASLtoATL visiblePositionASL _veh;
 	Sleep 0.1;
 	_veh enableSimulation false;
 	_veh setPos _prevPos;
@@ -173,9 +182,18 @@ if (_forceAttach) then {} else {
 // Add detach actions
 [_obj] call setDetachAction;
 
+_isHidden = _veh getVariable ['GW_HIDDEN', false];
+if (_isHidden) then {
+	pubVar_setHidden = [_veh, true];
+	publicVariable "pubVar_setHidden";	
+	[_veh, false] call pubVar_fnc_setHidden;	
+};
+
 // Remove all actions from player
 removeAllActions player;
 player spawn setPlayerActions;
+
+[_veh] call snapToPad;
 
 true
 

@@ -6,8 +6,8 @@
 
 private ["_arr", "_pos", "_dist", "_closest"];
 
-_arr = [_this,0, [], [[]]] call BIS_fnc_param;
-_pos = [_this,1, [], [[]]] call BIS_fnc_param;
+_arr = [_this,0, [], [[]]] call filterParam;
+_pos = [_this,1, [], [[]]] call filterParam;
 _dist = 999999;
 
 if (count _arr == 0 || count _pos == 0) exitWith { player };

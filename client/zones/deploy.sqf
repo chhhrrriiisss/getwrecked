@@ -22,6 +22,7 @@ _unit = _this select 1;
 _location = _this select 2;
 
 _zoneType = "battle";
+_zoneDisplayName = "";
 _deployData = [];
 
 // Determine the deploy locations and properties
@@ -30,6 +31,7 @@ _targetPosition = if (typename _location == "ARRAY") then { _location } else {
 	{
 		if ((_x select 0) == GW_SPAWN_LOCATION) exitWith {
 			_zoneType = (_x select 1);
+			_zoneDisplayName = (_x select 2);
 		};
 		false
 	} count GW_VALID_ZONES > 0;
@@ -44,7 +46,7 @@ _targetPosition = if (typename _location == "ARRAY") then { _location } else {
 
 	_rangeCheck = _zoneType call {
 		if (_this == "battle") exitWith { 150 };
-		if (_this == "race") exitWith { 4 };
+		if (_this == "race") exitWith { 5 };
 		5
 	};
 
@@ -76,6 +78,7 @@ _stripActions = {
 	_this setVariable ['hasActions', false];
 	true	
 };
+
 // Get rid of excess addActions
 { 
 	_x call _stripActions;
@@ -85,12 +88,12 @@ _stripActions = {
 // Clear/Unsimulate unnecessary items near workshop
 {
 	_x call _stripActions;
-	if (simulationEnabled _x) then {
-		_x enableSimulation false;
-	};
-
+	if (simulationEnabled _x) then { _x enableSimulation false; };
 	false
-} count (nearestObjects [ (getMarkerPos "workshopZone_camera"), [], 250]) > 0;
+} count (nearestObjects [ (getMarkerPos "workshopZone_camera"), [], 200]) > 0;
+
+// Trigger get-in event handler
+[_targetVehicle, 'driver', _unit] call handleGetIn;
 
 // Add handlers for vehicle
 _hasHandlers = _targetVehicle getVariable ['hasHandlers', false];
@@ -98,14 +101,11 @@ if (!_hasHandlers) then {
 	[_targetVehicle] call setVehicleHandlers;
 };
 
-// Add handlers for objects
-{
-	_h = _x getVariable ['hasHandlers', false];
-	if (!_h) then {
-		[_x] call setObjectHandlers;
-	};
-	false
-} count (attachedObjects _targetVehicle) > 0;
+// Unhide vehicle and all attachments
+pubVar_setHidden = [_targetVehicle, false];
+publicVariable "pubVar_setHidden";
+_targetVehicle hideObject false;
+_targetVehicle setVariable ['GW_HIDDEN', nil, true];
 
 // Update simulation for all clients
 [		
@@ -116,23 +116,29 @@ if (!_hasHandlers) then {
 	"setObjectSimulation",
 	false,
 	false 
-] call BIS_fnc_MP;
+] call gw_fnc_mp;
 
 // Set wanted value
 _targetVehicle setVariable ['GW_WantedValue', 0];
 
 _targetVehicle lockDriver false;
 [_targetVehicle, 2] spawn dustCircle;
-[_targetVehicle, ['invulnerable', 'nolock', 'nofire'], 10] call addVehicleStatus;
+[_targetVehicle, ['invulnerable', 'nolock', 'nofire', 'nofork'], 10] call addVehicleStatus;
+
+if (_zoneType == "race") then {
+	_targetVehicle setFuel 0;
+	_targetVehicle setVariable ['fuel', 0, true];
+	_targetVehicle setVariable ['ammo', 0, true];
+};
 
 // Everything is ok, return true
 GW_DEPLOY_ACTIVE = false;
 
 // Tell everyone else where we've gone
-_str = if (GW_SPAWN_LOCATION == "downtown") then { "" } else { "the "};
-systemChat format['You deployed to %1%2.', _str, GW_SPAWN_LOCATION];
+_str = if (_zoneDisplayName == "Downtown") then { "" } else { "the "};
+systemChat format['You deployed to %1%2.', _str, _zoneDisplayName];
 
-_strBroadcast = format['%1 deployed to %2%3', GW_PLAYERNAME, _str, GW_SPAWN_LOCATION];
+_strBroadcast = format['%1 deployed to %2%3', name player, _str, _zoneDisplayName];
 pubVar_systemChat = _strBroadcast;
 publicVariable "pubVar_systemChat";
 

@@ -509,8 +509,8 @@ class GW_HUD_Vehicle
 			idc = 12018;
 			fade = 1;
 			colorBackground[] = {0,0,0,0};
-			x = (0.865) * safezoneW + safezoneX;
-			y = (0.015) * safezoneH + safezoneY;
+			x = (0.85) * safezoneW + safezoneX;
+			y = (0.02) * safezoneH + safezoneY;
 			w = (GW_BUTTON_WIDTH / 6) * safezoneW;
 			h = (GW_BUTTON_HEIGHT * 2) * safezoneH;
 

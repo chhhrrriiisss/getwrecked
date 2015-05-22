@@ -7,7 +7,7 @@
 private ['_index', '_currentValue', '_currentValue', '_result'];
 
 
-_index = [_this,1, -1, [0]] call BIS_fnc_param;
+_index = [_this,1, -1, [0]] call filterParam;
 if (_index == -1) exitWith {};
 
 _currentValue = lnbData [97001, [_index, 0]];

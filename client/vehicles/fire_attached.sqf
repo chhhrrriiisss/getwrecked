@@ -8,10 +8,10 @@ if (GW_WAITFIRE) exitWith { };
 
 GW_WAITFIRE = true;
 
-_type = [_this,0, "", [""]] call BIS_fnc_param;
-_vehicle = [_this,1, objNull, [objNull]] call BIS_fnc_param;
-_module = [_this,2, objNull, [objNull]] call BIS_fnc_param;
-_indirect = [_this,3, false, [false]] call BIS_fnc_param;
+_type = [_this,0, "", [""]] call filterParam;
+_vehicle = [_this,1, objNull, [objNull]] call filterParam;
+_module = [_this,2, objNull, [objNull]] call filterParam;
+_indirect = [_this,3, false, [false]] call filterParam;
 
 if (isNull _vehicle || _type == "") exitWith { GW_WAITFIRE = false; };
 
@@ -46,7 +46,7 @@ if (_ammo <= 0 && _type != "FLM") exitWith {
 	    "addVehicleStatus",
 	    _vehicle,
 	    false 
-	] call BIS_fnc_MP;  
+	] call gw_fnc_mp;  
 
 	GW_WAITFIRE = false;
 };
@@ -67,7 +67,7 @@ _found = _state select 1;
 
 // Is the device on timeout?
 if (_timeLeft > 0 && _found) exitWith {
-	if ( _type == "HMG" || _type == "GMG" || _type == "FLM" || _type == "LMG") then {} else {
+	if ( _type == "HMG" || _type == "GMG" || _type == "FLM" || _type == "LMG" || _type == "RPD") then {} else {
 		[format['PLEASE WAIT (%1s)', round(_timeLeft)], 0.5, warningIcon, nil, "flash"] spawn createAlert;
 	};
 		GW_WAITFIRE = false;
@@ -93,7 +93,7 @@ if (_ammo < _cost && _type != "FLM") exitWith {
 	    "addVehicleStatus",
 	    _vehicle,
 	    false 
-	] call BIS_fnc_MP;  
+	] call gw_fnc_mp;  
 
 	GW_WAITFIRE = false;
 };
@@ -144,6 +144,7 @@ _success = if (!isNil "_obj") then {
 		case "FLM": {  fireFlamethrower };
 		case "HAR": {  fireHarpoon };
 		case "LMG": {  fireLmg };
+		case "RPD": {  firePod };
 
 	};
 
@@ -177,6 +178,5 @@ if (_success) then {
 	};
 };
 
-GW_WAITUSE = false;
 GW_WAITFIRE = false;
 

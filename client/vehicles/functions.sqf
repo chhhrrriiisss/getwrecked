@@ -4,73 +4,13 @@
 //		Return: None
 //
 
-calcMass = {
-
-	private ["_o", "_v", "_d"];
-
-	_o = _this select 0;
-	_v = _this select 1;
-
-	_vMass = (getMass _v);
-
-	_d = [(typeof _v), GW_VEHICLE_LIST] call getData;
-	_modifier = if (!isNil "_d") then { (((_d select 2) select 0) select 0) } else { 1 };
-	_oMass = ( _o getVariable ["mass", 0] );	
-	_oMass = _oMass * _modifier;
-	_newMass = _vMass + _oMass;
-
-	_v setMass _newMass;
-
-	true
-};
-
-calcAmmo = {
-
-	private ["_o", "_v"];
-
-	_o = _this select 0;
-	_v = _this select 1;
-
-	_ammo = (_o getVariable ["ammo", 0]);
-	_type = (_o getVariable ["ammo", 0]);
-
-	if (_ammo > 0) then { _v setVariable["maxAmmo", (_v getVariable "maxAmmo") + _ammo]; };
-
-	true
-};
-
-calcFuel = {
-
-	private ["_o", "_v"];
-
-	_o = _this select 0;
-	_v = _this select 1;
-
-	_fuel = _o getVariable ["fuel", 0];
-
-	if (_fuel > 0) then { _v setVariable["maxFuel", (_v getVariable "maxFuel") + _fuel]; };
-
-	true
-};
-
 calcWeapons = {
 
 	private ["_o", "_v"];
 
 	_o = _this select 0;
 	_v = _this select 1;
-	_w = _this select 2;
 
-	// Calculate the relative angle of the weapon
-	_vehDir =  getDir _v;
-	_wepDir = getDir _o;
-
-	if (typeOf _o == 'groundWeaponHolder') then {
-		_wepDir = _wepDir + 90;
-	};
-
-	_dif = [_wepDir - _vehDir] call normalizeAngle;
-	_o setVariable ['defaultDirection', _dif];
 
 	// Add the weapon target to the weapons array
 	_type = _w select 0;
@@ -104,20 +44,6 @@ calcTactical = {
 	// Check if a module of this type already exists
 	_exists = [_type, _v] call hasType;
 
-	if (_exists < 0) then {
-
-		_id = _v addAction[_desc, { 
-
-			_type = (_this select 3) select 0; 
-			_obj = (_this select 3) select 1; 
-			_id = (_this select 3) select 2; 
-			_veh = _this select 0; 
-
-			[_type, _veh] spawn useAttached;
-
-		}, [_type, _obj, _id], 0, false, false, "", format["( player in _target && (driver _target) == player && ((['%1', _target] call hasType) > 0) )", _type]]; // Only show action if the type exists on the vehicle
-	};
-
 	_vehTactical = _vehTactical + [ [_type, _obj, _id] ];
 	_v setVariable["tactical", _vehTactical];		
 
@@ -145,26 +71,42 @@ calcSpecial = {
 // Apply all defaults to the vehicle
 setDefaultData = {
 
-	private ["_v"];
+	private ["_v", "_data", "_armor", "_defaultAmmo", '_defaultFuel', '_armorValue'];
 
 	_v = _this select 0;
-	_defaultData = _v getVariable ["GW_defaults",[]];
 
-	if (count _defaultData <= 0) exitWith { false };
+	_mass = getMass _v;
+	if (isNil "_mass") then { _mass = 5000; };
 
+	_data = [typeOf _v, GW_VEHICLE_LIST] call getData;
+	if (isNil "_data") exitWith { false };
+	_attr = _data select 2;
+
+	_armor = [_attr, 6, 1, [0]] call filterParam;
+	_armorValue = getNumber(configFile >> "CfgVehicles" >> (typeOf _v) >> "armor");
+	_armorValue = if (isNil "_armorValue") then { GW_GAM } else { ((_armorValue / GW_GAM) * _armor) };
+	
 	{
-		if ((_x select 0) == 'mass') then {
-			_v setMass (_x select 1);
-		} else {
+		_v setVariable _x;
+	} count [	    
+	    ['GW_Armor', _armorValue, true],
+	    ['GW_Signature', ([_attr, 7, "Low"] call filterParam), true],
+	    ['GW_Health', 100, true],
+	    ['fuel', 0, false],
+	    ['ammo', 1, false],
+	    ['maxAmmo', ([_attr, 3, 0] call filterParam), false],
+	    ['maxFuel', ([_attr, 4, 0] call filterParam), false],
+	    ['maxWeapons', ([_attr, 1,9999] call filterParam), false],
+	    ['maxModules', ([_attr, 2, 9999] call filterParam), false],
+	    ['weapons', [], false],
+	    ['tactical', [], false],
+	    ['special', [], false],
+	    ['mass', _mass, false],
+	    ['maxMass', ([(_attr select 0), 1, 99999] call filterParam), false],
+	    ['massModifier', ([(_attr select 0), 0, 1] call filterParam), false],
+	    ['lockOns', false, false]
 
-			if (_x select 2) then {
-				_v setVariable [_x select 0, _x select 1, true];
-			} else {
-				_v setVariable [_x select 0, _x select 1];
-			};
-		};
-		false
-	} count _defaultData > 0;
+	] > 0;
 	
 	removeAllActions _v;
 	
@@ -175,6 +117,8 @@ setDefaultData = {
 setVehicleActions = {
 	
 	_vehicle = _this select 0;
+
+	if (!hasInterface) exitWith {};
 
 	_vehicle setVariable ['hasActions', true];
 
@@ -210,6 +154,13 @@ setVehicleActions = {
 
 	}, [], 0, false, false, "", "( (player in _target) && (player == (driver _target)) && (count (_target getVariable ['GW_detonateTargets', []]) > 0) )"];
 
+	// Activate Teleport
+	_vehicle addAction ["<t color='#ff1100' style='0'>Activate Teleport</t>", {
+
+		[(_this select 0)] call activateTeleport;
+
+	}, [], 0, false, false, "", "( (player in _target) && (player == (driver _target)) && (count (_target getVariable ['GW_teleportTargets', []]) > 0) )"];
+
 	// Deactivate Cloak
 	cloakObjectFormat = "<t color='#ff1100' style='0'>Deactivate Cloak</t>";
 
@@ -223,7 +174,7 @@ setVehicleActions = {
 			"removeVehicleStatus",
 			false,
 			false 
-		] call BIS_fnc_MP;  
+		] call gw_fnc_mp;  
 
 	}, [], 0, false, false, "", "( (player in _target) && (player == (driver _target)) && ( 'cloak' in (_target getVariable ['status', []]) ) )"];
 
@@ -232,7 +183,7 @@ setVehicleActions = {
 
 		[(_this select 0), player] spawn settingsMenu;
 
-	}, [], 0, false, false, "", "( !GW_EDITING && player in _target && !GW_LIFT_ACTIVE && !(GW_PAINT_ACTIVE))"];		
+	}, [], 0, false, false, "", "( !GW_EDITING && ((player distance _target) < 8) && (player in _target) && (GW_CURRENTZONE != 'workshopZone') && !GW_LIFT_ACTIVE && !(GW_PAINT_ACTIVE))"];		
 
 	// Open the settings menu
 	_vehicle addAction[unflipVehicleFormat, {

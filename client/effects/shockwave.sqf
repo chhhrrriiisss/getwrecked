@@ -5,11 +5,12 @@
 //		Return: None
 //
 
-_target = if (isNil {_this select 0 }) exitWith {};
-_target = (_this select 0);
+_target = [_this, 0, objNull, [objNull, []]] call filterParam;
+_radius =  [_this, 1, 20, [0]] call filterParam;
+_force =  [_this, 2, 25, [0]] call filterParam;
 
-_radius =  if (isNil {_this select 1 }) then { 20 } else { (_this select 1) };
-_force =  if (isNil {_this select 2 }) then { 25 } else { (_this select 2) };
+_exit = if (typename _target == "OBJECT") then { if (isNull _target) exitWith { true }; false } else { false };
+if (_exit) exitWith {};
 
 _sourcePos = if (typename _target == "OBJECT") then { (ASLtoATL visiblePositionASL _target) } else { _target };
 
@@ -22,8 +23,9 @@ if (count _objectList == 0) exitWith {};
 	_objectVel = velocity _x;
 	_objectDir = direction _x;
 
-	_objectMass = getMass _x;
-	_objectMass = if (isNil "_objectMass") then { 1000 } else { (_objectMass) };
+	_objectMass = if (isNil { getMass _x }) then { 1000 } else { (getmass _x) };
+	if (_objectMass == 0) then { _objectMass = 2; };
+		
 	_distance = _x distance _sourcePos;
 
 	_dis = _sourcePos vectorDiff (ASLtoATL visiblePositionASL _x);
@@ -47,7 +49,11 @@ if (count _objectList == 0) exitWith {};
 	_shockY_F = ceil(random _shockY_F);
 	_shockZ_F = ceil(random _shockZ_F);
 
-	_targetVelocity = [(_objectVel select 0) + (sin _objectDir * _shockX_F),(_objectVel select 1) + (cos _objectDir * _shockY_F),_shockZ_F];
+	_targetVelocity = [
+		([(_objectVel select 0) + (sin _objectDir * _shockX_F), -20, 20] call limitToRange),
+		([(_objectVel select 1) + (cos _objectDir * _shockY_F), -20, 20] call limitToRange),
+		([_shockZ_F, -20, 20] call limitToRange)
+	];
 
 	// Apply velocity to vehicle whether local or remote
 	if (local _x) then {		
@@ -61,7 +67,7 @@ if (count _objectList == 0) exitWith {};
 			"setVelocityLocal",
 			_x,
 			false 
-		] call BIS_fnc_MP;  
+		] call gw_fnc_mp;  
 	};
 
 	false

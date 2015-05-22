@@ -6,55 +6,44 @@
 
 private ["_targets", "_vehicle"];
 
-
 _vehicle = _this select 0;
+_target = _this select 1;
+_power = _this select 4;
 
-_vehiclePos =  (ASLtoATL visiblePositionASL _vehicle);
-_nearby = _vehiclePos nearEntities [["Car"], 10];
-if (count _nearby == 0) exitWith {};
+// Need a little bit of power to attempt attach
+if (_power <= 10) exitWith {};
+
+// Maximum 10 second fork effect, min 2
+_power = ([_power, 20, 100] call limitToRange) / 10; 
 
 {
-	if ("Land_PalletTrolley_01_khaki_F" == (typeOf _x)) then {
+	if ("Land_PalletTrolley_01_khaki_F" isEqualTo (typeOf _x)) then {
 
-		_fork = _x;
-		_pos = _fork modelToWorldVisual [0,0,0];
+		_forkObject = _x;
+		_objs = lineIntersectsWith [ATLtoASL (_x modelToWorldVisual [0,0,-0.5]),ATLtoASL (_x modelToWorldVisual [3,0,-0.5]), GW_CURRENTVEHICLE, _forkObject];
+		[_x modelToWorldVisual [0,0,-0.5],_x modelToWorldVisual [3,0,-0.5], 0.1] spawn debugLine;
+		if (count _objs == 0) exitWith {};
 
 		{
-			_isVehicle = _x getVariable ["isVehicle", false];
-			_status = _x getVariable ["status", []];
+			if (_x == _target) exitWith {
 
-			if (_isVehicle && { _x != _vehicle } && { !('forked' in _status) }) exitWith {
+				_status = _x getVariable ['status', []];
+				if ('invulnerable' in _status || 'cloak' in _status || 'forked' in _status || 'nofork' in _status) exitWith {};
 
 				[       
-	                [
-	                    _x,
-	                    "['forked']",
-	                    10
-	                ],
-	                "addVehicleStatus",
-	                _x,
-	                false 
-	        	] call BIS_fnc_MP;  
-
-	        	_p = _fork worldToModelVisual (ASLtoATL visiblePositionASL _x);
-
-	        	_p set [2, (ASLtoATL visiblePositionASL _fork) select 2];
-
-	        	_x attachTo [_fork, _p];
-
-	        	_x spawn {
-
-	        		Sleep 5;
-	        		detach _this;
-
-	        	};
+				    [
+				        _target,
+				        _vehicle,
+				        _power
+				    ],
+				    "forkEffect",
+				    _target,
+				    false 
+				] call gw_fnc_mp; 
 
 			};
-
-		} ForEach _nearby;
-
-	};
+			false
+		} count _objs;	
+	};	
 	false
 } count (attachedObjects _vehicle) > 0;
-
-

@@ -9,34 +9,17 @@ private ["_find", "_arr","_foundArr", "_data"];
 _find = _this select 0;
 _arr = _this select 1;
 
-if (_find == "" || count _arr == 0) exitWith { nil };
+if ((count toArray _find == 0) || count _arr == 0) exitWith { nil };
 
 _data = [];
 {		
-	_found = false;
-
-	// CHeck all indexes for a match (same typename)
-	for "_f" from 0 to (count _x) step 1 do {
-		if (typename (_x select _f) == (typename _find)) then {
-			if (_find == (_x select _f)) exitWith { _found = true; };		
+	_entry = _x;
+	if ({  
+		if (typename _x isEqualTo typename _find) then { 
+			if (_find == _x) exitWith { _data = _entry; };
 		};
-	};
-
-	if (_found) exitWith {
-
-		_count = count _x;
-
-		// Spit out all the data
-		for "_i" from 0 to _count step 1 do {
-
-			if (!isNil { (_x select _i) }) then {			 
-				_data pushBack (_x select _i);
-			};
-
-		};		
-
 		false
-	};
+	} count _entry isEqualTo 1) exitWith {};
 
 	false
 } count _arr;

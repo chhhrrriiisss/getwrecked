@@ -4,18 +4,19 @@
 //		Return: None
 //
 
-private['_vehicle', '_o', '_obj'];
+private['_vehicle', '_obj', '_tag'];
 
 if (GW_WAITCOMPILE) exitwith {};
 GW_WAITCOMPILE = true;
 
-_vehicle = [_this,0, objNull, [objNull]] call BIS_fnc_param;
+_vehicle = [_this,0, objNull, [objNull]] call filterParam;
 
 if (isNull _vehicle) exitWith { GW_WAITCOMPILE = false; };
 if (!alive _vehicle) exitWith { GW_WAITCOMPILE = false; };
 	
 _attachedObjects = attachedObjects _vehicle;
 
+_vehicle lock true;
 _vehicle lockDriver true;
 _vehicle lockCargo true;
 
@@ -24,50 +25,104 @@ _prevAmmo = _vehicle getVariable ["ammo", nil];
 _prevFuel = (fuel _vehicle) + (_vehicle getVariable ["fuel", 0]);	
 [_vehicle] call setDefaultData;
 
+// Check for max limits or old items and prune
+if (GW_CURRENTZONE == "workshopZone") then { _vehicle call cleanAttached; };
+
 _attachedValue = 0;
+_maxMass = _vehicle getVariable ['maxMass', 99999];
+_defaultMass = _vehicle getVariable ['mass', 1000];
+_massModifier = _vehicle getVariable ['massModifier', 1];
+_combinedMass = 0;
 
 {
 	_obj = _x;
-
-	if (!alive _obj) then {
-
+	
+	if (!alive _obj || !(_obj call isObject)) then {
 		deleteVehicle _obj;
-
 	} else {
 
-		[_obj, _vehicle] call calcMass;
-		[_obj, _vehicle] call calcFuel;
-		[_obj, _vehicle] call calcAmmo;
+		// Get all the data we need
+		[_obj] call setObjectProperties;
+		_oData = _obj getVariable ['GW_Data','["Bad data", 0, 0, 0, 0]'];
+		_oData = call compile _oData;
+		_tag = _obj getVariable ["GW_Tag", ''];
 
-		_weapons = _obj getVariable ["weapons", nil];
+		// Add object mass to vehicle				
+		_oMass = (_oData select 1) * _massModifier;
+		_combinedMass = _combinedMass + _oMass;
 
-		if (!(isNil "_weapons")) then {
-			[_obj, _vehicle, _weapons] call calcWeapons;
+		// Add any fuel to vehicle
+		_fuel = (_oData select 3);
+		if (_fuel > 0) then { _vehicle setVariable["maxFuel", (_vehicle getVariable "maxFuel") + _fuel]; };
+
+		// Add any ammo to vehicle
+		_ammo = (_oData select 2);
+		if (_ammo > 0) then { _vehicle setVariable["maxAmmo", (_vehicle getVariable "maxAmmo") + _ammo]; };
+
+		// Add weapon to vehicle reference
+		_isWeapon = _obj call isWeapon;
+		_isModule = _obj call isModule;
+		_isSpecial = _obj call isSpecial;
+		_isHolder = _obj call isHolder;
+
+		if (_isWeapon || _isModule || _isSpecial) then { 			
+
+			// Binds only for active modules and weapons
+			_bind = if (_isWeapon || _isModule) then {
+				_bind = _obj getVariable ['GW_KeyBind', ["-1", "1"]];
+				_bind = if (typename _bind == "ARRAY") then { (_bind select 1) } else { _bind };	
+				_bind
+			} else { [] };	
+
+			_arrayTarget = if (_isWeapon) then { "weapons" } else {
+				if (_isModule) exitWith { "tactical" }; "special"
+			};
+
+			// Calculate default direction for weapons
+			if (_isWeapon) then {				
+
+				// Calculate the relative angle of the weapon
+				_vehDir =  getDir _vehicle;
+				_wepDir = getDir _obj;
+				if (_isHolder) then { _wepDir = _wepDir + 90; };
+
+				_dif = [_wepDir - _vehDir] call normalizeAngle;
+				_obj setVariable ['GW_defaultDirection', _dif];
+
+				if (_tag in GW_LOCKONWEAPONS) then { _vehicle setVariable["lockOns", true];	};
+			};		
+
+			// Adjust vehicle quick reference arrays
+			_array = _vehicle getVariable [_arrayTarget, []];
+
+			if (_isWeapon || _isModule) exitWith {
+				_array = _array + [[_tag, _obj, _bind]];
+				_vehicle setVariable[_arrayTarget, _array];	
+			};
+
+			if (!(_tag in _array)) then {
+				_array pushBack _tag;
+				_vehicle setVariable[_arrayTarget, _array];	
+			};		
+	
 		};
 
-		_tactical = _obj getVariable ["tactical", nil];
+		_class = if (_isHolder) then {
+			(([_tag, GW_LOOT_LIST] call getData) select 0)
+		} else { (typeOf _obj) };
 
-		if (!(isNil "_tactical")) then {
-			[_obj, _vehicle, _tactical] call calcTactical;
-		};
-
-		_special = _obj getVariable ["special", nil];
-
-		if (!(isNil "_special")) then {
-			[_obj, _vehicle, _special] call calcSpecial;
-		};
-
-		_class = if (typeOf _obj == "groundWeaponHolder") then { (_obj getVariable "type") } else { typeOf _obj };
 		_value = [_class, "", ""] call getCost;
 		_attachedValue = _attachedValue + _value;
+	
 	};
 
-	false
-	
 } count _attachedObjects > 0;
 
+// Apply combined mass to vehicle
+_vehicle setMass ([_combinedMass, _defaultMass, _maxMass] call limitToRange);
+
 // Calculate and set vehicle value
-_vehicleValue = [typeOf _vehicle, "", ""] call getCost;
+_vehicleValue = [(typeOf _vehicle), "", ""] call getCost;
 _totalValue = _attachedValue + _vehicleValue;
 _vehicle setVariable ["GW_Value", _totalValue];
 
@@ -110,6 +165,7 @@ if (GW_CURRENTZONE == "workshopZone") then {
 
 if (GW_CURRENTZONE != "workshopZone") then {
 	_vehicle lockDriver false;
+	_vehicle lock false;
 };
 
 GW_WAITCOMPILE = false;

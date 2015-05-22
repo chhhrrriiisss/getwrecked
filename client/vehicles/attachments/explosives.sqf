@@ -53,7 +53,7 @@ _obj attachTo [_holder, [0,0,0.1]];
 };
 
 _releaseTime = time;
-_timer = 60;
+_timer = 120;
 _timeout = time + _timer;
 
 // Handlers to trigger effect early
@@ -107,13 +107,13 @@ GW_DEPLOYLIST = GW_DEPLOYLIST + [_obj];
 			"setObjectSimulation",
 			false,
 			false 
-		] call BIS_fnc_MP;
+		] call gw_fnc_mp;
 
 		_bomb = createVehicle ["Bo_GBU12_LGB", _pos, [], 0, "FLY"];		
 		_bomb setVelocity [0,0,-10];
-		[_pos, 20, 55] call shockwaveEffect;
+		[_pos, 40, 15] call shockwaveEffect;		
 
-		_nearby = _pos nearEntities [["Car"], 20];	
+		_nearby = _pos nearEntities [["Car"], 30];	
 
 		if (count _nearby > 0) then {
 			{
@@ -122,10 +122,23 @@ GW_DEPLOYLIST = GW_DEPLOYLIST + [_obj];
 				if ('invulnerable' in _status) then {} else {
 
 					if (_x != (_v)) then { [_x, "EPL"] call markAsKilledBy; };
-					
-					_d = if ('nanoarmor' in _status) then { 0.05 } else { (random (0.25) + 0.5) };
-					_x setDammage ((getdammage _x) + _d);
-					_x call updateVehicleDamage;
+
+					_modifier = [1 - (30 / ( _x distance _pos)), 0.5, 1] call limitToRange;					
+					_d = if ('nanoarmor' in _status) then { 0.05 } else { (random (0.1) + 0.5) };
+					_d = _d * _modifier;
+
+					if (_d > 0) then {
+
+						_x setDammage ((getdammage _x) + _d);
+
+						[       
+							_x,
+							"updateVehicleDamage",
+							_x,
+							false
+						] call gw_fnc_mp; 
+
+					};
 
 				};
 				
@@ -134,7 +147,11 @@ GW_DEPLOYLIST = GW_DEPLOYLIST + [_obj];
 			} count _nearby > 0;
 		};
 
-		deleteVehicle _o;		
+		Sleep 0.5;
+		
+		deleteVehicle _o;	
+		[_pos, [0,0,0], 30] call impactEffect;	
+
 	};
 
 	// Cleanup

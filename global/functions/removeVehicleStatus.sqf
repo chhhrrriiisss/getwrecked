@@ -20,7 +20,7 @@ if (!local _vehicle) exitWith {
 		"removeVehicleStatus",
 		_vehicle,
 		false 
-	] call BIS_fnc_MP; 
+	] call gw_fnc_mp; 
 };
 
 if (typename _status == "STRING") then { _status = (call compile _status); };

@@ -9,9 +9,14 @@ _vehicle = _this select 0;
 _selection = _this select 1;
 _damage = _this select 2;
 
+// If we're in the workshop, ignore all damage
+if (_vehicle distance (getMarkerPos "workshopZone_camera") < 200) exitWith { false };
+
 _origDamage = _damage;
 _oldDamage = nil;
 _projectile = _this select 4;
+_scale = 1;
+_armor = 1;
 
 // Prevent wheel damage
 if (_selection find "wheel" != -1) exitWith { false }; 
@@ -41,12 +46,11 @@ if (_selection != "?") then  {
         } else {
 
             _scale = _projectile call vehicleDamageData;
-
             _status = _vehicle getVariable ['status', []];
-            _armor = _vehicle getVariable ['armor', 1];
+            _armor = _vehicle getVariable ['GW_Armor', 1];
+            _armor = if (_armor <= 0) then { 1 } else { _armor };
             _scale = if (GW_ARMOR_SYSTEM_ENABLED) then { (_scale * _armor) } else { _scale };
             _scale = if ("nanoarmor" in _status) then { 0.01 } else { _scale };
-
             _damage = ((_damage - _oldDamage) * _scale) + _oldDamage; 
 
         };
@@ -55,12 +59,19 @@ if (_selection != "?") then  {
 
 };
 
-if (GW_DEBUG) then {
-    _str = format['%1 / %2 / %3 / %4', typeof _vehicle, _damage, _selection, (getDammage _vehicle)];
+// Debug damage 
+if (isNil "GW_LASTDAMAGEMESSAGE") then { GW_LASTDAMAGEMESSAGE = time - 0.25; };
+if (GW_DEBUG && (time - GW_LASTDAMAGEMESSAGE > 0.25)) then {
+
+    GW_LASTDAMAGEMESSAGE = time;
+    _vName = _vehicle getVariable ['name', 'A vehicle'];
+    _health = _vehicle getVariable ['GW_Health', 100];
+    _str = format['V: %1 A: %2 D: %3 H: %4 P:%5', _vName, _armor, _scale, _health, _projectile];
     systemchat _str;
     pubVar_systemChat = _str;
     publicVariable "pubVar_systemChat";
 };
+
 
 // If we're invulnerable, ignore all damage
 _status = _vehicle getVariable ["status", []];
@@ -84,18 +95,39 @@ if ("invulnerable" in _status) then {
             };
         };
         false
-    } count _parts > 0;
+    } count _parts > 0;   
 
-   
-
-    if (_highestDmg > 0.91) then {} else {
+    //if (_highestDmg > 0.91) then {} else {
         { _vehicle setHit [_x, _highestDmg]; false } count _parts > 0;
-        _vehicle setDammage _highestDmg;
-    };
+        //_vehicle setDammage _highestDmg;
+    //};
 
 };
 
-_vehicle spawn { Sleep 0.05; _this call updateVehicleDamage; };
+// Update the vehicle damage status bar
+_vehicle spawn { 
+
+    Sleep 0.01; 
+    _this call updateVehicleDamage; 
+
+    if (!GW_DEBUG) exitWith {};
+
+    _firstHit = _this getVariable ['firstHit', nil];
+    if (isNil "_firstHit") then { _this setVariable ['firstHit', time]; };
+
+    _health = _this getVariable ["GW_Health", 0];
+    _name = _this getVariable ['name', 'vehicle'];
+    _isDead = _this getVariable ["isDead", false];
+    if (_health == 0 && !_isDead) then {
+        _this setVariable ['isDead', true];
+        _firstHit = _this getVariable ['firstHit', time];
+        player customChat [GW_SUCCESS_CHANNEL, format['%1 destroyed in %2', _name, ([(time - _firstHit),1] call roundTo)]  ];
+    };  
+   
+};
+
+
+
 [_vehicle, ['noservice'], 5] call addVehicleStatus;
 
 _damage

@@ -5,5 +5,6 @@ class GW
 	{
 		file = "global\functions";	
 		class initTerminal { file = "global\functions\initTerminal.sqf"; };
+		class fontSize { file = "global\functions\fontSize.sqf"; };
 	};
 };

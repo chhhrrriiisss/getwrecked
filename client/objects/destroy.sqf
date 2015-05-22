@@ -6,8 +6,8 @@
 
 private ["_obj", "_veh"];
 
-_obj = [_this,0, objNull, [objNull]] call BIS_fnc_param;
-_effect = [_this,1, false, [false]] call BIS_fnc_param;
+_obj = [_this,0, objNull, [objNull]] call filterParam;
+_effect = [_this,1, false, [false]] call filterParam;
 
 if (isNull _obj) exitWith {};
 
@@ -19,7 +19,7 @@ if (_effect) then {
 			0.5
 		],
 		"muzzleEffect"
-	] call BIS_fnc_MP;
+	] call gw_fnc_mp;
 
 };
 

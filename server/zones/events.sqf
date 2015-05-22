@@ -32,7 +32,7 @@ _eventsList = [
 			_activeZones = [];
 
 			{
-				if ((_x select 1) != "safe") then {
+				if ((_x select 1) isEqualTo "battle") then {
 					_zoneName = format['%1%2', (_x select 0), 'Zone'];
 					if (count ([_zoneName] call findAllInZone) > 0) then {
 						_activeZones pushBack _zoneName;
@@ -53,7 +53,24 @@ _eventsList = [
 			true	
 
 		}
+	],
+
+	// Ignore night
+	[
+		"time", // Name of event
+		100, // Probability of event
+		// Condition to check for
+		{ ((daytime >= 17) || (daytime < 7)) },
+		// Script to run on TRUE condition
+		{ 
+			_curTime = daytime;
+			if (_curTime >= 17) exitWith { skiptime (7 + (24 - _curTime)); true };
+			if (_curTime < 7) exitWith { skiptime (7 - _curTime); true };
+			true
+		}
 	]
+
+
 
 ];
 

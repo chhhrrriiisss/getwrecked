@@ -7,7 +7,24 @@ Get Wrecked challenges players to create, customize, drive, survive and of cours
 
 Get Wrecked is not a mod, just a mission file, so you don't need to start the Arma 3 client with any funky parameters - just ensure you have disabled all other mods as they can cause conflicts in rare cases. If you're just looking to play - you don't need to do anything but join a server running the Get Wrecked mission file. There is a [server list available on the website](http://getwrecked.info#play), or filter 'Get Wrecked' if you are already in-game.
 
-If you're looking to host yourself, it is strongly recommended to use a dedicated server to run Get Wrecked. Simply  [download the mission.pbo](http://getwrecked.info#download) and add it to your Arma3/MpMissions folder on your server. If you're not familiar with editing the server.cfg to include a reference to the mission file, it's worth using google to find this information.
+If you're looking to host yourself, it is strongly recommended to use a dedicated server to run Get Wrecked. Simply  [download the mission.pbo](http://getwrecked.info#download) and add it to your Arma3/MpMissions folder on your server. You'll need to add a class to the server.cfg to load the mission as a default:
+
+class Missions
+{
+	class GetWrecked // Name for the mission, can be anything
+	{
+		template = "Get Wrecked v0_8_1 [Alpha].Altis";	// This file name must match the mission file name EXACTLY (without the .pbo extension)
+		difficulty = "regular";	  // It's recommended to keep this as regular and to ensure third person is enabled
+	};
+};	
+
+## Customization
+
+Several aspects of the game mode can be customized. These include starting money, kill rewards, armor system and respawn timers.
+
+If you are running a one-off session, you can access them as an admin via the parameters tab in the lobby. 
+
+If you are running a dedicated server and you want these values to persist, you need to edit the "default = #;" entries in params.hpp, which will require decompiling and then recompiling the .pbo. Seek help if you are not sure what you are doing as editing these values incorrectly may cause the mission to stop working.
 
 ## Links
 

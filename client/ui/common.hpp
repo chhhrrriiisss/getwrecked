@@ -34,7 +34,8 @@ class GW_StructuredTextBox
 	w = 0.5;
 	h = 0.5;
 
-	size = "(((((safezoneW / safezoneH) min 1.2) / 1.2) / 20) * 1)";
+	size = "0.025 / (getResolution select 5)";
+	SizeEx = "0.025 / (getResolution select 5)"; 
 
 	text = "";
 	
@@ -58,7 +59,7 @@ class GW_Corner
 		w = 0.05;
 		h = 0.05;
 		font = "";
-		sizeEx = 0.05;
+		SizeEx = "0.0275 / (getResolution select 5)"; 
 		colorBackground[] = {1,1,1,1};
 		colorText[] = {1,1,1,0.95}; 
 		text = "client\images\icons\hud\corner1.paa";
@@ -79,7 +80,7 @@ class GW_Stripe_Box
 	h = 0.1;
 
 	font = "PuristaMedium";
-	sizeEx = 0.05;
+	SizeEx = "0.0275 / (getResolution select 5)"; 
 
 	colorBackground[] = {0,0,0,0.5}; 
 	colorText[] = {1,1,1,0.8}; 
@@ -98,7 +99,6 @@ class GW_Text_Box
 	colorBackground[] = {0,0,0,0};
 	colorText[] = {1,1,1,1};
 	font = "PuristaSemiBold";
-	sizeEx = "0.05 / (getResolution select 5)";
 	lineSpacing = 0;
 	fixedWidth = 0;
 	shadow = 0;
@@ -109,7 +109,7 @@ class GW_Text_Box
 	h = 0.06;
 
 	text = "";
-	size = "0.05 / (getResolution select 5)";
+	SizeEx = "(0.018 / (getResolution select 5))"; 
 
 };
 
@@ -123,7 +123,7 @@ class GW_Block {
 	shadow = 1;
 	colorShadow[] = {0, 0, 0, 0.5};
 	font = "PuristaMedium";
-	SizeEx = "(			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 1)";
+	SizeEx = "(0.018 / (getResolution select 5))"; 
 	text = "";
 	colorText[] = {1, 1, 1, 1.0};
 	colorBackground[] = {0, 0, 0, 0};
@@ -135,7 +135,7 @@ class GW_ListBox {
 	type = 102;
 	shadow = 0;
 	font = "PuristaMedium";
-	sizeEx = "0.03";
+	SizeEx = "(0.019 / (getResolution select 5))";
 	color[] = {0.95,0.95,0.95,1};
 	colorText[] = {1,1,1,1.0};
 	colorDisabled[] = {1,1,1,0.25};
@@ -153,6 +153,15 @@ class GW_ListBox {
 	autoScrollSpeed = -1;
 	autoScrollDelay = 5;
 	autoScrollRewind = 0;
+
+	tooltip = ""; // Tooltip text
+	tooltipColorShade[] = {0,0,0,1}; // Tooltip background color
+	tooltipColorText[] = {1,1,1,1}; // Tooltip text color
+	tooltipColorBox[] = {1,1,1,1}; // Tooltip frame color
+
+	colorPicture[] = {1,1,1,1};
+	colorPictureSelected[] = {1,1,1,1};
+	colorPictureDisabled[] = {1,1,1,1};  
 
 	class ListScrollBar
 	{
@@ -184,7 +193,8 @@ class GW_RscTitle
 	w = 0.2;
 	shadow = 0;
 	font = "puristaMedium";
-	sizeEx = "(			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 12) * 1)";
+	size = 0.035;
+	SizeEx = "(0.018 / (getResolution select 5))"; 
 };
 
 
@@ -202,7 +212,7 @@ class GW_LargeTitle
 	y = 0;
 	shadow = 0;
 	font = "puristaMedium";
-	sizeEx = "0.17";  
+	SizeEx = "(0.09 / (getResolution select 5))"; 
 };
 
 
@@ -217,7 +227,7 @@ class GW_RscText {
 	shadow = 0;
 	colorShadow[] = {0, 0, 0, 0};
 	font = "PuristaMedium";
-	sizeEx = "(			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 1)";
+	SizeEx = "(0.019 / (getResolution select 5))";
 	text = "";
 	colorText[] = {1, 1, 1, 1.0};
 	colorBackground[] = {0, 0, 0, 0};
@@ -229,8 +239,8 @@ class GW_RscPicture {
 	colorText[] = {1, 1, 1, 1};
 	x = 0;
 	y = 0;
-	w = 0.2;
-	h = 0.15;
+	w = "(0.17 / (getResolution select 5))";
+	h = "(0.127 / (getResolution select 5))";
 };
 
 class GW_RscPictureKeepAspect : GW_RscPicture {
@@ -255,7 +265,7 @@ class GW_RscListNBox {
 	shadow = 0;
 	default = 0; 
 	font = "PuristaMedium";
-	sizeEx = "(			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 1)";
+	SizeEx = "(0.019 / (getResolution select 5))";
 	color[] = {0.95,0.95,0.95,1};
 	colorText[] = {1,1,1,1.0};
 	colorDisabled[] = {1,1,1,0.25};
@@ -297,7 +307,7 @@ class GW_RscButton {
 	h = 0.039216;
 	shadow = 2;
 	font = "PuristaMedium";
-	sizeEx = "(			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 1)";
+	sizeEx = "0.022 / (getResolution select 5)";
 	colorText[] = {1, 1, 1, 1.0};
 	colorDisabled[] = {0.4, 0.4, 0.4, 1};
 	colorBackground[] = {"(profilenamespace getvariable ['GUI_BCG_RGB_R',0.3843])", "(profilenamespace getvariable ['GUI_BCG_RGB_G',0.7019])", "(profilenamespace getvariable ['GUI_BCG_RGB_B',0.8862])", 0.7};
@@ -346,8 +356,8 @@ class GW_RscButtonMenu : GW_RscButton {
 	period = 1.2;
 	periodFocus = 1.2;
 	periodOver = 1.2;
-	size = "(			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 1)";
-	sizeEx = "(			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 1)";
+	size= 0.035;
+	SizeEx = "(0.018 / (getResolution select 5))";
 
 	toolTipColorText[] = {1, 1, 1, 1};
 	toolTipColorBox[] = {0, 0, 0, 0};
@@ -363,8 +373,8 @@ class GW_RscButtonMenu : GW_RscButton {
 
 	class TextPos
 	{
-		left = "0.25 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
-		top = "(			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25) - 		(			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 1)) / 2";
+		left = "0.004125 / (getResolution select 5)";
+		top = "0";
 		right = 0.005;
 		bottom = 0.0;
 	};
@@ -377,7 +387,7 @@ class GW_RscButtonMenu : GW_RscButton {
 	};
 	class ShortcutPos
 	{
-		left = "(6.25 * 			(			((safezoneW / safezoneH) min 1.2) / 40)) - 0.0225 - 0.005";
+		left = "0.00825 / (getResolution select 5)";
 		top = 0.005;
 		w = 0.0225;
 		h = 0.03;
@@ -420,7 +430,7 @@ class GW_RscCombo {
 	colorActive[] = {1, 0, 0, 1};
 	colorDisabled[] = {1, 1, 1, 0.25};
 	font = "PuristaMedium";
-	sizeEx = "(			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 30) * 1)";
+	SizeEx = "(0.019 / (getResolution select 5))";
 	
 	class ComboScrollBar {
 

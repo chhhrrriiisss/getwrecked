@@ -6,50 +6,14 @@
 
 private ["_cam", "_victim", "_killer", "_centerCamera"];
 
-_victim = [_this,0, objNull, [objNull]] call BIS_fnc_param;
-_killer = [_this,1, objNull, [objNull]] call BIS_fnc_param;
 
-_point = getMarkerPos format['%1_%2', GW_CURRENTZONE, 'camera'];
-_centerCamera = if (_point distance [0,0,0] <= 0) then { getMarkerPos "workshopZone_camera" } else { _point };
-
-_target = _centerCamera;
-_type = 'default';
-
-if (!isNull _killer && !isNull _victim) then {
-
-	// Possible suicide, try go to overview shot
-	if ((_killer == _victim) || (!alive _killer)) exitWith {		
-
-		// Do we have a previous position to work with?
-		_prevPos = _victim getVariable ['prevPos', nil];
-		_target = if (!isNil "_prevPos") then { _prevPos } else { _centerCamera };
-		_type = 'overview';
-
-	};
-
-	// Definitely a homocide! Killer is alive and in a vehicle
-	if (alive _killer && (_killer != (vehicle _killer)) ) exitWith {
-		_target= vehicle _killer;
-		_type = 'focus';
-	};
-
-} else {
-	
-	// No clue, just show something
-	_target = _centerCamera;
-	_type = 'default';
-
-};
+_target = [_this,0, getMarkerPos "workshopZone_camera", [objNull, []]] call filterParam;
+_type = [_this,1, "default", [""]] call filterParam;
 
 // Reset kill stats
-player setVariable ["killedBy", nil];
-player setVariable ["prevPos", nil];
-
 GW_DEATH_CAMERA_ACTIVE = true;
 
 9999 cutText ["", "BLACK IN", 1.5];  
-
-
 
 // Create a timer dialog
 [] spawn {
@@ -57,18 +21,10 @@ GW_DEATH_CAMERA_ACTIVE = true;
 	if (GW_DEATH_CAMERA_ACTIVE) then { GW_DEATH_CAMERA_ACTIVE = false;	};
 };
 
-_targetPosition = if (typename _target == "OBJECT") then { visiblePosition _target } else { _target };
-
-_cam = [];	
+_targetPosition = if (typename _target == "OBJECT") then { (ASLtoATL visiblePositionASL _target) } else { _target };
 _cam = "camera" camCreate [_targetPosition select 0, _targetPosition select 1, 30];
 
 _timeout = time + GW_RESPAWN_DELAY;
-
-
-// Were we killed by a nuke? Alternate camera mode
-_killedByNuke = profileNamespace getVariable ['killedByNuke', []];
-
-_type = if (count _killedByNuke > 0) then { _targetPosition = _killedByNuke; 'nukefocus' } else { _type };
 
 // Initialize the camera based on type requested
 switch (_type) do {

@@ -6,7 +6,7 @@
 
 private ['_index', '_timeout', '_list', '_prevData', '_prevText'];
 
-_index = if (isNil { _this select 1} ) then { -1 } else { (_this select 1) };
+_index = [_this, 1, -1, [0]] call filterParam;
 
 _timeout = time + 8;
 

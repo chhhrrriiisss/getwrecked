@@ -6,10 +6,9 @@
 
 private ["_obj", "_pitchAmount","_bankAmount", "_pitchBank", "_pitch", "_bank", "_newPitch", "_newBank"];
 
-
-_obj = [_this,0, objNull, [objNull]] call BIS_fnc_param;
-_pitchAmount = [(_this select 1),0, 0, [0]] call BIS_fnc_param;
-_bankAmount = [(_this select 1),1, 0, [0]] call BIS_fnc_param;
+_obj = [_this,0, objNull, [objNull]] call filterParam;
+_pitchAmount = [(_this select 1),0, 0, [0]] call filterParam;
+_bankAmount = [(_this select 1),1, 0, [0]] call filterParam;
 
 if (isNull _obj || (_pitchAmount == 0 && _bankAmount == 0)) exitWith {};
 

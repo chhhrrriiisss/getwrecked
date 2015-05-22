@@ -6,13 +6,15 @@
 
 private ['_target', '_pos', '_duration', '_size'];
 
- _target = [_this,0, objNull, [objNull]] call BIS_fnc_param;
-_duration = [_this,1, 1, [0]] call BIS_fnc_param;
-_size = [_this,2, 1, [0]] call BIS_fnc_param;
+ _target = [_this,0, objNull, [objNull]] call filterParam;
+_duration = [_this,1, 1, [0]] call filterParam;
+_size = [_this,2, 1, [0]] call filterParam;
 
 if (isNull _target || _duration < 0 || _size < 0) exitWith {};
-_pos = visiblePositionASL _target;
-if ((visiblePositionASL player) distance _pos > GW_EFFECTS_RANGE) exitWith {};
+
+_pos = (ASLtoATL visiblePositionASL _target);
+_isVisible = [_pos, _duration] call effectIsVisible;
+if (!_isVisible) exitWith {};
 
 // Prep pe
 _source  = "#particlesource" createvehiclelocal _pos;
@@ -28,9 +30,9 @@ _source setParticleParams
 	"Billboard",															//Type
 	1,																		//TimerPeriod
 	0.25,																	//LifeTime
-	[0, 0, 0],																//Position
-	[20, 20, 1],															//MoveVelocity
-	0,																		//RotationVelocity
+	[0, 0, -0.25],																//Position
+	[3, 3, -3],															//MoveVelocity
+	1,																		//RotationVelocity
 	3,																		//Weight
 	3,																		//Volume
 	0.1,																	//Rubbing

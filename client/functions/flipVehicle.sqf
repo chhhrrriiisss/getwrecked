@@ -6,9 +6,9 @@
 
 private ['_vehicle', '_dir', '_pos', '_alt', '_vel'];
 
-_vehicle = [_this,0, objNull, [objNull]] call BIS_fnc_param;
-_full = [_this,1, true, [false]] call BIS_fnc_param; 
-_force = [_this,1, false, [false]] call BIS_fnc_param; 
+_vehicle = [_this,0, objNull, [objNull]] call filterParam;
+_full = [_this,1, true, [false]] call filterParam; 
+_force = [_this,1, false, [false]] call filterParam; 
 
 if (isNull _vehicle) exitWith {};
 
@@ -37,3 +37,6 @@ if (!_full) then {
 	_vehicle setVectorUp [0,0,1];
 	_vehicle setVelocity [0,0,4];
 };
+
+// Recompile to avoid aiming errors
+[_vehicle] call compileAttached;

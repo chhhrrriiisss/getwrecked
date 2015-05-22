@@ -6,8 +6,8 @@
 
 private ["_obj", "_vehicle", "_o"];
 
-_obj = [_this,0, objNull, [objNull]] call BIS_fnc_param;
-_vehicle = [_this,1, objNull, [objNull]] call BIS_fnc_param;
+_obj = [_this,0, objNull, [objNull]] call filterParam;
+_vehicle = [_this,1, objNull, [objNull]] call filterParam;
 
 [] spawn cleanDeployList;
 
@@ -37,7 +37,7 @@ playSound3D ["a3\sounds_f\sfx\vehicle_drag_end.wss",_vehicle, false, getPosATL _
 // 	"setObjectSimulation",
 // 	false,
 // 	false 
-// ] call BIS_fnc_MP;
+// ] call gw_fnc_mp;
 
 // _releaseTime = time;
 // _timer = 60;

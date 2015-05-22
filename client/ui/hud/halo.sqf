@@ -6,11 +6,11 @@
 
 private ['_vehicle', '_condition'];
 
-_vehicle = [_this,0, objNull , [objNull]] call BIS_fnc_param;
-_duration = [_this,1, 0 , [0]] call BIS_fnc_param;
-_texture = [_this,2, "" , [""]] call BIS_fnc_param;
-_condition = [_this,3, { true } , [{}]] call BIS_fnc_param;
-_rotate = [_this,4, true , [false]] call BIS_fnc_param;
+_vehicle = [_this,0, objNull , [objNull]] call filterParam;
+_duration = [_this,1, 0 , [0]] call filterParam;
+_texture = [_this,2, "" , [""]] call filterParam;
+_condition = [_this,3, { true } , [{}]] call filterParam;
+_rotate = [_this,4, true , [false]] call filterParam;
 
 
 if (isNull _vehicle || _duration == 0 || _texture == "") exitWith {};

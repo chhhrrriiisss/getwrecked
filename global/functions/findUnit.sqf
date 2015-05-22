@@ -4,18 +4,27 @@
 //      Return: Object (the unit)
 //
 
-private ['_target', '_result'];
+private ['_target', '_result', '_unit'];
 
-_target = [_this,0, "", [""]] call BIS_fnc_param;
+_target = [_this,0, "", [""]] call filterParam;
+_isAI = [_this,1, false, [false]] call filterParam;
 
 if (_target == "") exitWith { objNull };
 
 _result = objNull;
+_exit = false;
+
+_arr = if (!_isAI) then {
+	(call allPlayers)
+} else {
+	allUnits
+};
 
 {
 	_unit = _x;
-	if ((name _unit) == _target) exitWith {	_result = _unit; };
+	if (alive _unit) then {	if ((name _unit) == _target) exitWith {	_result = _unit; _exit = true; }; };
+	if (_exit) exitWith {};
 	false
-} count (call allPlayers) > 0;
+} count _arr > 0;
 
 _result

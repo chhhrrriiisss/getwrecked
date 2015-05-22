@@ -6,8 +6,8 @@
 
 private ["_vehicle", "_obj"];
 
-_obj = [_this,0, objNull, [objNull]] call BIS_fnc_param;
-_vehicle = [_this,1, objNull, [objNull]] call BIS_fnc_param;
+_obj = [_this,0, objNull, [objNull]] call filterParam;
+_vehicle = [_this,1, objNull, [objNull]] call filterParam;
 
 if (isNull _vehicle || isNull _obj) exitWith { false};
 
@@ -33,7 +33,7 @@ _s = if (_fuel < _cost) then {
 	    "addVehicleStatus",
 	    _vehicle,
 	    false 
-	] call BIS_fnc_MP;  
+	] call gw_fnc_mp;  
 
 	false
 } else {
@@ -67,7 +67,7 @@ _s = if (_fuel < _cost) then {
 			0.75
 			],
 			"nitroEffect"
-		] call BIS_fnc_MP;
+		] call gw_fnc_mp;
 
 		_final = _fuel - _cost;	
 

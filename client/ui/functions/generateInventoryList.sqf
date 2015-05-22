@@ -8,7 +8,7 @@ private ['_list', '_contents'];
 
 disableSerialization;
 _list = ((findDisplay 98000) displayCtrl 98001);
-_forceIndex = if (isNil { _this select 1}) then { 0 } else { (_this select 1) };
+_forceIndex = [_this, 1, 0, [0]] call filterParam;
 
 ctrlShow[98001, true]; 
 
@@ -23,13 +23,18 @@ if (count _contents == 0) exitWith {
 
 {
 	
-	_quantity = _x select 0;
-	_class = _x select 1;
+	_quantity = [_x, 0, 0, [0]] call filterParam;
+	_class = [_x, 1, "", [""]] call filterParam;
 
 	// Validate it as a useable item 
 	_data = [_class, GW_LOOT_LIST] call getData;
 
-	if (isNil "_data") then {} else {
+	if (isNil "_data") then {
+
+		_contents deleteAt _forEachIndex;
+		(_this select 0) setVariable ["GW_Inventory", _contents, true];
+
+	} else {
 
 		_name = _data select 1;
 		_icon = _data select 9;
@@ -43,7 +48,6 @@ if (count _contents == 0) exitWith {
 		};
 
 	};
-	false
-} count _contents > 0;
+} foreach _contents;
 
 _list lnbSetCurSelRow _forceIndex;

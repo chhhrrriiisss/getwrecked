@@ -10,7 +10,7 @@ _p = _this select 0;
 _speed = _this select 1;
 
 // Vary the accuracy slightly
-_p = [_p, 1.5, 1.5] call setVariance;
+_p = [_p, 1, 1] call setVariance;
 
 // Distance from local vehicle
 _dist = (vehicle player) distance _p;
@@ -28,7 +28,7 @@ _ex = createVehicle ["R_TBG32V_F",_p,[],0,"FLY"];
 _ex setVectorDirAndUp [[0,0,1],[0,-1,0]];
 _ex setVelocity [0,0,_speed];
 
-[_p, 25, 30] call shockwaveEffect;
+[_p, 25, 10] call shockwaveEffect;
 
 _nearby = _p nearEntities [["Car"], 10];
 if (count _nearby == 0) exitWith {};
@@ -51,7 +51,7 @@ if (count _nearby == 0) exitWith {};
 	        "addVehicleStatus",
 	        _x,
 	        false 
-		] call BIS_fnc_MP;  
+		] call gw_fnc_mp;  
 
 	};
 

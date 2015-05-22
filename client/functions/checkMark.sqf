@@ -16,7 +16,12 @@ _isVehicle = _t getVariable ["isVehicle", false];
 // Its a valid vehicle
 if (_isVehicle) then {
 
-	_killedBy = _t getVariable ["killedBy", ["Nobody", ""] ];
+	_killedBy = _t getVariable ["killedBy", nil ];
+	_killedBy = if (isNil "_killedBy") then { ["Nobody", ""] } else { 
+		if (typename _killedBy == "STRING") exitWith { (call compile _killedBy) };
+		_killedBy
+	};
+	
 	_status = _t getVariable ["status", []];
 
 	// Disable cloak
@@ -30,12 +35,12 @@ if (_isVehicle) then {
 			"removeVehicleStatus",
 			_t,
 			false 
-		] call BIS_fnc_MP;  
+		] call gw_fnc_mp;  
 
 	};				
 
 	// Tag that sucker
-	if ( ( (_killedBy select 0) == "Nobody") || ((_killedBy select 0) != GW_PLAYERNAME && (_killedBy select 2) != _m) ) then {
+	if ( ( (_killedBy select 0) == "Nobody") || !((_killedBy select 0) isEqualTo name player && (_killedBy select 1) isEqualTo _m) ) then {
 		[_t, _m] call markAsKilledBy;
 	};
 

@@ -6,9 +6,9 @@
 
 private ['_string', "_limit", "_delimiter"];
 
-_string = _this select 0;
-_limit = _this select 1;
-_delimiter = _this select 2;
+_string = [_this, 0, "", [""]] call filterParam;
+_limit =  [_this, 1, 20, [0]] call filterParam;
+_delimiter = [_this, 2, "", [""]] call filterParam;
 
 if (_string == "") exitWith {};
 

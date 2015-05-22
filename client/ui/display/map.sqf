@@ -20,7 +20,7 @@ GW_MAP_EH = ((findDisplay 12) displayCtrl 51) ctrlAddEventHandler ["Draw", {
 	// Draw current vehicle
 	(_this select 0) drawIcon [
         getText (configFile/"CfgVehicles"/typeOf _vehicle/"Icon"),
-        [0.25,0.65,0,0.75],
+        [0.99,0.85,0.23,1],
         (ASLtoATL visiblePositionASL _vehicle),
         0.5/ctrlMapScale (_this select 0),
         0.5/ctrlMapScale (_this select 0),

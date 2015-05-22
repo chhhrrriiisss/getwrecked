@@ -4,8 +4,8 @@
 //      Return: None
 //
 
-_source = [_this,0, [], [[]]] call BIS_fnc_param;
-_destination = [_this,1, [], [[]]] call BIS_fnc_param;	
+_source = [_this,0, [], [[]]] call filterParam;
+_destination = [_this,1, [], [[]]] call filterParam;	
 
 if (count _source == 0 || count _destination == 0) exitWith {};
 
@@ -33,7 +33,7 @@ if (count _objects == 0) exitWith {};
             "addVehicleStatus",
             _x,
             false 
-    	] call BIS_fnc_MP;  
+    	] call gw_fnc_mp;  
 
         // Play tyre burst sound
         [       
@@ -45,7 +45,7 @@ if (count _objects == 0) exitWith {};
             "playSoundAll",
             true,
             false
-        ] call BIS_fnc_MP;   
+        ] call gw_fnc_mp;   
 
     	// Tag as killed by
     	[_x] call markAsKilledBy;

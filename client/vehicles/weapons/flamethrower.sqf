@@ -47,7 +47,7 @@ _velocity = [_heading, _projectileSpeed] call BIS_fnc_vectorMultiply;
 	"playSoundAll",
 	true,
 	false
-] call BIS_fnc_MP;	  
+] call gw_fnc_mp;	  
 
 _src = createVehicle ["Land_PenBlack_F", _oPos, [], 0, "CAN_COLLIDE"];
 [_src, 1.5] spawn flameEffect;
@@ -60,7 +60,7 @@ _src = createVehicle ["Land_PenBlack_F", _oPos, [], 0, "CAN_COLLIDE"];
 	"flameEffect",
 	false,
 	false
-] call BIS_fnc_MP;
+] call gw_fnc_mp;
 
 _src setVectorDir _heading; 
 _src setVelocity _velocity;
@@ -72,45 +72,58 @@ if (count _nearby < 0) exitWith {};
 
 
 
-_src addEventHandler['EpeContact', {	
+_src addEventHandler['EpeContactStart', {	
+
 	if ((_this select 1) == (vehicle player)) exitWith {};
+
+	(_this select 0) removeEventHandler ['EpeContactStart', 0];
+
 	[(_this select 1), 100, 6] spawn setVehicleOnFire;
+
+	_status = (_this select 1) getVariable ['status', []];
+	if ('nofire' in _status || 'invulnerable' in _status) exitWith {};
+
+	[(_this select 1), 'FLM'] call markAsKilledBy;
+
+	_d = if ('nanoarmor' in _status) then { 0 } else { 0.005 };
+	(_this select 1) setDammage ((getDammage (_this select 1)) + _d);	
+	
 }];
 
 _src spawn {
 
-	for "_i" from 0 to 1 step 0 do {
-
-		if (!alive _this) exitWith {};
+	waitUntil {
 
 		_nearby = (ASLtoATL visiblePositionASL _this) nearEntities[["Car"], 6];
 		{ 
 			if (_x distance (ASLtoATL visiblePositionASL _this) < 4 && _x != (vehicle player)) exitWith {
 				_null = [_x, 100, 6] spawn setVehicleOnFire;
+				[_x, 'FLM'] call markAsKilledBy;
 			};
 			false
 		} count _nearby > 0;
 
-		Sleep 0.25;
+		Sleep 0.2;
 
+		(!alive _this)
 	};
 
 };
 
 [_src, _lifeTime] spawn { 
 
-	Sleep 3.5;
+	Sleep 3;
 
 	_o = _this select 0;
 	_l = _this select 1;
 
 	_timeout = time + _l;
 	waitUntil{
-	if ( time > _timeout || (((getPos _o) select 2) < 0.5) ) exitWith { true };
+	if ( time > _timeout || (((ASLtoATL visiblePositionASL _o) select 2) < 0.5) ) exitWith { true };
 	false
 	};
 
-	_o removeEventHandler['EpeContact', 0];
+	_o removeEventHandler['EpeContactStart', 0];
 	deleteVehicle _o;
 
 };

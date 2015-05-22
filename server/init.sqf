@@ -18,7 +18,7 @@ _startTime = time;
 {
 	_x setVariable ['GW_CU_IGNORE', true];
 	false
-} count (nearestObjects [(getmarkerpos "workshopZone_camera"), [], 150]) > 0;
+} count (nearestObjects [(getmarkerpos "workshopZone_camera"), [], 200]) > 0;
 
 [] spawn initCleanup;
 

@@ -8,18 +8,20 @@ if (isDedicated) exitWith {};
 
 _this spawn {
 		
-	_colour = (_this select 0) select 0;
-	_duration = (_this select 0) select 1;
-	_points = (_this select 0) select 2;
+	_colour = [1,0,0,1];
+	_duration = 1;
+	_packet = _this select 0;
 
 	GW_LINEEFFECT_COLOR = _colour;
-	GW_LINEFFECT_ARRAY pushback _points;
+	GW_LINEFFECT_ARRAY pushback _packet;	
 
-	_p1 = (_points select 0);
-	_p2 = (_points select 1);
+	_p1 = (_packet select 0);
+	_p2 = (_packet select 1);
+
 	_pos = if (typename _p2 == "OBJECT") then { visiblePositionASL _p2 } else { _p2 };		
 	
-	if ((visiblePositionASL player) distance _pos > GW_EFFECTS_RANGE) exitWith { GW_LINEFFECT_ARRAY = []; };					
+	_isVisible = [_pos, _duration] call effectIsVisible;
+	if (!_isVisible) exitWith { GW_LINEFFECT_ARRAY = []; };	
 				
 	_source = "#particlesource" createVehicleLocal _pos;
 	_source setParticleCircle [0, [0, 0, 0]];
@@ -29,7 +31,7 @@ _this spawn {
 
 	Sleep _duration;
 	
-	GW_LINEFFECT_ARRAY = GW_LINEFFECT_ARRAY - [_points];
+	GW_LINEFFECT_ARRAY = GW_LINEFFECT_ARRAY - [_packet];
 
 	Sleep 0.3;
 

@@ -20,7 +20,7 @@ if (_exit) exitWith {};
 		_this
 	],
 	"muzzleEffect"
-] call BIS_fnc_MP;
+] call gw_fnc_mp;
 
 GW_NEW_ITEMS_ACTIVE = _this;
 

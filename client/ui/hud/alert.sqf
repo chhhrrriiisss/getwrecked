@@ -4,16 +4,17 @@
 //      Return: None
 //
 
-if (GW_WAITALERT) exitWith {};
+if (GW_WAITALERT || GW_SETTINGS_ACTIVE) exitWith {};
 GW_WAITALERT = true;
 
 private ['_text', '_duration', '_icon', '_colour', '_type'];
 
-_text = [_this,0, "", [""]] call BIS_fnc_param;
-_duration = [_this,1, 1, [0]] call BIS_fnc_param;
-_icon = [_this,2, blankIcon, [""]] call BIS_fnc_param;
-_colour = [_this,3, [], [[]]] call BIS_fnc_param;
-_type =  [_this,4, "default", [""]] call BIS_fnc_param;
+_text = [_this,0, "", [""]] call filterParam;
+_duration = [_this,1, 1, [0]] call filterParam;
+_icon = [_this,2, blankIcon, [""]] call filterParam;
+_colour = [_this,3, [], [[]]] call filterParam;
+_type =  [_this,4, "default", [""]] call filterParam;
+_sound =  [_this,5, "beep_light", [""]] call filterParam;
 
 _bgColour = [0,0,0,0.3];
 _fontColour = [1,1,1,1];
@@ -52,7 +53,15 @@ _title ctrlCommit 0;
 _inDuration = (_duration / 7.5) max 0.15;
 _outDuration = (_duration / 15) max 0.15;
 
-playSound3D ["a3\sounds_f\sfx\beep_target.wss", (vehicle player), false, (visiblePosition (vehicle player)), 2, 1, 40]; 
+if (_sound == "") then {} else { player say3D _sound; };
+
+_alertGroup spawn {	
+	for "_i" from 0 to 1 step 0 do {
+		if (!GW_WAITALERT) exitWith {};
+		[_this, [['fade', 1, 0, 0]], "quad"] spawn createTween;
+		Sleep 0.25;
+	};
+};
 
 switch (_type) do {
 
@@ -72,7 +81,7 @@ switch (_type) do {
 
 	case "warning":
 	{		
-		[_alertGroup, [['fade', 1, 0, _inDuration]], "quad"] spawn createTween;
+		[_alertGroup, [['fade', 1, 0, _inDuration]], "quad"] spawn createTween;		
 	};
 
 	default

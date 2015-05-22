@@ -10,7 +10,7 @@ private ['_list', '_index', '_key'];
 disableSerialization;
 _list = ((findDisplay 97000) displayCtrl 97001);
 _index = lnbcurselrow _list;
-_key = [_this,0, -1, [0]] call BIS_fnc_param;
+_key = [_this,0, -1, [0]] call filterParam;
 
 if (_key == -1) exitWith {};
 if (_key == 11) then {

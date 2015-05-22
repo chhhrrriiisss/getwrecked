@@ -24,11 +24,12 @@ for "_i" from 0 to _listLength step 1 do {
 
 		if (!isNil "_obj") then {
 
+			_objTag = _obj getVariable ['GW_Tag', ''];
 			// If its a bag of explosives, apply the bind to every bag
-			if (typeof _obj == "Land_Sacks_heap_F") then {
+			if (_objTag == 'EPL' || _objTag == "TPD") then {
 
 				{
-					if ((_x select 0) == "EPL") then {
+					if ((_x select 0) == _objTag) then {
 						(_x select 1) setVariable ["GW_KeyBind", [_key, "0"], true];
 					};
 					false

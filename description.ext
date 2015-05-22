@@ -18,8 +18,11 @@ class Header
 	maxPlayers = 12; 
 };
 
+onPauseScript = "onPause.sqf";
+
+#include "params.hpp"
+
 disableChannels[] = {0,2,3,6};
-allowFunctionsLog = 1;
 
 // Control types
 #define CT_STATIC           0
@@ -159,6 +162,22 @@ class CfgSounds
 	{
 		name = "beep";
 		sound[] = {"\client\sounds\beep.ogg", 1, 1};
+		titles[] = {};
+	};
+
+	// Made by Sli
+	class beep_light
+	{
+		name = "beep_light";
+		sound[] = {"\client\sounds\beep_light.ogg", 0.1, 1};
+		titles[] = {};
+	};
+
+	// Made by Sli
+	class beep_warning
+	{
+		name = "beep_warning";
+		sound[] = {"\client\sounds\beep_warning.ogg", 0.5, 1};
 		titles[] = {};
 	};
 

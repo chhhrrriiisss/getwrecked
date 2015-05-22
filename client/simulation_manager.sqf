@@ -4,7 +4,7 @@
 //      Return: Bool
 //
 
-waitUntil{ !(isNil "GW_CURRENTZONE") };
+waitUntil{ !(isNil "GW_CURRENTZONE") && !GW_LOADING_ACTIVE };
 
 #define CHECK_RATE 2
 #define CHECK_DISTANCE 5
@@ -12,6 +12,8 @@ waitUntil{ !(isNil "GW_CURRENTZONE") };
 #define SIMULATION_RANGE 1700
 
 GW_SIMULATION_MANAGER_ACTIVE = true;
+_firstRun = false;
+
 _lastPos = [0,0,0];
 _lastDir = 0;
 
@@ -21,8 +23,9 @@ for "_i" from 0 to 1 step 0 do {
 
 	_currentPos = positionCameraToWorld [0,0,0];
 
-	if ( (_currentPos distance _lastPos > CHECK_DISTANCE) && !GW_PREVIEW_CAM_ACTIVE && !GW_LIFT_ACTIVE && !GW_WAITLOAD) then {
-		
+	if (( (_currentPos distance _lastPos > CHECK_DISTANCE) && !GW_PREVIEW_CAM_ACTIVE && !GW_LIFT_ACTIVE && !GW_WAITLOAD) || !_firstRun) then {
+
+		_firstRun = true;		
 		_lastPos = _currentPos;
 
 		{
@@ -52,7 +55,7 @@ for "_i" from 0 to 1 step 0 do {
 			
 			false
 
-		} count (allMissionObjects "Car") > 0;
+		} count (allMissionObjects "") > 0;
 
 		Sleep 0.01;		
 

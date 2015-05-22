@@ -23,6 +23,7 @@ GW_CATEGORY_INDEX = [
 	["Incendiary", GW_LOOT_INCENDIARY],
 	["Defence", GW_LOOT_DEFENCE],
 	["Evasion", GW_LOOT_EVASION],
+	["Melee", GW_LOOT_MELEE],
 	["Electronics", GW_LOOT_ELECTRONICS]
 
 ];

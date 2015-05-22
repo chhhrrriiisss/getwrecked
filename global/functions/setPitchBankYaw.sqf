@@ -8,8 +8,8 @@
 
 private ["_object","_rotations","_aroundX","_aroundY","_aroundZ","_dirX","_dirY","_dirZ","_upX","_upY","_upZ","_dir","_up","_dirXTemp","_upXTemp"];
 
-_object = [_this,0, objNull, [objNull]] call BIS_fnc_param;
-_rotations = [_this,1, [], [[]]] call BIS_fnc_param;
+_object = [_this,0, objNull, [objNull]] call filterParam;
+_rotations = [_this,1, [], [[]]] call filterParam;
 
 if (isNull _object || count _rotations == 0) exitWith {};
 
@@ -48,4 +48,5 @@ if (_aroundZ != 0) then {
 
 _dir = [_dirX,_dirY,_dirZ]; 
 _up = [_upX,_upY,_upZ]; 
-_object setVectorDirAndUp [_dir,_up]; 
+
+[_object, [_dir,_up]] call setVectorDirAndUpTo;

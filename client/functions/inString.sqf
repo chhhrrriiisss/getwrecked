@@ -16,8 +16,8 @@ _found = ["needle", "Needle in Haystack"] call KK_fnc_inString;
 */
 
 private ["_needle","_haystack","_needleLen","_hay","_found"];
-_needle = [_this, 0, "", [""]] call BIS_fnc_param;
-_haystack = toArray ([_this, 1, "", [""]] call BIS_fnc_param);
+_needle = [_this, 0, "", [""]] call filterParam;
+_haystack = toArray ([_this, 1, "", [""]] call filterParam);
 _needleLen = count toArray _needle;
 _hay = +_haystack;
 _hay resize _needleLen;

@@ -22,6 +22,10 @@ if (!_owner) exitWith {
 // Get list of all vehicles
 GW_LIBRARY = profileNamespace getVariable ['GW_LIBRARY', []];
 
+// Check the library isn't corrupted and exists
+_resetLibrary = if (isNil "GW_LIBRARY") then { true } else { if (count GW_LIBRARY == 0) exitWith { true }; false };
+if (_resetLibrary) then { ['LIBRARY RESET!', 2, warningIcon, colorRed, "slideDown"] spawn createAlert;  GW_LIBRARY = [] call createDefaultLibrary; };
+
 disableSerialization;
 if(!(createDialog "GW_Menu")) exitWith {}; 
 
@@ -68,8 +72,8 @@ GW_PREVIEW_CAM_ACTIVE = false;
 
 // If we're spawning something
 if (!isNil "GW_PREVIEW_SELECTED" && !isNil "GW_PREVIEW_VEHICLE") then {	
-	[_closest] call clearPad;
-	GW_PREVIEW_VEHICLE setPos _loadAreaPosition;
+	_closest = [saveAreas, (ASLtoATL visiblePositionASL player)] call findClosest; 
+	[_closest] call clearPad;		
 
 	if (!simulationEnabled GW_PREVIEW_VEHICLE) then {
 
@@ -81,8 +85,26 @@ if (!isNil "GW_PREVIEW_SELECTED" && !isNil "GW_PREVIEW_VEHICLE") then {
 			"setObjectSimulation",
 			false,
 			false 
-		] call BIS_fnc_MP;
+		] call gw_fnc_mp;
 
+	};
+
+	GW_PREVIEW_VEHICLE allowDamage false;
+	GW_PREVIEW_VEHICLE setPos _loadAreaPosition;
+
+	[GW_PREVIEW_VEHICLE, _loadAreaPosition] spawn {
+			Sleep 2;
+
+			if ((_this select 0) distance (_this select 1) > 2) then {
+				(_this select 1) set [2, 1];
+				(_this select 0) setPos (_this select 1);
+			};
+
+			if (vectorUp (_this select 0) distance [0,0,1] > 0.3) then {
+				(_this select 0) setVectorUp [0,0,1];
+			};
+			
+			(_this select 0) allowDamage true;
 	};
 };
 
@@ -91,5 +113,5 @@ if (isNil "GW_PREVIEW_SELECTED" && !isNil "GW_PREVIEW_VEHICLE") then {
 	[GW_PREVIEW_VEHICLE, false] call clearPad;
 };
 
-_closest setVariable ['owner', '', true];
+_closest setVariable ['GW_Owner', '', true];
 

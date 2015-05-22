@@ -7,7 +7,7 @@
 if (GW_INVENTORY_ACTIVE) exitWith {};
 GW_INVENTORY_ACTIVE = true;
 
-GW_INVENTORY_BOX = [_this,0, objNull, [objNull]] call BIS_fnc_param;
+GW_INVENTORY_BOX = [_this,0, objNull, [objNull]] call filterParam;
 
 if (isNull GW_INVENTORY_BOX) exitWith {};
 

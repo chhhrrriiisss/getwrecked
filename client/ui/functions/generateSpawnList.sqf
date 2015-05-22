@@ -14,12 +14,13 @@ _spawnList = ((findDisplay 52000) displayCtrl 52002);
 lnbClear _spawnList;
 
 {		
-	_name = _x select 0;
+	_id = _x select 0;	
 	_type = _x select 1;
+	_name = _x select 2;
 
 	if (_type == 'safe') then {} else {
 
-		_vehs = [format['%1%2', _name, 'Zone']] call findAllInZone;
+		_vehs = [format['%1%2', _id, 'Zone']] call findAllInZone;
 		_string = if (count _vehs > 0) then { format['[%1]', (count _vehs)] } else { '' };
 		_name = toUpper (_name);		
 

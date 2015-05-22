@@ -9,7 +9,7 @@ setTerminalActions = {
 	
 	private ['_obj', '_var'];
 
-	_obj = [_this,0, objNull, [objNull]] call BIS_fnc_param;
+	_obj = [_this,0, objNull, [objNull]] call filterParam;
 	_var = _this select 1;
 
 	removeAllActions _obj;
@@ -75,7 +75,7 @@ setSupplyAction = {
 	
 	private ['_obj'];
 
-	_obj = [_this,0, objNull, [objNull]] call BIS_fnc_param;
+	_obj = [_this,0, objNull, [objNull]] call filterParam;
 	if (isNull _obj) exitWith {};
 
 	removeAllActions _obj;
@@ -90,7 +90,7 @@ setSupplyAction = {
 
 		removeAllActions _obj;	
 
-	}, [], 0, false, false, "", "( ( (vehicle player) == player ) && !GW_EDITING && (player distance _target < 5) && [_target, player, false] call checkOwner && !GW_LIFT_ACTIVE)"];		
+	}, [], 0, false, false, "", "( ( (vehicle player) == player ) && !GW_EDITING && (player distance _target < 7) && [_target, player, false] call checkOwner && !GW_LIFT_ACTIVE)"];		
 
 	// Open the box inventory
 	_obj addAction[openBoxFormat, {
@@ -101,11 +101,11 @@ setSupplyAction = {
 		_isOwner = [_obj, _unit, true] call checkOwner;
 		if (!_isOwner) exitWith { systemChat 'You dont own this object' };	
 
-		_obj setVariable ["name", format["%1's Supply Box", GW_PLAYERNAME], true];	
+		_obj setVariable ["name", format["%1's Supply Box", name player], true];	
 
 		[_obj, _unit] spawn inventoryMenu;
 
-	}, [], 0, false, false, "", "( ( (vehicle player) == player ) && !GW_EDITING && (player distance _target < 5) && [_target, player, false] call checkOwner && !GW_LIFT_ACTIVE && !GW_PAINT_ACTIVE )"];		
+	}, [], 0, false, false, "", "( (!GW_INVEHICLE) && !GW_EDITING && (player distance _target < 7) && [_target, player, false] call checkOwner && !GW_LIFT_ACTIVE && !GW_PAINT_ACTIVE )"];		
 	
 	_obj setVariable ["hasActions", true];
 
@@ -120,7 +120,7 @@ setPaintAction = {
 
 	private ['_obj'];
 
-	_obj = [_this,0, objNull, [objNull]] call BIS_fnc_param;
+	_obj = [_this,0, objNull, [objNull]] call filterParam;
 	if (isNull _obj) exitWith {};
 
 	removeAllActions _obj;
@@ -136,7 +136,7 @@ setPaintAction = {
 			[_color, _unit] spawn paintVehicle;
 		};		
 
-	}, [], 0, false, false, "", "( ( (vehicle player) == player ) && !GW_EDITING && (player distance _target < 5) && !GW_LIFT_ACTIVE)"];	
+	}, [], 0, false, false, "", "(!GW_INVEHICLE && !GW_EDITING && (player distance _target < 8) && !GW_LIFT_ACTIVE)"];	
 	
 	_obj setVariable ["hasActions", true];
 
@@ -150,7 +150,7 @@ setMoveAction = {
 
 	private ['_obj'];
 
-	_obj = [_this,0, objNull, [objNull]] call BIS_fnc_param;
+	_obj = [_this,0, objNull, [objNull]] call filterParam;
 	if (isNull _obj) exitWith {};
 
 	removeAllActions _obj;
@@ -164,7 +164,7 @@ setMoveAction = {
 
 		removeAllActions _obj;	
 
-	}, [], 0, false, false, "", "( ( (vehicle player) == player ) && !GW_EDITING && (player distance _target < 5) && [_target, player, false] call checkOwner && !GW_LIFT_ACTIVE && GW_CURRENTZONE == 'workshopZone' )"];		
+	}, [], 0, false, false, "", "(!GW_INVEHICLE && !GW_EDITING && (player distance _target < 8) && ([_target, player, false] call checkOwner) && !GW_LIFT_ACTIVE && GW_CURRENTZONE == 'workshopZone' )"];		
 
 	_obj setVariable ["hasActions", true];
 
@@ -176,7 +176,7 @@ setMoveAction = {
 // Actions for objects that are already attached to a vehicle
 setDetachAction = {
 
-	_obj = [_this,0, objNull, [objNull]] call BIS_fnc_param;
+	_obj = [_this,0, objNull, [objNull]] call filterParam;
 	if (isNull _obj) exitWith {};
 
 	removeAllActions _obj;
@@ -191,7 +191,7 @@ setDetachAction = {
 
 		removeAllActions _obj;
 		
-	}, [], 0, false, false, "", "( ((vehicle player) == player) && !GW_EDITING && (player distance _target < 5) && [_target, player, false] call checkOwner && !GW_LIFT_ACTIVE && GW_CURRENTZONE == 'workshopZone' )"];
+	}, [], 0, false, false, "", "(!GW_INVEHICLE && !GW_EDITING && (player distance _target < 8) && ([_target, player, false] call checkOwner) && !GW_LIFT_ACTIVE && GW_CURRENTZONE == 'workshopZone' )"];
 
 	_obj setVariable ["hasActions", true];
 

@@ -6,14 +6,13 @@
 
 private ['_source', '_destination', '_ignore'];
 
-_source = _this select 0;
-_destination = _this select 1;
-_ignore = if (isNil { _this select 2 }) then { objNull } else { (_this select 2) };
-_modifier = if (isNil { _this select 3 }) then { 1 } else { (_this select 3) };
-_tag = if (isNil { _this select 4 }) then { "" } else { (_this select 4) };
+_source = [_this, 0, [0,0,0], [[]]] call filterParam;
+_destination = [_this, 1, [0,0,0], [[]]] call filterParam;
+_ignore = [_this, 2, objNull, [objNull]] call filterParam;
+_modifier = [_this, 3, 1, [0]] call filterParam;
+_tag = [_this, 4, "", [""]] call filterParam;
 
-
-if (count _source == 0 || count _destination == 0) exitWith {};
+if (_source isEqualTo [0,0,0] || _destination isEqualTo [0,0,0]) exitWith {};
 
 _objects = lineIntersectsWith [_source, _destination, _ignore, objNull, false];
 

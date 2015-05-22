@@ -16,8 +16,8 @@ _this spawn {
 
 	_pos = ASLtoATL getPosASL _vehicle;
 
-	_minPower = 50;
-	_maxPower = 120;
+	_minPower = 200;
+	_maxPower = 275;
 	_power = random (_maxPower - _minPower) + _minPower;
 
 	_minRange = 50;
@@ -41,7 +41,7 @@ _this spawn {
 		3
 		],
 	"magnetEffect"
-	] call BIS_fnc_MP;
+	] call gw_fnc_mp;
 
 	_nearby = _pos nearEntities[["Car"], _range];
 
@@ -78,7 +78,12 @@ _this spawn {
 				_calcPower = ((_power / (_mass * 0.001)) max 10) + (_dist / 6);
 				[_calcPower, _minPower, _maxPower] call limitToRange;
 				_vel = [_heading, _calcPower] call BIS_fnc_vectorMultiply; 
-					
+				_vel = [
+					[(_vel select 0) / ((_vel select 2) / 12), -140, 140] call limitToRange,
+					[(_vel select 1) / ((_vel select 2) / 12), -140, 140] call limitToRange,
+					[(_vel select 2), -20, 20] call limitToRange
+				];
+	
 				//Apply velocity to vehicles
 				if (local _x) then {
 					
@@ -94,7 +99,8 @@ _this spawn {
 						"setVelocityLocal",
 						_x,
 						false 
-					] call BIS_fnc_MP;  
+					] call gw_fnc_mp;  
+					
 				};
 
 			};

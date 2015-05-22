@@ -22,6 +22,8 @@ if ('cloak' in _status) then {
 		"removeVehicleStatus",
 		_veh,
 		false 
-	] call BIS_fnc_MP;  
+	] call gw_fnc_mp;  
 
 };	
+
+false

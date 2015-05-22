@@ -6,30 +6,30 @@
 
 private ['_t', '_r', '_p'];
 	
-_t = [_this,0,objNull,[[], objNull]] call BIS_fnc_param;
-_r = [_this,1,1,[0]] call BIS_fnc_param;
+_t = [_this,0,objNull,[[], objNull]] call filterParam;
+_r = [_this,1,1,[0]] call filterParam;
 
-_p = if (typename _t == "OBJECT") then { (ASLtoATL getPosASL _t) } else { _t };
+_p = if (typename _t == "OBJECT") then { (ASLtoATL visiblePositionASL _t) } else { _t };
 
 _objs = nearestObjects [_p, [], _r];
 if (count _objs == 0) exitWith { true };
-
 
 _ownedByAnother = false;
 _ownedByMe = false;
 
 {
-	_isOwner = _x getVariable ['owner', ''];
+	_currentOwner = if (isNull attachedTo _x) then {
+		// Ignore supply boxes so the pads can be cleared
+		if (_x call isSupplyBox) exitWith { '' };
+		(_x getVariable ['GW_Owner', ''])
+	} else {
+		if (isPlayer (attachedTo _x)) exitWith { (name (attachedTo _x)) };
+		((attachedTo _x) getVariable ['GW_Owner', ''])
+	};
 
-	if (count toArray _isOwner == 0) then {} else {
-
-		if (_isOwner != GW_PLAYERNAME) then {
-			_ownedByAnother = true;
-		};
-
-		if (_isOwner == GW_PLAYERNAME) then {
-			_ownedByMe = true;
-		};
+	if (count toArray _currentOwner == 0) then {} else {
+		if (_currentOwner != name player) then { _ownedByAnother = true; };
+		if (_currentOwner == name player) then { _ownedByMe = true; };
 	};
 
 	false

@@ -6,8 +6,8 @@
 
 private ['_vehicle', '_speed'];
 
-_vehicle =  _this select 0;
-_speed = if (isNil {_this select 1}) then { 0.97 } else { (_this select 1) };
+_vehicle =  [_this, 0, objNull, [objNull]] call filterParam;
+_speed = [_this, 1, 0.97, [0]] call filterParam;
 
 if (isNull _vehicle) exitWith {};
 if (!alive _vehicle) exitWith {};

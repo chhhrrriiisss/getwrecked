@@ -17,5 +17,6 @@ _objs = lineIntersectsWith [_src, _des, GW_CURRENTVEHICLE, objNull, false];
 if (count _objs == 0) exitWith {};
 
 {
-	[_x, _m] spawn checkMark;
-} ForEach _objs;
+	[_x, _m] call checkMark;
+	false
+} count _objs > 0;

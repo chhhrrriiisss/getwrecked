@@ -3,12 +3,13 @@
 //      Desc: Small smoke burst at point to simulate gun firing
 //     
 
-_source = [_this,0, objNull, [objNull]] call BIS_fnc_param;
+_source = [_this,0, objNull, [objNull]] call filterParam;
 
 if (isNull _source) exitWith {};
 
-_pos = visiblePositionASL _source;
-if ((visiblePositionASL player) distance _pos > GW_EFFECTS_RANGE) exitWith {};
+_pos = (ASLtoATL visiblePositionASL _source);
+_isVisible = [_pos, 1.3] call effectIsVisible;
+if (!_isVisible) exitWith {};
 
 _weh = 0.104;
 _life= 1.3 + random 0.6;

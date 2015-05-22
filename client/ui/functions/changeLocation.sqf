@@ -33,12 +33,13 @@ if (_type == "STRING") then {
 _currentIndex = [_newValue, 0, (count GW_VALID_ZONES - 1), true] call limitToRange;
 
 GW_SPAWN_LOCATION = (GW_VALID_ZONES select _currentIndex) select 0;
+_displayName = (GW_VALID_ZONES select _currentIndex) select 2;
 
 if (((GW_VALID_ZONES select _currentIndex) select 1) == "safe") exitWith {
 	[_value] spawn changeLocation;
 };
 
-[GW_SPAWN_LOCATION] spawn previewLocation;
+[GW_SPAWN_LOCATION, _displayName] spawn previewLocation;
 
 
 

@@ -18,11 +18,11 @@ if (isNil "GW_LEADERBOARD") then {
 
 addToLeaderboard = {
 	
-	_uid = [_this,0, "", [""]] call BIS_fnc_param;
-	_name = [_this,1, "", [""]] call BIS_fnc_param;
-	_vehicle = [_this,2, "", [""]] call BIS_fnc_param;
-	_vehicleType = [_this,3, "", [""]] call BIS_fnc_param;
-	_stats = [_this,4, [], [[]]] call BIS_fnc_param;
+	_uid = [_this,0, "", [""]] call filterParam;
+	_name = [_this,1, "", [""]] call filterParam;
+	_vehicle = [_this,2, "", [""]] call filterParam;
+	_vehicleType = [_this,3, "", [""]] call filterParam;
+	_stats = [_this,4, [], [[]]] call filterParam;
 	_exists = false;
 
 	GW_LEADERBOARD = profileNamespace getVariable ['GW_LEADERBOARD', []];
@@ -41,7 +41,7 @@ addToLeaderboard = {
 
 			for "_i" from 0 to ((count _stats) -1) step 1 do {
 
-				_v = if (isNil { (_data select _i) }) then { 0 } else { (_data select _i) };
+				_v = [_data, _i, 0, [0]] call filterParam;
 				_data set [_i, (_v + (_stats select _i))];
 
 			};
@@ -65,7 +65,7 @@ addToLeaderboard = {
 
 removeFromLeaderboard = {
 	
-	_name = [_this,0, "", [""]] call BIS_fnc_param;
+	_name = [_this,0, "", [""]] call filterParam;
 
 	{
 		if ((_x select 1) == _name || (_x select 2) == _name) then {

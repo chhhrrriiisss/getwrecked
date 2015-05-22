@@ -6,7 +6,7 @@
 
 private ['_obj'];
 
-_obj = [_this,0, objNull, [objNull]] call BIS_fnc_param;
+_obj = [_this,0, objNull, [objNull]] call filterParam;
 
 if (isNull _obj) exitWith {};
 
@@ -26,14 +26,42 @@ _obj setVariable ["tag", _obj addAction ["", "", "", 0, false, false, "", "
 	    	_color set [3, 1 - _dist / 10];
 	    	_box = [_target] call getBoundingBox;
 	    	_height = _box select 2;
-	       	_name = _target getVariable ['name', ''];
-	       	_mass = _target getVariable ['mass', 0];
-	       	_fuel = _target getVariable ['fuel', 0];
-	       	_ammo = _target getVariable ['ammo', 0];
-	       	_health = _target getVariable ['health', 0];
-	       	_isPaint = _target getVariable ['isPaint', false];
-	       	isSupply = _target getVariable ['isSupply', false];
 
+	       	_isPaint = _target call isPaint;
+	       	_isSupply = _target call isSupplyBox;
+	       	_isWeapon = _target call isWeapon;
+
+	       	_name = '';
+	       	_mass = 100;
+	       	_ammo = 0;
+	       	_fuel = 0;
+	       	_health = 100;
+
+	       	if (!_isSupply && !_isPaint) then {
+
+		       	_data = _target getVariable ['GW_Data', '['', 0,0,0,0,0]'];
+		       	if (isNil '_data') exitWith {};
+		       	_data = call compile _data;
+	
+				_name = _data select 0;	       	
+				_mass = _data select 1;	       	
+				_ammo = _data select 2;
+				_fuel = _data select 3;
+				_health = _data select 4;
+
+			};
+
+	       	if (_isSupply) then { 
+	       		_owner =  _target getVariable ['GW_Owner', ''];	       		
+	       		_name = if (count toArray _owner == 0) then { 'Supply Box' } else { _owner = [_owner, 10] call cropString; (format['%1`s Supply Box', _owner]) };
+	       	};
+
+	       	if (_isPaint) then { 
+	       		_paintColor = _target getVariable ['color', 'Random'];  
+	       		_name = format['%1 Paint', _paintColor]; 
+	       	};
+
+	       	if (_isWeapon) then { _target call renderFOV; }; 
 	       	_currentZoom = if (cameraView == 'Internal' || _dist < 2.2) then { 2 * round (call getZoom) } else { round (call getZoom) };
 
 		    _position = [
@@ -74,11 +102,13 @@ _obj setVariable ["tag", _obj addAction ["", "", "", 0, false, false, "", "
 		        'PuristaMedium'
 		    ];
 
-		    if (_isPaint || _isSupply) exitWith { false };
+		    if (_isPaint || _isSupply) exitWith { false };    	
 		    	
 		    _step = 0.14;
 
 		    if (isNull _attached) then {	
+
+				
 
 		    	_position set[2, (_position select 2) - (_step / _currentZoom)];
 		    	

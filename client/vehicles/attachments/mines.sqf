@@ -74,19 +74,19 @@ _this spawn {
 
 						if (_x != GW_CURRENTVEHICLE) then { [_x, "MIN"] call checkMark;	};
 
-						playSound3D ["a3\sounds_f\weapons\mines\electron_trigger_1.wss", _obj, false, getPos _obj, 2, 1, 50]; 
+						playSound3D ["a3\sounds_f\weapons\mines\electron_trigger_1.wss", _obj, false, getPos _obj, 5, 1, 50]; 
 
 						_tPos =  (ASLtoATL getPosASL _x);
 						_tPos set[2, 0];
-						_d = if ('nanoarmor' in _status) then { 0.05 } else { (0.3 + random 0.2) };
+						_d = if ('nanoarmor' in _status) then { 0.05 } else { (0.2 + random 0.1) };
 
 						_x setDamage ((getDammage _x) + _d);
 						
-						_bomb = createVehicle ["M_PG_AT", _tPos, [], 0, "CAN_COLLIDE"];		
+						_bomb = createVehicle ["M_AT", _tPos, [], 0, "CAN_COLLIDE"];		
 						_bomb setVelocity [0,0,-100];
 						Sleep 0.01;			
 
-						[_tPos, 25, 25] call shockwaveEffect;
+						[_tPos, 10, 15] call shockwaveEffect;
 
 						deleteVehicle _obj;
 
@@ -138,9 +138,9 @@ _this spawn {
 			"setObjectSimulation",
 			false,
 			false 
-		] call BIS_fnc_MP;
+		] call gw_fnc_mp;
 
-		playSound3D ["a3\sounds_f\weapons\other\sfx9.wss", GW_CURRENTVEHICLE, false, (ASLtoATL visiblePositionASL GW_CURRENTVEHICLE), 2, 1, 50];
+		playSound3D ["a3\sounds_f\weapons\other\sfx9.wss", GW_CURRENTVEHICLE, false, (ASLtoATL visiblePositionASL GW_CURRENTVEHICLE), 6, 1, 50];
 
 		GW_WARNINGICON_ARRAY pushback _o;
 		GW_DEPLOYLIST pushback _o;
@@ -153,7 +153,7 @@ _this spawn {
 
 	};
 
-	playSound3D ["a3\sounds_f\sfx\vehicle_drag_end.wss", GW_CURRENTVEHICLE, false,(ASLtoATL visiblePositionASL GW_CURRENTVEHICLE), 2, 1, 50];
+	playSound3D ["a3\sounds_f\sfx\vehicle_drag_end.wss", GW_CURRENTVEHICLE, false,(ASLtoATL visiblePositionASL GW_CURRENTVEHICLE), 8, 1, 50];
 
 	for "_i" from 0 to 3 step 1 do {
 		

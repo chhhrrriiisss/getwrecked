@@ -6,12 +6,13 @@
 
 private ['_obj', '_unit', '_type'];
 
-_vehicle = [_this,0, objNull, [objNull]] call BIS_fnc_param;
-_unit = [_this,1, objNull, [objNull]] call BIS_fnc_param;
+_vehicle = [_this,0, objNull, [objNull]] call filterParam;
+_unit = [_this,1, objNull, [objNull]] call filterParam;
 
 if (isNull _vehicle || isNull _unit) exitWith {};
 
 GW_LIFT_ACTIVE = true;
+GW_LIFT_VEHICLE = _vehicle;
 GW_EDITING = false;
 
 [		
@@ -22,13 +23,19 @@ GW_EDITING = false;
 	"setObjectSimulation",
 	false,
 	false 
-] call BIS_fnc_MP;
+] call gw_fnc_mp;
 
 // Add the drop vehicle action
 removeAllActions _unit;
-_unit spawn setPlayerActions;
+_unit call setPlayerActions;
+
+_unit addAction [suspendVehicleFormat, {
+	GW_LIFT_VEHICLE setVariable ['GW_suspend', true];
+	GW_LIFT_ACTIVE = false;
+}, [], 0, true, false, "", "( (GW_CURRENTZONE == 'workshopZone') && GW_LIFT_ACTIVE )"];
 
 _unit addAction [dropVehicleFormat, {
+	GW_LIFT_VEHICLE setVariable ['GW_suspend', false];
 	GW_LIFT_ACTIVE = false;
 }, [], 0, true, false, "", "( (GW_CURRENTZONE == 'workshopZone') && GW_LIFT_ACTIVE )"];
 
@@ -74,20 +81,7 @@ for "_i" from 0 to 1 step 0 do {
 
 };
 
-if ((ASLtoATL getPosASL _vehicle) select 2 < 1) then {
-
-	_vehicle setVariable ['GW_IGNORE_SIM', false];
-	[		
-		[
-			_vehicle,
-			true
-		],
-		"setObjectSimulation",
-		false,
-		false 
-	] call BIS_fnc_MP;
-
-} else {
+if ( GW_LIFT_VEHICLE getVariable ['GW_suspend', true] ) then {
 
 	_vehicle setVariable ['GW_IGNORE_SIM', true];
 	[		
@@ -98,6 +92,22 @@ if ((ASLtoATL getPosASL _vehicle) select 2 < 1) then {
 		"setObjectSimulation",
 		false,
 		false 
-	] call BIS_fnc_MP;
+	] call gw_fnc_mp;
+
+} else {
+
+	_vehicle setVariable ['GW_IGNORE_SIM', false];
+	
+	[		
+		[
+			_vehicle,
+			true
+		],
+		"setObjectSimulation",
+		false,
+		false 
+	] call gw_fnc_mp;
 
 };
+
+GW_LIFT_ACTIVE = false;

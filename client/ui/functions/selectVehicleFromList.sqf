@@ -14,7 +14,8 @@ _state = _control lnbData  [_index, 0];
 
 _result = true;
 
-if (_state == "locked") then {
+if (_state == "locked" && GW_ITEM_COST == 0) then { _result = true; };
+if (_state == "locked" && GW_ITEM_COST > 0) then {
 
 	_cost = _class call getCost;
 	_costString = [_cost] call numberToCurrency;
@@ -31,11 +32,11 @@ if (_state == "locked") then {
 		if (_success) then {
 			// Yuus, new wheels!
 			_class call unlockItem;
-			[format['UNLOCKED %1!', toUpper(_name)], 2, successIcon, nil, "slideDown"] spawn createAlert; 
+			[format['UNLOCKED %1!', toUpper(_name)], 2, successIcon, nil, "slideDown", "beep_light"] spawn createAlert; 
 		} else {
 			// Nope, not enough cash
 			closeDialog 0;
-			['INSUFFICIENT FUNDS!', 2, warningIcon, colorRed, "slideDown"] spawn createAlert; 
+			['INSUFFICIENT FUNDS!', 2, warningIcon, colorRed, "slideDown", "beep_warning"] spawn createAlert; 
 			_result = false;
 		};
 	};
@@ -46,7 +47,7 @@ if (!_result) exitWith {};
 
 // Find the closest vehicle pad, and request the server spawn a fresh one
 _closest = [saveAreas, (getPosATL player)] call findClosest; 
-_array = [_class,'Untitled','', (getPosATL _closest), 0, []];
+_array = [_class,'Untitled','', (ASLtoATL visiblePositionASL _closest), 0, []];
 [_closest, _array] spawn requestVehicle;
 
 closeDialog 0;

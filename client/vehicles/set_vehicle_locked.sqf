@@ -6,8 +6,8 @@
 
 private ['_vehicle', '_tx', '_class', '_file', '_path'];
 
-_vehicle = [_this,0, ObjNull, [ObjNull]] call BIS_fnc_param;
-_lock = [_this,1, true, [false]] call BIS_fnc_param;
+_vehicle = [_this,0, ObjNull, [ObjNull]] call filterParam;
+_lock = [_this,1, true, [false]] call filterParam;
 
 if(isNull _vehicle) exitWith { diag_log 'Cant lock or unlock null vehicle'; };
 
@@ -22,7 +22,7 @@ if (!local _vehicle) exitWith {
 	    "setVehicleLocked",
 	    _vehicle,
 	    false 
-	] call BIS_fnc_MP;  
+	] call gw_fnc_mp;  
 
 };
 

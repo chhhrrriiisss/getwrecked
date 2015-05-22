@@ -6,7 +6,7 @@
 
 private ['_vehicle', '_name', '_raw', '_meta', '_version', '_creator', '_prevFuel', '_prevAmmo', '_stats'];
 
-_vehicle = [_this,0, objNull, [objNull]] call BIS_fnc_param;
+_vehicle = [_this,0, objNull, [objNull]] call filterParam;
 
 if (isNull _vehicle) exitWith {};
 if (!alive _vehicle) exitWith {};
@@ -16,7 +16,7 @@ _vehicle lockCargo true;
 [_vehicle] call compileAttached;
 
 // Set us as the owner
-_vehicle setVariable ["owner", GW_PLAYERNAME, true];
+_vehicle setVariable ["owner", name player, true];
 
 _name = _vehicle getVariable ["name", ''];
 if (_name == '' || _name == "UNTITLED") exitWith {};
@@ -47,11 +47,11 @@ if (isNil "_meta") then {} else {
         _version = if (typename _version == "ARRAY") then { 0 } else { _version };
 
         if (_version < GW_VERSION) then {
-            systemChat 'Warning: Vehicle saved on older version, re-save, clear, then load to avoid issues.';      
+            player customChat [GW_WARNING_CHANNEL, localize "str_gw_version_mismatch"];        
         };
     };
 
-    if (!isNil "_creator") then {
+    if (!isNil "_creator") then {        
         _vehicle setVariable ['creator', _creator, true];
     };
 
@@ -73,17 +73,6 @@ if (isNil "_meta") then {} else {
             _vehicle setFuel _prevFuel;
         };
     };  
-
-    // Iterate through and print each stat
-    if (!isNil "_stats") then {       
-
-        {
-            if (isNil "_x") then {} else {                
-                _vehicle setVariable [GW_STATS_ORDER select (_forEachIndex), (_stats select (_forEachIndex))];
-            };
-        } ForEach _stats;
-
-    };
 
     if (!isNil "_binds") then {
 

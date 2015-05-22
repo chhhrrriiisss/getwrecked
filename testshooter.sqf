@@ -38,7 +38,7 @@ if (isNil "_shooter") then {
 		default { _unit addheadgear "H_RacingHelmet_1_black_F"; };
 	};
 
-	[[_unit,_tx],"setPlayerTexture",true,false] call BIS_fnc_MP;
+	[[_unit,_tx],"setPlayerTexture",true,false] call gw_fnc_mp;
 	_v setVariable ['shooter', _unit];
 	_unit addWeapon "launch_RPG32_F";
 

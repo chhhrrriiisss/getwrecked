@@ -6,8 +6,8 @@
 
 private ['_vehicle', '_condition'];
 
-_vehicle = [_this,0, objNull , [objNull]] call BIS_fnc_param;
-_condition = [_this,3, { true } , [{}]] call BIS_fnc_param;
+_vehicle = [_this,0, objNull , [objNull]] call filterParam;
+_condition = [_this,3, { true } , [{}]] call filterParam;
 
 _selections = getObjectTextures (_this select 0);
 

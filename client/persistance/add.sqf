@@ -4,8 +4,8 @@
 //      Return: Bool (Success)
 //
 
-_string = [_this,0, "", [""]] call BIS_fnc_param;
-_data = [_this,1, [], [[]]] call BIS_fnc_param;
+_string = [_this,0, "", [""]] call filterParam;
+_data = [_this,1, [], [[]]] call filterParam;
 
 if (_string == "" || count _data == 0) exitWith { false };
 

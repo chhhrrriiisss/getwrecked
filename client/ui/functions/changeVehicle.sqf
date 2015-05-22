@@ -31,4 +31,9 @@ if (_type == "STRING") then {
 
 // Ensure the selected vehicle is in range of the array
 _newPreview = [_newPreview, 0, (count GW_LIBRARY - 1), true] call limitToRange;
-[_newPreview] spawn previewVehicle;
+
+_list = ((findDisplay 42000) displayCtrl 42003);	
+
+_list lbSetCurSel _newPreview;
+
+// [_newPreview] spawn previewVehicle;

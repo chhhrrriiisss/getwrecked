@@ -36,7 +36,7 @@ GW_COMMANDS_LIST = [
 							"changeBalance",
 							_target,
 							false
-						] call BIS_fnc_MP;	 
+						] call gw_fnc_mp;	 
 
 					};
 
@@ -65,7 +65,7 @@ GW_COMMANDS_LIST = [
 				'createSupplyDrop',
 				false,
 				false
-			] call BIS_fnc_MP;	
+			] call gw_fnc_mp;	
 
 			systemChat 'Supply drop inbound.';	
 					
@@ -92,7 +92,7 @@ GW_COMMANDS_LIST = [
 				(_this select 0) call {
 
 					if (_this == "ALL") exitWith {
-						profileNamespace setVariable ['GW_BALANCE', nil];
+						profileNamespace setVariable ['GW_BALANCE', GW_INIT_BALANCE];
 						profileNamespace setVariable ['GW_UNLOCKED_ITEMS', nil]; 
 						profileNamespace SetVariable ['GW_LIBRARY', nil];
 						profileNamespace setVariable ['GW_FIXDLC', nil];	
@@ -158,9 +158,9 @@ GW_COMMANDS_LIST = [
 								"changeBalance",
 								(_this select 0),
 								false
-							] call BIS_fnc_MP;	 
+							] call gw_fnc_mp;	 
 
-							_string = format['%1 received $%2 from %3.', toUpper(_this select 1), ([_amount] call numberToCurrency), GW_PLAYERNAME];
+							_string = format['%1 received $%2 from %3.', toUpper(_this select 1), ([_amount] call numberToCurrency), name player];
 							systemChat _string;	
 							pubVar_systemChat = _string;
 							publicVariable "pubVar_systemChat";
@@ -179,6 +179,55 @@ GW_COMMANDS_LIST = [
 					
 		}
 	],
+
+	[
+		
+		"inv",
+		{
+
+			if ( !(serverCommandAvailable "#kick") ) exitWith {
+				systemChat 'You need to be an admin to use that.';
+			};
+
+			_status = GW_CURRENTVEHICLE getVariable ['status', []];
+			if ('invulnerable' in _status) then {
+				[GW_CURRENTVEHICLE, ['invulnerable']] call removeVehicleStatus;
+				systemchat 'Invulnerability disabled.';
+			} else {
+				[GW_CURRENTVEHICLE, ['invulnerable'], 99999] call addVehicleStatus;
+				systemchat 'Invulnerability enabled.';
+			};
+
+							
+		}
+	],
+	
+
+	[
+		
+		"collision",
+		{
+
+			if (player == (vehicle player)) exitWith {
+				systemCHat 'You need to be in a vehicle to use this.';
+			};
+
+			_v = (vehicle player);
+
+			_hasCollision = _v getVariable ['GW_COLLISION', false];
+
+			if (_hasCollision) then {
+				_v setVariable ['GW_COLLISION', false];
+				systemChat 'Collision disabled';
+			} else {
+				_v execVM 'testcollision.sqf';	
+				systemChat format['Collision active on [ %1 ]', _v getVariable ['name', 'Untitled Vehicle']];
+			};		
+
+							
+		}
+	],
+	
 
 	[
 		
@@ -219,7 +268,95 @@ GW_COMMANDS_LIST = [
 					
 		}
 	],
+
+	[
+
+		"accept",
+		{
+
+			if (isNil "GW_SHARED_ARRAY") exitWith {
+				systemchat 'No shared vehicles available';
+			};
+
+			if (count GW_SHARED_ARRAY == 0) exitWith {
+				systemchat 'No shared vehicles available';
+			};
+
+			_argument = _this select 0;
+
+			_len = count toArray(_argument);
+			_target = nil;
+			if (_len == 0) then { _target = (GW_SHARED_ARRAY select (count GW_SHARED_ARRAY - 1)); };
+			if (isNil "_target") then {
+				{
+					_name = _x select 1;
+					if ((toUpper _name) isEqualTo (toUpper _argument)) exitWith { _target = _x; GW_SHARED_ARRAY deleteAt _foreachindex; };	
+				} foreach GW_SHARED_ARRAY;
+			};
+
+			if (isNil "_target") exitWith { systemchat 'No vehicle found with that name'; };
+
+			_success = [(_target select 1), _target] call registerVehicle;
+
+			if (_success) then {
+				systemchat format['%1 added to library.', (_target select 1)];
+			} else {
+				systemchat format['Error adding %1 to library.', (_target select 1)];
+			};
+		}
+	],
 	
+	[
+		
+		"copy",
+		{
+
+			_argument = _this select 0;
+
+			if ( !(serverCommandAvailable "#kick") ) exitWith {
+				systemChat 'You need to be an admin to use that.';
+			};
+
+			_len = count toArray(_argument);
+			if (_len == 0) exitWith {
+				systemchat 'Please specify vehicle to copy.';
+			};
+
+			[
+				[_argument, name player],
+				'shareVehicle',
+				true,
+				false
+			] call gw_fnc_mp;	
+
+		}
+	],
+
+	[
+		
+		"load",
+		{
+
+			_argument = _this select 0;
+
+			if ( !(serverCommandAvailable "#kick") ) exitWith {
+				systemChat 'You need to be an admin to use that.';
+			};
+
+			_len = count toArray(_argument);
+			if (_len == 0 && isNil "GW_LASTLOAD") exitWith {
+				systemchat 'Please specify vehicle to load.';
+			};
+
+			if (_len == 0) then {
+				_argument = GW_LASTLOAD; 
+			};
+
+			[GW_CURRENTVEHICLE modelToWorldVisual [0, 30, 0], _argument] spawn requestVehicle;
+		}
+	],
+
+
 	[
 		
 		"spawn",
@@ -241,11 +378,8 @@ GW_COMMANDS_LIST = [
 			if (!isNil "_data") then {
 
 				_type = _data select 0;
-
-				_dir = direction player;
-				_relPos = [(ASLtoATL getPosASL player), 2, _dir] call BIS_fnc_relPos;
-				pubVar_spawnObject = [_type, _relPos];
-				publicVariableServer "pubVar_spawnObject"; 	
+				_relPos = player modelToWorldVisual [0, 2, 0];		
+				[_relPos, _type] call createObject;
 
 				lastSpawn = _type;
 
@@ -256,32 +390,48 @@ GW_COMMANDS_LIST = [
 		}
 	],
 
+	[
+		
+		"cleanup",
+		{
+
+			if ( !(serverCommandAvailable "#kick") ) exitWith { systemChat 'You need to be an admin to use that.'; };
+
+			[		
+				[
+					player
+				],
+				"executeCleanUp",
+				false,
+				false
+			] call gw_fnc_mp;
+		}
+	],
+
 
 	[
 		
 		"warp",
 		{
 
-			if (serverCommandAvailable "#kick") then {			
+			if ( !(serverCommandAvailable "#kick") ) exitWith { systemChat 'You need to be an admin to use that.'; };	
 
-				[] spawn
-				{
-					closedialog 0;
-					sleep 0.5;
-					TitleText [format["Click on the map to teleport."], "PLAIN DOWN"];
-					openMap [true, false];
-					onMapSingleClick "[_pos select 0, _pos select 1, 8] spawn {
+			[] spawn
+			{
+				closedialog 0;
+				sleep 0.5;
+				TitleText [format["Click on the map to teleport."], "PLAIN DOWN"];
+				openMap [true, false];
+				onMapSingleClick "[_pos select 0, _pos select 1, 8] spawn {
 
-						_pos = [_this select 0, _this select 1,_this select 2];
+					_pos = [_this select 0, _this select 1,_this select 2];
 
-						(vehicle player) setpos [_pos select 0, _pos select 1, 0];				
-						openMap [false, false];
-						TitleText [format[''], 'PLAIN DOWN'];
-						onMapSingleClick '';
+					(vehicle player) setpos [_pos select 0, _pos select 1, 0];				
+					openMap [false, false];
+					TitleText [format[''], 'PLAIN DOWN'];
+					onMapSingleClick '';
 
-					}; true";
-				};
-			
+				}; true";
 			};		
 		}
 	],
@@ -292,17 +442,33 @@ GW_COMMANDS_LIST = [
 		{
 			_argument = _this select 0;
 
-			if (serverCommandAvailable "#kick") then {			
+			if ( !(serverCommandAvailable "#kick") ) exitWith { systemChat 'You need to be an admin to use that.'; };	
 
-				_target = [_argument] call findUnit;
+			_target = [_argument] call findUnit;
 
-				if (!isNil "_target") then {
-					(vehicle player) setPos ((vehicle _target) modelToWorld [10, 0, 1]);
-				} else {
-					systemChat 'Player not found';					
-				};
-			
-			};		
+			if (!isNil "_target") then {
+				(vehicle player) setPos ((vehicle _target) modelToWorld [15, 0, 1]);
+			} else {
+				systemChat 'Player not found';					
+			};	
+		}
+	],
+
+	[
+		
+		"grab",
+		{
+			_argument = _this select 0;
+
+			if ( !(serverCommandAvailable "#kick") ) exitWith { systemChat 'You need to be an admin to use that.'; };	
+
+			_target = [_argument] call findUnit;
+
+			if (!isNil "_target") then {
+				(vehicle _target) setPos ((vehicle player) modelToWorld [0, 15, 1]);
+			} else {
+				systemChat 'Player not found';					
+			};	
 		}
 	],
 
@@ -312,18 +478,17 @@ GW_COMMANDS_LIST = [
 		{
 			_argument = _this select 0;
 
-			if (serverCommandAvailable "#kick") then {			
+			if ( !(serverCommandAvailable "#kick") ) exitWith { systemChat 'You need to be an admin to use that.'; };
 
-				_target = [_argument] call findUnit;
+			_target = [_argument] call findUnit;
 
-				if (!isNil "_target") then {
-					_pos = ASLtoATL getPosASL (vehicle _target);
-					_bomb = createVehicle ["Bo_GBU12_LGB", _pos, [], 0, "CAN_COLLIDE"];						
-					_target setDammage 1;
+			if (!isNil "_target") then {
+				_pos = ASLtoATL getPosASL (vehicle _target);
+				_bomb = createVehicle ["Bo_GBU12_LGB", _pos, [], 0, "CAN_COLLIDE"];						
+				_target setDammage 1;
 
-				} else {
-					systemChat 'Player not found';
-				};
+			} else {
+				systemChat 'Player not found';
 			};		
 		}
 	],

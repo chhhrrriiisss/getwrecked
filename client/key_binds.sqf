@@ -11,8 +11,7 @@ initBinds = {
 
 	waituntil {!(isNull (findDisplay 46))};
 
-	// Main HUD
-	if (!isNil "GW_KD_EH") then { (findDisplay 46) displayRemoveEventHandler ["KeyDown", GW_KD_EH];	GW_KD_EH = nil;	};
+	if (!isNil "GW_KD_EH") then { (findDisplay 46) displayRemoveEventHandler ["KeyDown", GW_KD_EH]; };
 	GW_KD_EH = (findDisplay 46) displayAddEventHandler ["KeyDown", "_this call checkBinds; false"];
 
 	if (!isNil "GW_KU_EH") then { (findDisplay 46) displayRemoveEventHandler ["KeyUp", GW_KU_EH];	GW_KU_EH = nil;	};
@@ -25,17 +24,11 @@ initBinds = {
 	GW_MU_EH = (findDisplay 46) displayAddEventHandler ["MouseButtonUp", "_this call setMouseUp; false;"];
 
 	setMouseDown = {			
-		if ((_this select 1) == 0) then {  
-
-			GW_LMBDOWN = true; 		
-	
-		};
-		
+		if ((_this select 1) == 0) then { GW_LMBDOWN = true; };		
 	};
 
 	setMouseUp = {		
-		if ((_this select 1) == 0) then {  GW_LMBDOWN = false; };	
-		
+		if ((_this select 1) == 0) then {  GW_LMBDOWN = false; };		
 	};
 
 };
@@ -59,7 +52,7 @@ resetBinds = {
 };
 
 checkBinds = {
-	
+		
 	User1 = actionKeys "User1"; // Grab/drop
 	User2 = actionKeys "User2"; // Attach / detach
 	User3 = actionKeys "User3"; // Rotate CW 
@@ -67,8 +60,6 @@ checkBinds = {
 	User5 = actionKeys "User5"; // Hold Rotate
 	// User6 = actionKeys "User6"; // Tilt Forward
 	// User7 = actionKeys "User7"; // Tilt Backward
-
-
 
 	User20 = actionKeys "User20"; // Settings
 
@@ -80,9 +71,15 @@ checkBinds = {
 	if (GW_SHOOTER_ACTIVE) exitWIth { false };
 
 	// Conditionals
-	_vehicle = (vehicle player);
-	_inVehicle = !(player == (_vehicle));
-	_isDriver = (player == (driver (_vehicle)));	
+	_vehicle = GW_CURRENTVEHICLE;
+	_inVehicle = GW_INVEHICLE;
+	_isDriver = GW_ISDRIVER;	
+
+	if (_ctrl && _shift && _key == 46) then {
+		if (_vehicle call hasMelee) then {	
+			_vehicle call meleeAttached;
+		};
+	};
 
 	// Toggle Debug
 	if (_ctrl && _alt && _shift && _key == 32) exitWith {
@@ -119,24 +116,23 @@ checkBinds = {
 
 	if (GW_SETTINGS_ACTIVE || GW_DEPLOY_ACTIVE || GW_SPAWN_ACTIVE || GW_DIALOG_ACTIVE) exitWith {};	
 
-	// Save
-	if (_ctrl && _key == 31) exitWith {
-		[''] spawn saveVehicle;
-	};
-
-	// Preview
-	if (_ctrl && _key == 24) exitWith {
-		[] spawn previewMenu;
-	};
-
 	if (!_inVehicle && GW_CURRENTZONE == "workshopZone") then {
+
+		// Save
+		if (_ctrl && _key == 31) exitWith {
+			[''] spawn saveVehicle;
+		};
+
+		// Preview
+		if (_ctrl && _key == 24) exitWith {
+			[] spawn previewMenu;
+		};
+	
 		if (_key in User5) then { GW_HOLD_ROTATE = true; };		
-	};
 
-	// Editor Keys
-	if ( GW_EDITING && !_inVehicle ) then {
+		if (!GW_EDITING) exitWith {};
 
-		_object = player getVariable ["editingObject", nil];
+		_object = player getVariable ["GW_EditingObject", nil];
 		if (isNil "_object") exitWith {};
 		
 		if (_key in User1) then { [player, _object] spawn dropObj; }; 
@@ -147,59 +143,37 @@ checkBinds = {
 		if (_key in User7) then { [_object, [5, 0]] spawn tiltObj; }; 
 	};
 
-	// Outside Editor Keys
-	if ( !GW_EDITING && !_inVehicle ) then {
-
-		_object = cursorTarget;
-		if (isNil "_object") exitWith {};
-
-		_useable = _object getVariable ["isObject", false];
-		if ( !_useable ) exitWith {};
-		
-		if (_key in User1) then { [_object, player] spawn moveObj; }; 
-		
-	};
-
-
 	if (GW_CURRENTZONE == "workshopZone") exitWith {};
 
-	if (_inVehicle && _isDriver && GW_CHUTE_ACTIVE) then {
+	if (_inVehicle && _isDriver) then {
 
-		_pitchBank = GW_CHUTE call BIS_fnc_getPitchBank;
-		_pitchBank set[2, (getDir GW_CHUTE)];
-		_pitchAmount = 1;
-		_bankAmount = 0.3;
+		if (GW_CHUTE_ACTIVE) then {
 
-		// S
-		if (_key == 17) then {
-			_pitchBank set [0, ([(_pitchBank select 0) - _pitchAmount, -3, 3] call limitToRange)];
+			_angleOffset = _key call {
+				if (_this == 17) exitWith { 0 };
+				if (_this == 31) exitWith { 180 };
+				if (_this == 30) exitWith { 90 };
+				if (_this == 32) exitWith { -90 };
+				0
+			};
+
+			_yawFactor = _key call {
+				if (_this == 17 || _this == 31) exitWith { 1 };
+				if (_this == 30 || _this == 32) exitWith { 0.5 };
+				0
+			};
+
+			_dirTo = [GW_CHUTE_TARGET, GW_CHUTE] call dirTo;
+			_dirTo = [_dirTo + _angleOffset] call normalizeAngle;
+			_newTarget = [GW_CHUTE_TARGET, _yawFactor, _dirTo] call BIS_fnc_relPos;
+			_currentPos = (ASLtoATL visiblePositionASL GW_CHUTE);
+			_currentPos set [2, 0];
+			_dist = (_newTarget distance _currentPos);
+			if (_dist < 30 || _dist > 1000) exitWith {};
+			GW_CHUTE_TARGET = _newTarget;
 		};
 
-		// S
-		if (_key == 31) then {
-			_pitchBank set [0, ([(_pitchBank select 0) + _pitchAmount, -3, 3] call limitToRange)];
-		};
-
-		// A
-		if (_key == 30) then {		
-			_pitchBank set [1, ([(_pitchBank select 1) - _bankAmount, -15, 15] call limitToRange)];
-		};
-
-		// D
-		if (_key == 32) then {
-			_pitchBank set [1, ([(_pitchBank select 1) + _bankAmount, -15, 15] call limitToRange)];
-		};
-
-		//systemchat str _pitchBank;
-		[GW_CHUTE, _pitchBank] call setPitchBankYaw;
-
-	};
-
-
-	// In Vehicle Keys
-	if (_inVehicle && _isDriver) then { 
-
-		_status = _vehicle getVariable ["status", []];
+		_status = GW_VEHICLE_STATUS;
 		_canShoot = if (!GW_WAITFIRE && !('cloak' in _status)) then { true } else { false };
 		_canUse = if (!GW_WAITUSE && !('cloak' in _status)) then { true } else { false };
 
@@ -240,10 +214,12 @@ checkBinds = {
 							if (_tag == "HORN") exitWith { [_vehicle, ['horn'], 1] call addVehicleStatus; [_vehicle] spawn tauntVehicle; };
 							if (_tag == "UNFL") exitWith { [_vehicle, false, false] spawn flipVehicle; };				
 							if (_tag == "EPLD") exitWith { [_vehicle] call detonateTargets; playSound "beep"; };
+							if (_tag == "TELP") exitWith { [_vehicle] call activateTeleport;  playSound "beep"; };
 							if (_tag == "LOCK" && {	_exists = false; {	if (([_x, _vehicle] call hasType) > 0) exitWith { _exists = true; };false } count GW_LOCKONWEAPONS > 0;	_exists	}) exitWith { [_vehicle] call toggleLockOn; playSound "beep"; };
 							if (_tag == "OILS" && ((['OIL', _vehicle] call hasType) > 0) ) exitWith { GW_OIL_ACTIVE = nil; playSound "beep"; };
 							if (_tag == "DCLK" && ((['CLK', _vehicle] call hasType) > 0) ) exitWith { [_vehicle, ['cloak']] call removeVehicleStatus; playSound "beep"; };
 							if (_tag == "PARC" && ((['PAR', _vehicle] call hasType) > 0) ) exitWith { if (GW_CHUTE_ACTIVE) then { GW_CHUTE_ACTIVE = false; playSound "beep"; };  };
+							
 
 						};
 
@@ -259,7 +235,7 @@ checkBinds = {
 						if (_canUse && _isModuleBind) exitWith {
 
 							// If its a bag of explosives, just drop one bag
-							if (_tag == "EPL") then { _exitEarly = true; false };							
+							if (_tag == "EPL" || _tag == "TPD") then { _exitEarly = true; false };							
 							[_tag, _vehicle, _obj] call useAttached;
 						};	
 

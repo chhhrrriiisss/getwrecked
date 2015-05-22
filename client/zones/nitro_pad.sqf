@@ -25,7 +25,7 @@ if ("boost" in _status) exitWith {};
     "addVehicleStatus",
     _vehicle,
     false 
-] call BIS_fnc_MP;  
+] call gw_fnc_mp;  
 
 _pb = _vehicle call BIS_fnc_getPitchBank;
 
@@ -42,7 +42,7 @@ _maxSpeed = [_actualVel * 1.5, 30, 80] call limitToRange;
 		3
 	],
 	"nitroEffect"
-] call BIS_fnc_MP;
+] call gw_fnc_mp;
 
 for "_i" from 1 to _maxSpeed step 0.1 do {
 

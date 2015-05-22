@@ -4,8 +4,8 @@
 //      Return: Bool (Unused)
 //
 
-_vehicle = [_this,0, objNull, [objNull]] call BIS_fnc_param;
-_unit = [_this,1, objNull, [objNull]] call BIS_fnc_param;
+_vehicle = [_this,0, objNull, [objNull]] call filterParam;
+_unit = [_this,1, objNull, [objNull]] call filterParam;
 
 if (isNull _vehicle || isNull _unit) exitWith { false };
 

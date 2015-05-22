@@ -4,13 +4,17 @@
 //      Return: None
 //
 
-private ['_box', '_item', '_class', '_contents'];
+private ['_box', '_item', '_class', '_contents', '_data'];
 
 _box = _this select 0;
 _item = _this select 1;
 
-_class = if (typeOf _item == "groundWeaponHolder") then { (_item getVariable "type") } else { (typeOf _item) };
+_tag = _item getVariable ['GW_Tag', ''];
+_data = [_tag, GW_LOOT_LIST] call getData;
+if (isNil "_data") exitWith {};
+_class = _data select 0;
 
+_box setVariable ["GW_CU_IGNORE", false, true];
 _contents = _box getVariable ["GW_INVENTORY", []];
 _count = [_box] call countItemsSupplyBox;
 

@@ -4,13 +4,10 @@
 //      Return: None
 //
 
-_o = [_this,0, objNull, [objNull]] call BIS_fnc_param;
-_state = [_this,1, false, [false]] call BIS_fnc_param;
+_o = [_this,0, objNull, [objNull]] call filterParam;
+_state = [_this,1, false, [false]] call filterParam;
 if (isNull _o || !isServer) exitWith {};
 
-{ 		
-	_x hideObjectGlobal _state;		
-	false
-} count (attachedObjects _o) > 0;
-
 _o hideObjectGlobal _state;
+{ _x hideObjectGlobal _state; false	} count (attachedObjects _o);
+

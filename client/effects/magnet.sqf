@@ -6,15 +6,19 @@
 
 private ['_target', '_pos', '_duration', '_size'];
 
-_target = [_this,0, objNull, [objNull]] call BIS_fnc_param;
-_duration = [_this,1, 1, [0]] call BIS_fnc_param;
+_target = [_this,0, objNull, [objNull]] call filterParam;
+_duration = [_this,1, 1, [0]] call filterParam;
+_scale = [_this,2, 1, [0]] call filterParam;
 
 if (isNull _target || _duration < 0) exitWith {};
-_pos = visiblePositionASL _target;
+
+_pos = (ASLtoATL visiblePositionASL _target);
+_isVisible = [_pos, _duration] call effectIsVisible;
+if (!_isVisible) exitWith {};
 
 _source  = "#particlesource" createvehiclelocal _pos;
 _source setParticleCircle [0, [0, 0, 0]];
-_source setParticleRandom [0.2, [15, 15, 0], [0, 0, 0], 1, 0.5, [0, 0, 0, 0], 0, 0];
+_source setParticleRandom [0.2, [15 * _scale, 15 * _scale, 0], [0, 0, 0], 1, 0.5, [0, 0, 0, 0], 0, 0];
 _source setDropInterval 0.01;
 _source attachTo [_target];
 
@@ -26,12 +30,12 @@ _source setParticleParams
 	1,																		//TimerPeriod
 	0.15,																	//LifeTime
 	[0, 0, 0],																//Position
-	[30, 30, 0],															//MoveVelocity
+	[30 * _scale, 30 * _scale, 0],															//MoveVelocity
 	0,																		//RotationVelocity
 	3,																		//Weight
 	3,																		//Volume
 	0.1,																	//Rubbing
-	[5, 60],																	//Size
+	[5 * _scale, 60 * _scale],																	//Size
 	[[1, 1, 1, 1], [1, 1, 1, 0.7],  [1, 1, 1, 0.1]],		//0.15												//Color
 	[1],					  												//AnimationPhase
 	0,																		//RandomDirectionPeriod

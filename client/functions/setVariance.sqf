@@ -5,9 +5,9 @@
 //
 
 _pos = _this select 0;
-_rangeX =  if (isNil {_this select 1}) then { 0 } else { (_this select 1) };
-_rangeY  =  if (isNil {_this select 2}) then { 0 } else { (_this select 2) };
-_rangeZ  = if (isNil {_this select 3}) then { 0 } else { (_this select 3) };
+_rangeX = [_this, 1, 0, [0]] call filterParam;
+_rangeY  = [_this, 2, 0, [0]] call filterParam;
+_rangeZ  = [_this, 3, 0, [0]] call filterParam;
 
 _vel = [0,0,0] distance (velocity GW_CURRENTVEHICLE);
 

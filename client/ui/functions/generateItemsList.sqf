@@ -12,7 +12,7 @@ _index = if (isNil {_this select 1}) then { 0 } else { (_this select 1) };
 ctrlShow[97001, true];
 
 // Before clearing, loop through and get existing quantities of any
-_listLength = [(lnbSize 97001),0, -1, [0]] call BIS_fnc_param;
+_listLength = [(lnbSize 97001),0, -1, [0]] call filterParam;
 	
 if (isNil "GW_BUY_CART") then {
 	GW_BUY_CART = [];
@@ -73,9 +73,9 @@ _filterBy = if (_category > 0) then {
 
 	if (!_valid) then {} else {
 
-		_discountCost = [_class, _sponsor, _company] call getCost; // Cost with discounts
+		_discountCost = [_class, _sponsor, _company] call getCost; // Cost with discounts		
 		_rawCost = [_class, "", ""] call getCost; // Cost with no discounts
-		_difCost = ((_rawCost - _discountCost) / _rawCost);
+		_difCost = IF (_rawCost == 0 && _discountCost == 0) then { 0 } else { ((_rawCost - _discountCost) / _rawCost); };
 
 		_colour = [1,1,1,0.5];
 
@@ -98,12 +98,17 @@ _filterBy = if (_category > 0) then {
 			if (_x select 0 == _class) exitWith { _quantity = _x select 1; };
 			false
 		} count GW_BUY_CART > 0;
+		
+		_quantityString = if (_quantity > 0) then { 
+			lnbSetData [97001, [((((lnbSize 97001) select 0)) -1), 0], _quantity];
+			(format['%1x', _quantity])
+		} else { "-" };
 
-		_quantityString = if (_quantity > 0) then { format['%1x', _quantity] } else { "-" };
+		// Don't add entries for items with no cost
+		if (_rawCost == 0 && _discountCost == 0) exitWith {};
 
 		_list lnbAddRow[_quantityString, "", _name, "", _cost];		
 
-		lnbSetData [97001, [((((lnbSize 97001) select 0)) -1), 0], _quantity]; // Quantity
 		lnbSetData [97001, [((((lnbSize 97001) select 0)) -1), 4], format['%1', _discountCost]]; // Cost
 		lnbSetData [97001, [((((lnbSize 97001) select 0)) -1), 3], _class];		 // Class
 

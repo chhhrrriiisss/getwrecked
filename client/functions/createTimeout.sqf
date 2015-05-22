@@ -11,7 +11,7 @@ _reloadTime = _this select 1;
 
 if (_reloadTime == 0) exitWith { false };
 
-_expires = _currentTime + _reloadTime;
+_expires = time + _reloadTime;
 GW_WAITLIST pushback [_type, _expires];
 
 true

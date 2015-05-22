@@ -29,25 +29,23 @@ saveProfileNamespace;
 // Handles money sent from the server, adjusts balance accordingly
 receiveMoney = {
 
-	private ['_value'];
+	private ['_value', '_vehicle', '_valueString'];
 
-	_value = [_this,0,0,[0]] call bis_fnc_param;
+	_value = [_this,0,0,[0]] call filterParam;
 
 	if (_value == 0) exitWith {};
 
 	[_value] call changeBalance;	
 
 	// If we were just in a vehicle, count the money as "moneyEarned" stat
-	_vehicle = player getVariable ["prevVeh", nil];
-	if (!isNil "_vehicle") then {
-		['moneyEarned', _vehicle, _value] spawn logStat;   
-	};		
+	_vehicle = player getVariable ["GW_prevVeh", nil];
+	if (!isNil "_vehicle") then { ['moneyEarned', _vehicle, _value] call logStat; };		
 
 	_valueString = ([_value] call numberToCurrency);
 
 	// Make everyone aware we got the dosh
 	systemChat format['You earned $%1.', _valueString];
-	pubVar_systemChat = format['%1 earned $%2', GW_PLAYERNAME, _valueString];
+	pubVar_systemChat = format['%1 earned $%2', name player, _valueString];
 	publicVariable "pubVar_systemChat";
 
 	// Alert message
@@ -63,7 +61,7 @@ receiveMoney = {
 		"playSoundAll",
 		true,
 		false
-	] call BIS_fnc_MP;	 
+	] call gw_fnc_mp;	 
 };
 
 // Converts a number to a string with commas (as a currency)
@@ -71,7 +69,7 @@ numberToCurrency = {
 
 	private ["_value","_digits","_count","_string","_step", "_mod"];
 
-	_value = [_this,0,0,[0]] call bis_fnc_param;
+	_value = [_this,0,0,[0]] call filterParam;
 	_digits = _value call bis_fnc_numberDigits;
 	_count = count (_digits) - 1;
 
@@ -150,7 +148,7 @@ setBalance = {
 
 	private ['_value'];
 
-	_value = [_this,0,0,[0]] call BIS_fnc_param;
+	_value = [_this,0,0,[0]] call filterParam;
 
 	_oldBalance = profileNamespace getVariable ['GW_BALANCE', 0];
 	profileNamespace setVariable ['GW_BALANCE', _value];
@@ -166,7 +164,7 @@ changeBalance = {
 	
 	private ['_value', '_current'];
 
-	_value = [_this,0,0,[0]] call BIS_fnc_param;
+	_value = [_this,0,0,[0]] call filterParam;
 	if (_value == 0) exitWith { false };
 
 	_current = profileNamespace getVariable ['GW_BALANCE', 0];

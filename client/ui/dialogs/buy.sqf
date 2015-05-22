@@ -6,7 +6,7 @@
 
 private ['_obj', '_unit', '_company'];
 
-_obj = [_this,0, objNull, [objNull]] call BIS_fnc_param;
+_obj = [_this,0, objNull, [objNull]] call filterParam;
 
 if (isNull _obj) exitWith {};
 	

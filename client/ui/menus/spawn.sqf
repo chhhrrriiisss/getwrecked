@@ -4,6 +4,8 @@
 //      Return: None
 //
 
+private ['_unit', '_pad', '_ownership', '_owner'];
+
 if (GW_SPAWN_ACTIVE) exitWith { closeDialog 0;	GW_SPAWN_ACTIVE = false; };
 GW_SPAWN_ACTIVE = true;
 
@@ -17,8 +19,13 @@ _onExit = {
 
 
 // Do we actually have something to deploy?
-_nearby = (ASLtoATL (getPosASL _pad)) nearEntities [["Car"], 8];
-if (count _nearby <= 0 && isNil "GW_LASTLOAD") exitWith { ['You have no vehicle to deploy.'] spawn _onExit; };
+_nearby = (ASLtoATL visiblePositionASL _pad) nearEntities [["Car"], 8];
+if (({
+
+    if (_x != (vehicle player)) exitWith { 1 };
+    false
+
+} count _nearby) isEqualTo 0 || isNil "GW_LASTLOAD") exitWith { ['You have no vehicle to deploy.'] spawn _onExit; };
 
 // Check ownership
 _owner = ( [_pad, 8] call checkNearbyOwnership);
@@ -60,7 +67,7 @@ if (!simulationEnabled GW_SPAWN_VEHICLE) then {
         "setObjectSimulation",
         false,
         false 
-    ] call BIS_fnc_MP;  
+    ] call gw_fnc_mp;  
 
 };
 
@@ -98,7 +105,13 @@ if (time > _timeout) exitWith {
 // Check the vehicle has been saved at least once prior
 _isSaved = GW_SPAWN_VEHICLE getVariable ["isSaved", false];
 _continue = if (!_isSaved) then { (['UNSAVED VEHICLE', 'CONTINUE?', 'CONFIRM'] call createMessage) } else { true };
-if (!_continue) exitWith { GW_SPAWN_ACTIVE = false; };
+
+GW_SPAWN_ACTIVE = if (typename _continue == "BOOL") then {
+    if (!_continue) exitWith { false };
+    true
+} else { false };
+
+if (!GW_SPAWN_ACTIVE) exitWith {};
 
 // Ensure the vehicle is compiled & has handlers
 [GW_SPAWN_VEHICLE] call compileAttached;
@@ -113,9 +126,10 @@ if (!_firstCompile || !_hasActions) exitWith {
 
 // If we've deployed somewhere previously, show that
 GW_SPAWN_LOCATION = if (!isNil "GW_LASTLOCATION") then { GW_LASTLOCATION } else {  ((GW_VALID_ZONES select (random (count GW_VALID_ZONES -1))) select 0) };
+_displayName = '';
 _startIndex = 0;
 {
-    if ((_x select 0) == GW_SPAWN_LOCATION) exitWith { _startIndex = _foreachindex; };
+    if ((_x select 0) == GW_SPAWN_LOCATION) exitWith { _startIndex = _foreachindex; _displayName = (_x select 2); };
 } Foreach GW_VALID_ZONES;
 
 disableSerialization;
@@ -125,7 +139,7 @@ _layerStatic = ("BIS_layerStatic" call BIS_fnc_rscLayer);
 _layerStatic cutRsc ["RscStatic", "PLAIN" , 1];
 
 [_startIndex] call generateSpawnList;
-[GW_SPAWN_LOCATION] spawn previewLocation;
+[GW_SPAWN_LOCATION, _displayName] spawn previewLocation;
 
 99999 cutText ["", "BLACK IN", 0.35];  
 

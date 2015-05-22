@@ -6,30 +6,33 @@
 
 private ['_obj', '_unit', '_makeOwner', '_owner'];
 
-_obj = [_this,0, objNull, [objNull]] call BIS_fnc_param;
-_unit = [_this,1, objNull, [objNull]] call BIS_fnc_param;
+_obj = [_this,0, objNull, [objNull]] call filterParam;
+_unit = [_this,1, objNull, [objNull]] call filterParam;
 
 if (isNull _obj || isNull _unit) exitWith { false };
 
 // Optionally take ownership if it's unowned
-_makeOwner = [_this,2, true, [false]] call BIS_fnc_param;
+_makeOwner = [_this,2, true, [false]] call filterParam;
 
-_owner = _obj getVariable ['owner', ''];
+_owner = if (isNull attachedTo _obj) then { (_obj getVariable ['GW_Owner', '']) } else { 
+	if (isPlayer (attachedTo _obj)) exitWith { (name  (attachedTo _obj)) }; 
+	((attachedTo _obj) getVariable ['GW_Owner', '']) 
+};
 
 // No owner, take ownership
-if (_owner == '' && _makeOwner) exitWith { 
-	_obj setVariable ['owner', (name _unit), true];	
+if (count toArray _owner == 0 && _makeOwner) exitWith { 
+	_obj setVariable ['GW_Owner', (name _unit), true];	
 	true
 };
 
 // No owner, dont take ownership	
-if (_owner == '' && !_makeOwner) exitWith { true }; 
+if (count toArray _owner == 0 && !_makeOwner) exitWith { true }; 
 
 // Has owner, not ours	
-if (_owner != (name _unit)) exitWith { false }; 
+if ( !(_owner isEqualTo (name _unit)) ) exitWith { false }; 
 
 // Has owner, ours
-if (_owner == (name _unit)) exitWith { true }; 
+if (_owner isEqualTo (name _unit)) exitWith { true }; 
 
 // Default, not the owner
 false 

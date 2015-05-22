@@ -1,16 +1,106 @@
 # [Get Wrecked](http://getwrecked.info) Changelog
-## Last Updated: [19-02-2015] ##
+## Last Updated: [13-05-2015] ##
 
 Note: Some changes that are deemed spoilers are hidden from this log 
+(WIP) Indicates items that may not be fully functional and are only partially implemented
+Items without Fixed/Added/Removed proceeding, are typically balance changes
 
-**v0.8c** [Public alpha hotfix 2]
+**v0.8.2** [Public alpha release]
+
+
+- Melee weapons now take a small amount of damage when used until they break (damage no longer less per item)
+- Weapon damage and vehicle armor pass to help re-balance engagement times and viability
+- Supply boxes should no longer take over the workshop
+- Objects now hold their rotate while attaching them 
+- effectIsVisible dedicated check to minimize unnecessary visual effects being spawned on clientsw
+- Teleport mechanic adjusted to make it more practical to use
+- Shockwave velocity limitation
+- Increased audability of most weapon/module effects 
+- Re-write to object manipulation system to avoid collisions in workshop
+- loadVehicle system is now client side to improve reliability (WIP)
+- Improved status effect handler system to improve fps
+- Improved guided missile handling slightly
+- Improved RPG accuracy and speed
+- Debris effect to bag of explosives
+- Flamethrower damage reduced slightly, but does additional damage with sustained hits
+- Slightly increased HMG stock damage
+- Refract effect to flame effects
+- Pulse effect to railgun
+- Bags of explosives now do scaled damage depending on distance
+- Vehicle health tag now only shows when player is looking directly at it
+- Fixed - Items detachable on vehicles player does not own
+- Temp Fix - Ownership lost when cancelling deploy timer
+- Fixed - Death camera focus mode
+- Fixed - Taunt not triggering on first key press
+- Fixed - 'You have no vehicle to deploy' message not showing for spawn menu check
+- Fixed - Vehicle signatures not being correctly considered in lock time
+- Fixed - Guided missile dealing no damage
+- Fixed - Vehicles spawning simultaneously now are both deleted to avoid collisions
+- Fixed - Laser firing from center of object
+- Fixed - Memory crash involving object handle damage event handler
+- Fixed - Crash on attaching HMGs/GMGs 
+- Fixed - setVehicleTexture not exiting correctly on server
+- Fixed - Vehicle stats should now be recorded properly
+- Fixed - Infinite flight with the emergency parachute
+- Fixed - Textures not loading occasionally for some vehicles
+- Fixed - Script error causing guided missile screen to occasionally get stuck
+- Fixed - Vendor item script error (1.44)
+- Fixed - Custom font missing error on input dialog
+- Fixed - Vehicle load UI list should now correctly match current preview
+- Changed - 'Salt flat' is now 'Dry Lake'
+- Added - Random vehicle name generator
+- Added - Check to move player forwards if they get stuck when aborting deploy
+- Added - !copy command for Admins to retrieve vehicles from remote clients
+- Added - Weapon FOV preview when attaching items in the workshop
+- Added - Rocket Pods, Grappling Hook, Teleportation Device, Electromagnet (WIP)
+- Added - EMP Resistant Fencing, Military-Grade Concrete, Chainlink Panel, Thick Concrete Wall
+- Added - Concrete Pylon, Hydraulic Hook (WIP)
+- Added - Box Truck, Fuel and Ammo and Tempest Trucks to available vehicles 
+- Added - Suspend option to lift vehicle mechanic
+
+
+**v0.8.1** [Closed alpha release]
+
+- Widespread fps improvements and optimizations
+- Loading screen timeout to prevent endless black screen
+- Using thruster while parachuting will now automatically cut it
+- EMP duration changed to 10 seconds, 7 for source vehicle, 60 second timeout
+- Mine damage reduced to 20-30%
+- HMG damage increased by 25%
+- Incorrect selection for GW_KILL_VALUE causing low kill values
+- Removed unnecessary vehicle teleport in save/load system
+- Own vehicle health bar now wider and at bottom of screen
+- Tweaks to the ballistics system to better work on hills
+- Fixed - Melee spikes now only pick up cars (and not whole radar stations!)
+- Fixed - Weapon tagging unable to overwrite, even if different weapon
+- Fixed - Corrupted or reset libraries using !reset should now auto-fill with defaults when loading preview menu
+- Fixed - Save 'cancel' button not aborting properly
+- Fixed - Aggressive cleanup now has a 75m nearby man check in workshop, 10m in zone
+- Fixed - Buggy emergency parachute on kart
+- Fixed - Occasional filterParam script error
+- Fixed - Lock-on beeps causing unnecessary network traffic
+- Fixed - Black icons in dialogs as of 1.40
+- Fixed - Smoke generator script error
+- Fixed - Self Destruct now has a delay and can't blow up invulnerable vehicles
+- Added - Additional beep sound effects to alerts
+- Added - First person camera is now enabled for building and combat
+- Added - Customizable mission parameters (Starting cash, bounty rewards, game mode, respawn time etc)
+- Added - Stringtable (English/French) (WIP)
+- Added - Max data packet size variable to prevent server instability when loading large vehicles
+- Added - Stratis map support with three new battle zones - Airbase, Peninsula and Beach (WIP)
+- Added - Melee metal spikes (WIP), that do around 7.5% damage on hit and can grab vehicles
+- Added - !grab to bring players to admin and !cleanup to manually execute the cleanup script
+- Added - Auto detect for Karts DLC to remove racing helmets, (!fixdlc is no longer required)
+- Added - !collision command for testing attached object collisions (WIP)
+
+**v0.8.0c** [Public alpha hotfix 2]
 
 - Fixed - Nuke not dealing any damage
 - Fixed - Magnetic coil script error
 - Fixed - Changed settings menu mouse bind back to double click to toggle
 - Fixed - Emergency parachutes can be deployed multiple times while active
 
-**v0.8b** [Public alpha hotfix]
+**v0.8.0b** [Public alpha hotfix]
 
 - Fixed - Attached weapons should now be properly immune to damage
 - Fixed - Flamethrower consuming ammo in addition to fuel
@@ -20,7 +110,7 @@ Note: Some changes that are deemed spoilers are hidden from this log
 - Fixed - Explosives dropping all in one stack rather than individually
 - Added - Shockwave effects to some explosive weapons
 
-**v0.8** [Public alpha release]
+**v0.8.0** [Public alpha release]
 
 - Optimized vehicle service terminal initialization script
 - Tweaked lock-on missiles slightly to improve accuracy

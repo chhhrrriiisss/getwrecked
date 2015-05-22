@@ -1,6 +1,8 @@
 #define GW_Dialog_ID 93000
 #define GW_Dialog_Input_ID 93001
 #define GW_Dialog_Title_ID 93002
+#define GW_Dialog_Function_ID 93011
+#define GW_Dialog_Function_Icon_ID 93010
 
 #define GW_BUTTON_WIDTH 0.2
 #define GW_BUTTON_HEIGHT 0.035
@@ -15,6 +17,8 @@
 #define CT_LISTBOX 5
 #define CT_STRUCTURED_TEXT  13
 #define CT_EDIT 2
+
+#define ST_NO_RECT        0x200
 
 class GW_RscEdit
 {
@@ -52,7 +56,7 @@ class GW_Dialog
 	movingEnabled = false;
 	enableSimulation = true;	
 	onLoad = "uiNamespace setVariable ['GW_Dialog', _this select 0]; "; 
-
+	
 	class controlsBackground
 	{
 		
@@ -117,8 +121,8 @@ class GW_Dialog
 				y = (DIALOG_Y - 0.025) * safezoneH + safezoneY;				
 				w = 0.025 * safezoneW;
 				h = 0.025 * safezoneH;
-				font = "";
-				sizeEx = 0.05;
+				font = "PuristaMedium";
+				sizeEx = "0.0275 / (getResolution select 5)";
 				colorBackground[] = {1,1,1,1}; 
 				colorText[] = {1,1,1,0.95}; 
 				text = "client\images\icons\hud\corner1.paa";
@@ -134,8 +138,8 @@ class GW_Dialog
 				y = (DIALOG_Y - 0.025) * safezoneH + safezoneY;				
 				w = 0.025 * safezoneW;
 				h = 0.025 * safezoneH;
-				font = "";
-				sizeEx = 0.05;
+				font = "PuristaMedium";
+				sizeEx = "0.0275 / (getResolution select 5)";
 				colorBackground[] = {1,1,1,1}; 
 				colorText[] = {1,1,1,0.95}; 
 				text = "client\images\icons\hud\corner2.paa";
@@ -151,8 +155,8 @@ class GW_Dialog
 				y = (DIALOG_Y + (GW_BUTTON_HEIGHT * 3) + (GW_BUTTON_GAP_Y * 2)) * safezoneH + safezoneY;				
 				w = 0.025 * safezoneW;
 				h = 0.025 * safezoneH;
-				font = "";
-				sizeEx = 0.05;
+				font = "PuristaMedium";
+				sizeEx = "0.0275 / (getResolution select 5)";
 				colorBackground[] = {1,1,1,1}; 
 				colorText[] = {1,1,1,0.95}; 
 				text = "client\images\icons\hud\corner3.paa";
@@ -168,38 +172,114 @@ class GW_Dialog
 				y = (DIALOG_Y + (GW_BUTTON_HEIGHT * 3) + (GW_BUTTON_GAP_Y * 2)) * safezoneH + safezoneY;		
 				w = 0.025 * safezoneW;
 				h = 0.025 * safezoneH;
-				font = "";
-				sizeEx = 0.05;
+				font = "PuristaMedium";
+				sizeEx = "0.0275 / (getResolution select 5)";
 				colorBackground[] = {1,1,1,1}; 
 				colorText[] = {1,1,1,0.95}; 
 				text = "client\images\icons\hud\corner4.paa";
 				lineSpacing = 1; 
 		};
-		
-		  	
 
+		class FunctionIcon : GW_StructuredTextBox
+		{
+			access = 0;
+			idc = GW_Dialog_Function_Icon_ID;
+
+			colorBackground[] = 
+			{
+				0,
+				0,
+				0,
+				0.5
+			};
+
+			x = (DIALOG_X + GW_BUTTON_WIDTH - (GW_BUTTON_WIDTH / 7)) * safezoneW + safezoneX;
+			y = (DIALOG_Y + (GW_BUTTON_HEIGHT) + (GW_BUTTON_GAP_Y)) * safezoneH + safezoneY;
+			w = (GW_BUTTON_WIDTH / 7) * safezoneW;
+			h = (GW_BUTTON_HEIGHT) * safezoneH;
+
+			align = "center";			
+
+			class Attributes
+			{
+				font = "PuristaMedium";
+				align = "center";
+				shadow = 0;
+			};
+
+			text = "";
+
+		};
+		  	
 	};
 
 	class controls
-	{
+	{		
 		class InputArea : GW_RscEdit
 		{
 			idc = GW_Dialog_Input_ID;
 			text = "";
+			font = "PuristaMedium";
+			style = ST_NO_RECT;
+
 			colorBackgroundFocused[] = {0,0,0,0};
 			colorBackground[] = {0,0,0,0};
 			colorBackground2[] = {0,0,0,0};
 			x = (DIALOG_X) * safezoneW + safezoneX;
 			y = (DIALOG_Y + GW_BUTTON_HEIGHT + GW_BUTTON_GAP_Y) * safezoneH + safezoneY;
-			w = (GW_BUTTON_WIDTH) * safezoneW;
+			w = (GW_BUTTON_WIDTH - (GW_BUTTON_WIDTH / 7)) * safezoneW;
 			h = GW_BUTTON_HEIGHT * safezoneH;
 
+
+
 		};
+
+		class FunctionButton : GW_RscButtonMenu
+		{
+			idc = GW_Dialog_Function_ID;
+			text = "";
+			size = 0.03;
+			sizeEx =  "0.018 / (getResolution select 5)";
+			font = "PuristaMedium";
+
+			onButtonClick = "[] call executeMessageFunction; false";
+			onMouseEnter = "ctrlSetFocus ((findDisplay 93000) displayCtrl 93011); false";
+			x = (DIALOG_X + GW_BUTTON_WIDTH - (GW_BUTTON_WIDTH / 7)) * safezoneW + safezoneX;
+			y = (DIALOG_Y + (GW_BUTTON_HEIGHT) + (GW_BUTTON_GAP_Y)) * safezoneH + safezoneY;
+			w = (GW_BUTTON_WIDTH / 7) * safezoneW;
+			h = (GW_BUTTON_HEIGHT) * safezoneH;
+
+			shadow = 1;
+
+			colorBackground[] = {0,0,0,0};
+			colorBackgroundFocused[] = {0,0,0,0.25};
+			colorBackground2[] = {0,0,0,0};
+
+			color[] = {1,1,1,0.65};
+			colorFocused[] = {1,1,1,1};
+			color2[] = {1,1,1,1};			
+			colorText[] = {1,1,1,1};
+
+			class TextPos
+			{
+				left = 0;
+				top = 0.0135;
+				right = 0;
+				bottom = 0;
+			};
+
+		};
+
+
+	
 
 		class DialogTitle : GW_RscButtonMenu
 		{
 			idc = GW_Dialog_Title_ID;
 			text = "CONFIRM";
+			font = "PuristaMedium";
+			sizeEx =  "0.0275 / (getResolution select 5)";
+
 			onButtonClick = "";
 			x = (DIALOG_X) * safezoneW + safezoneX;
 			y = (DIALOG_Y) * safezoneH + safezoneY;
@@ -233,7 +313,8 @@ class GW_Dialog
 			idc = -1;
 			text = "OK";
 			size = 0.03;
-			sizeEx = "0.03";
+			sizeEx =  "0.018 / (getResolution select 5)";
+			font = "PuristaMedium";
 
 			onButtonClick = "[] call confirmCurrentDialog; false";
 			x = (DIALOG_X) * safezoneW + safezoneX;
@@ -267,7 +348,7 @@ class GW_Dialog
 			idc = -1;
 			text = "CANCEL";
 			size = 0.03;
-			sizeEx = "0.03";
+			sizeEx =  "0.018 / (getResolution select 5)";
 
 			onButtonClick = "[] call cancelCurrentDialog; false";
 			x = (DIALOG_X + (GW_BUTTON_WIDTH / 2) + (GW_BUTTON_GAP_X / 2)) * safezoneW + safezoneX;

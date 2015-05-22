@@ -87,7 +87,7 @@ class GW_New
 			h = ((GW_BUTTON_HEIGHT * 9) - (GW_BUTTON_GAP_Y * 2)) * safezoneH;
 			
 			text = "";
-			sizeEx = "0.035";
+			sizeEx = "(0.018 / (getResolution select 5))";
 			columns[] = {0, 0.14, 0.52};
 			drawSideArrows = false;
 			idcLeft = -1;
@@ -137,7 +137,7 @@ class GW_New
 			h = ((GW_BUTTON_HEIGHT * 1.5)) * safezoneH;
 
 			text = "";
-			size = "0.035";
+			size = "(0.018 / (getResolution select 5))";
 		};	
 
 		class AttributesList : GW_ListBox
@@ -155,7 +155,7 @@ class GW_New
 			colorSelect2[] = {1,1,1,1};
 
 			text = "";
-			sizeEx = "0.035";
+			sizeEx = "(0.018 / (getResolution select 5))";
 			columns[] = {0.1, 0.28, 0.5, 0.68};
 			drawSideArrows = false;
 			idcLeft = -1;
@@ -180,7 +180,7 @@ class GW_New
 			h = GW_BUTTON_HEIGHT * safezoneH;
 
 			size = 0.03;
-			sizeEx = "0.03";
+			sizeEx = "(0.018 / (getResolution select 5))";
 
 			shadow = 1;		
 
@@ -231,7 +231,7 @@ class GW_New
 			h = GW_BUTTON_HEIGHT * safezoneH;
 
 			size = 0.03;
-			sizeEx = "0.03";
+			sizeEx = "(0.018 / (getResolution select 5))";
 
 			shadow = 1;
 

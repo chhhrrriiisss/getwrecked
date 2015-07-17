@@ -62,6 +62,12 @@ mouseInactiveIcon = ICON_ROOT + "menus\mouseInactive.paa";
 hornIcon = ICON_ROOT + "menus\horn.paa";
 randomizeIcon = ICON_ROOT + "menus\randomize.paa";
 
+markerBoxIcon = ICON_ROOT + "menus\markerBox.paa";
+finishMarkerIcon = ICON_ROOT + "menus\finishMarker.paa";
+startMarkerIcon = ICON_ROOT + "menus\startMarker.paa";
+checkpointMarkerIcon = ICON_ROOT + "menus\checkpointMarker.paa";
+checkpointMarkerAddIcon = ICON_ROOT + "menus\checkpointMarkerAdd.paa";
+
 // Economy 
 lockIcon = ICON_ROOT + "menus\padlock.paa";
 cartIcon = ICON_ROOT + "menus\cart.paa";

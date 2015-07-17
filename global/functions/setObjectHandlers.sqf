@@ -4,9 +4,7 @@
 //      Return: Bool
 //
 
-private ['_obj'];
-
-_obj = _this select 0;
+params ['_obj'];
 
 if (isServer) then {
 

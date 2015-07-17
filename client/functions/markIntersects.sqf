@@ -5,10 +5,7 @@
 //
 
 private ['_src', '_des', '_objs', '_m'];
-
-_src = _this select 0;
-_des = _this select 1;
-_m =  _this select 2;
+params ['_src', '_des', '_m'];
 
 if (count _src == 0 || count _des == 0) exitWith {};
 

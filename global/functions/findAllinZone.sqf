@@ -15,10 +15,10 @@ if (count allUnits isEqualTo 0) exitWith { [] };
 _arr = [];
 
 {
-	// If the unit is alive and within the zone
+	// If the unit is alive and within the zone AND a player
 	if (alive _x && ([(ASLtoATL getPosASL _x), _zone] call checkInZone)) then {
 
-		_inVehicle = if ((vehicle _x) isEqualTo _x) then { false } else { _x = vehicle _x; true };
+		_inVehicle = if ((vehicle _x) == _x) then { false } else { _x = vehicle _x; true };
 
 		// If we're only looking for vehicles, do nothing
 		if (_vehiclesOnly && !_inVehicle) then {} else {

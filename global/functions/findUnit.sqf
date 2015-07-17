@@ -4,7 +4,7 @@
 //      Return: Object (the unit)
 //
 
-private ['_target', '_result', '_unit'];
+private ['_target', '_result', '_unit', '_arr', '_exit', '_result'];
 
 _target = [_this,0, "", [""]] call filterParam;
 _isAI = [_this,1, false, [false]] call filterParam;
@@ -15,7 +15,7 @@ _result = objNull;
 _exit = false;
 
 _arr = if (!_isAI) then {
-	(call allPlayers)
+	allPlayers
 } else {
 	allUnits
 };

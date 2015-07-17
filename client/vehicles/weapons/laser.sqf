@@ -4,11 +4,7 @@
 //      Return: None
 //
 
-private ["_obj"];
-
-_obj = _this select 0;
-_target = _this select 1;
-_vehicle = _this select 2;
+params ['_obj', '_target', '_vehicle'];
 
 _oPos = _obj modelToWorldVisual [0,0,0];
 _tPos = if (typename _target == 'OBJECT') then { (ASLtoATL visiblePositionASL _target) } else { _target };
@@ -22,7 +18,7 @@ _tPos = if (typename _target == 'OBJECT') then { (ASLtoATL visiblePositionASL _t
 	"laserLine",
 	true,
 	false
-] call gw_fnc_mp;
+] call bis_fnc_mp;
 
 playSound3D ["a3\sounds_f\sfx\special_sfx\sparkles_wreck_2.wss", _obj, false, _oPos, 2, 1, 50];	
 

@@ -4,11 +4,7 @@
 //      Return: None
 //
 
-private ["_obj"];
-
-_obj = _this select 0;
-_target = _this select 1;
-_vehicle = _this select 2;
+params ['_obj', '_target', '_vehicle'];
 
 _oPos = (_obj modelToWorldVisual [5,0,-0.7]);
 _tPos = _target;
@@ -45,7 +41,7 @@ _hook addEventHandler['EpeContact', {
 	        "addVehicleStatus",
 	        _target,
 	        false 
-		] call gw_fnc_mp; 	
+		] call bis_fnc_mp; 	
 
 		_target setDammage (getDammage _target) + 0.025;
 

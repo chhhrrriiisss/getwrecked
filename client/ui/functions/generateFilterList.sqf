@@ -4,9 +4,7 @@
 //      Return: None
 //
 
-private ['_startIndex'];
-
-_startIndex = _this select 0;
+params ['_startIndex'];
 
 disableSerialization;
 _filterList = ((findDisplay 42000) displayCtrl 42003);

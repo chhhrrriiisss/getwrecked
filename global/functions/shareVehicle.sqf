@@ -30,7 +30,7 @@ _targets = if !(typename _target isEqualTo "ARRAY") then { [_target] } else { _t
 		'copyVehicle',
 		_u,
 		false
-	] call gw_fnc_mp;	
+	] call bis_fnc_mp;	
 
 	false
 } count _targets > 0;

@@ -6,11 +6,7 @@
 
 calcWeapons = {
 
-	private ["_o", "_v"];
-
-	_o = _this select 0;
-	_v = _this select 1;
-
+	params ['_o', '_v', '_t'];
 
 	// Add the weapon target to the weapons array
 	_type = _w select 0;
@@ -29,11 +25,7 @@ calcWeapons = {
 
 calcTactical = {
 
-	private ["_o", "_v"];
-
-	_o = _this select 0;
-	_v = _this select 1;
-	_t = _this select 2;
+	params ['_o', '_v', '_t'];
 
 	_type = _t select 0;
 	_obj = _t select 1;
@@ -51,9 +43,7 @@ calcTactical = {
 
 calcSpecial = {
 
-	_o = _this select 0;
-	_v = _this select 1;
-	_t = _this select 2;
+	params ['_o', '_v', '_t'];
 
 	_vehSpecial = (_v getVariable "special");
 
@@ -72,8 +62,7 @@ calcSpecial = {
 setDefaultData = {
 
 	private ["_v", "_data", "_armor", "_defaultAmmo", '_defaultFuel', '_armorValue'];
-
-	_v = _this select 0;
+	params ['_v'];
 
 	_mass = getMass _v;
 	if (isNil "_mass") then { _mass = 5000; };
@@ -116,7 +105,7 @@ setDefaultData = {
 // Sets actions for a compile vehicle
 setVehicleActions = {
 	
-	_vehicle = _this select 0;
+	params ['_vehicle'];
 
 	if (!hasInterface) exitWith {};
 
@@ -174,7 +163,7 @@ setVehicleActions = {
 			"removeVehicleStatus",
 			false,
 			false 
-		] call gw_fnc_mp;  
+		] call bis_fnc_mp;  
 
 	}, [], 0, false, false, "", "( (player in _target) && (player == (driver _target)) && ( 'cloak' in (_target getVariable ['status', []]) ) )"];
 

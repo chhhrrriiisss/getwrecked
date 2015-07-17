@@ -4,8 +4,8 @@ if (isNil "GW_LAST_COLLISION") then { GW_LAST_COLLISION = time - GW_COLLISION_FR
 if (time - GW_LAST_COLLISION < GW_COLLISION_FREQUENCY) exitWith { true };
 GW_LAST_COLLISION = TIME;
 
-_source = _this select 0;
-_target = _this select 1;
+params ['_source', '_target'];
+
 _collide = false;
 
 _status = _target getVariable ['status', []];
@@ -23,7 +23,7 @@ _source setDammage (getDammage _source) + ((random 0.1) + 0.01);
     "impactEffect",
     true,
     false 
-] call gw_fnc_mp; 
+] call bis_fnc_mp; 
 
 if ((_target isKindOf "Car") && !('forked' in _status || 'nofork' in _status) ) then  {
 
@@ -37,7 +37,7 @@ if ((_target isKindOf "Car") && !('forked' in _status || 'nofork' in _status) ) 
 	    "forkEffect",
 	    _target,
 	    false 
-	] call gw_fnc_mp; 
+	] call bis_fnc_mp; 
 
 	[_target, 'FRK'] call markAsKilledBy;
 
@@ -52,7 +52,7 @@ if ((_target isKindOf "Car") && !('forked' in _status || 'nofork' in _status) ) 
 	    "updateVehicleDamage",
 	    _target,
 	    false 
-	] call gw_fnc_mp; 
+	] call bis_fnc_mp; 
 
 	_collide = true;
 

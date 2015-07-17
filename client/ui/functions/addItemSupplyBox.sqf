@@ -5,9 +5,7 @@
 //
 
 private ['_box', '_item', '_class', '_contents', '_data'];
-
-_box = _this select 0;
-_item = _this select 1;
+params ['_box', '_item'];
 
 _tag = _item getVariable ['GW_Tag', ''];
 _data = [_tag, GW_LOOT_LIST] call getData;

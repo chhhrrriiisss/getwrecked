@@ -1,6 +1,5 @@
 private ['_v', '_closest'];
-
-_v = _this select 0;
+params ['_v'];
 
 // Spawn a check in case the vehicle gets too far from the pad center
 [_v, (ASLtoATL visiblePositionASL ([saveAreas, (ASLtoATL visiblePositionASL _v)] call findClosest))] spawn {

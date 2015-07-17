@@ -5,8 +5,7 @@
 //
 
 private ['_vehicle', '_status'];
-
-_vehicle = _this select 0;
+params ['_vehicle'];
 
 _status = _vehicle getVariable ["status", []];
 

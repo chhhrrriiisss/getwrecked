@@ -94,7 +94,7 @@ if (_action == 'add') exitWith {
 // 		systemChat 'No data for that vehicle.';
 // 	};
 
-// 	[[name player, _string, _data], "shareVehicle", true, true] call gw_fnc_mp; 
+// 	[[name player, _string, _data], "shareVehicle", true, true] call bis_fnc_mp; 
 
 // 	systemChat format['%1 was shared successfully.', _string];
 // };

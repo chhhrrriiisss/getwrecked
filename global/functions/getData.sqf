@@ -5,9 +5,7 @@
 //
 
 private ["_find", "_arr","_foundArr", "_data"];
-
-_find = _this select 0;
-_arr = _this select 1;
+params ['_find', '_arr'];
 
 if ((count toArray _find == 0) || count _arr == 0) exitWith { nil };
 

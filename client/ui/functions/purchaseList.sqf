@@ -75,7 +75,7 @@ if (_totalItems > 1) then {
 		'createObject',
 		false,
 		false
-	] call gw_fnc_mp;	
+	] call bis_fnc_mp;	
 };
 
 closeDialog 0;

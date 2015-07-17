@@ -83,9 +83,7 @@ setSupplyAction = {
 	// Custom move effect for supply boxes
 	_obj addAction[moveObjectFormat, {
 
-		_obj = _this select 0;
-		_unit = _this select 1;
-	
+		params ['_obj', '_unit'];	
 		[_obj, _unit] spawn moveObj;
 
 		removeAllActions _obj;	
@@ -95,9 +93,7 @@ setSupplyAction = {
 	// Open the box inventory
 	_obj addAction[openBoxFormat, {
 
-		_obj = _this select 0;
-		_unit = _this select 1;
-
+		params ['_obj', '_unit'];	
 		_isOwner = [_obj, _unit, true] call checkOwner;
 		if (!_isOwner) exitWith { systemChat 'You dont own this object' };	
 
@@ -127,8 +123,7 @@ setPaintAction = {
 
 	_obj addAction['Apply paint to vehicle', {
 
-		_o = _this select 0;
-		_unit = _this select 1;
+		params ['_o', '_unit'];	
 		_color = _o getVariable ["color", ''];
 
 		// If the colour is actually defined (which, it really should be...)
@@ -157,9 +152,7 @@ setMoveAction = {
 	
 	_obj addAction[moveObjectFormat, {
 
-		_obj = _this select 0;
-		_unit = _this select 1;
-
+		params ['_obj', '_unit'];	
 		[_obj, _unit] spawn moveObj;
 
 		removeAllActions _obj;	
@@ -184,9 +177,7 @@ setDetachAction = {
 	// Add detach action
 	_obj addAction[detachObjectFormat, 
 	{
-		_obj = _this select 0;
-		_unit = _this select 1;
-
+		params ['_obj', '_unit'];	
 		[_obj, _unit] spawn detachObj;
 
 		removeAllActions _obj;

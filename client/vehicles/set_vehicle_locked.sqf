@@ -22,7 +22,7 @@ if (!local _vehicle) exitWith {
 	    "setVehicleLocked",
 	    _vehicle,
 	    false 
-	] call gw_fnc_mp;  
+	] call bis_fnc_mp;  
 
 };
 

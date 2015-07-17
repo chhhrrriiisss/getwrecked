@@ -4,10 +4,7 @@
 //      Return: None
 //
 
-private ['_gun', '_target', '_vehicle'];
-
-_gun = _this select 0;
-_target = _this select 1;
+params ['_gun', '_target', '_vehicle'];
 
 _round = "G_40mm_HEDP";
 _soundToPlay = "a3\sounds_f\weapons\Grenades\grenade_launcher_1.wss";

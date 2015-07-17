@@ -13,10 +13,8 @@ if (isNull _obj || isNull _vehicle) exitWith { false };
 if (!alive _vehicle) exitWith { false };
 
 _this spawn {
-
-	_obj = _this select 0;
-	_vehicle = _this select 1;
-
+	
+	params ['_obj', '_vehicle'];
 	_pos = (ASLtoATL getPosASL _vehicle);
 
 	["DROPPING MINES! ", 1, warningIcon, nil, "default"] spawn createAlert;   
@@ -31,7 +29,7 @@ _this spawn {
 	// Drops a detector that causes the mine to explode 
 	dropLimpetTrigger = {
 
-		_obj = _this select 0;
+		params ['_obj'];
 		_pos = (ASLtoATL getPosASL _obj);
 		_pos set[2, 0];
 
@@ -58,7 +56,7 @@ _this spawn {
 			// Wait a quarter of a second between checks
 			Sleep 0.25;
 
-			_nearby = _pos nearEntities [["car"], 5];
+			_nearby = _pos nearEntities [["Car", "Tank"], 5];
 			_triggered = _obj getVariable ["triggered", false];
 
 			if (count _nearby > 0 || _triggered) then {
@@ -83,7 +81,7 @@ _this spawn {
 							"addVehicleStatus",
 							_x,
 							false 
-						] call gw_fnc_mp;  
+						] call bis_fnc_mp;  
 
 						deleteVehicle _obj;
 
@@ -116,8 +114,7 @@ _this spawn {
 	// Drops the actual mine at the target location
 	dropLimpetMine = {
 
-		_oPos = _this select 0;
-		_oDir = _this select 1;
+		params ['_oPos', '_oDir'];
 
 		_type = "Land_Flush_Light_red_F";
 		_oPos = [_oPos, 5, 5, 0] call setVariance;
@@ -134,7 +131,7 @@ _this spawn {
 			"setObjectSimulation",
 			false,
 			false 
-		] call gw_fnc_mp;
+		] call bis_fnc_mp;
 
 		playSound3D ["a3\sounds_f\weapons\other\sfx9.wss", GW_CURRENTVEHICLE, false, (ASLtoATL visiblePositionASL GW_CURRENTVEHICLE), 2, 1, 50];
 

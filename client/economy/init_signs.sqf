@@ -12,8 +12,7 @@ MISSION_ROOT = call {
     toString _arr
 };
 
-_obj = _this select 0;
-_company = _this select 1;
+params ['_obj', '_company'];
 
 _obj setObjectTextureGlobal [0, format["client\images\signage\%1.jpg", _company]];
 _obj setVariable ['company', _company, true];

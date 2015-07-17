@@ -5,9 +5,7 @@
 //
 
 private ['_i', '_k', '_dK'];
-
-_i = _this select 0;
-_k = _this select 1;
+params ['_i', '_k'];
 
 _k = if (typename _k == "STRING") then { (parseNumber(_k)) } else { _k };
 _dK = if (_k < 0) then { "" } else { [_k] call codeToKey };

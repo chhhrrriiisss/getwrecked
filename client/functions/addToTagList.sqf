@@ -4,9 +4,7 @@
 //      Return: Time (Last seen at)
 //
 
-private ['_v'];
-
-_v =  _this select 0;
+params ['_v'];
 
 if (isNull _v) exitWith {};
 

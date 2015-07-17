@@ -4,8 +4,7 @@
 //      Return: None
 //
 
-_unit = _this select 0;
-
+params ['_unit'];
 if (isNull _unit) exitWith {};
 
 _unit setVariable ["outofbounds", true];		

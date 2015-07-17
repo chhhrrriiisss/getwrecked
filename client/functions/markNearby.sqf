@@ -12,7 +12,7 @@ _m =  [_this,2, "", [""]] call filterParam;
 
 if (count _pos == 0) exitWith {};
 
-_nearby = _pos nearEntities [["car"], _rad];
+_nearby = _pos nearEntities [["Car", "Tank"], _rad];
 
 if (count _nearby == 0) exitWith {};
 

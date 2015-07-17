@@ -4,11 +4,7 @@
 //		Return: None
 //
 
-_t = _this select 0;
-_s = _this select 1;
-_d = _this select 2;
-_vP = _this select 3;
-
+params ['_t', '_s', '_d', '_vP'];
 _status = _t getVariable ['status', []];
 
 // Too far away from suggested attach point
@@ -35,7 +31,7 @@ _vect = [_t, _s] call getVectorDirAndUpRelative;
 	"setObjectSimulation",
 	false,
 	false 
-] call gw_fnc_mp;
+] call bis_fnc_mp;
 
 // Wait for simulation off before attaching
 _timeout = time + 1;
@@ -80,4 +76,4 @@ waitUntil{
 	"setObjectSimulation",
 	false,
 	false 
-] call gw_fnc_mp;
+] call bis_fnc_mp;

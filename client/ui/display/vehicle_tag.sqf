@@ -5,8 +5,8 @@
 //
 
 private ['_vehicle', '_hostVehicle'];
+params ['_vehicle'];
 
-_vehicle = _this select 0;
 _hostVehicle = if (_vehicle == GW_CURRENTVEHICLE) then { true } else { false };
 
 if (isNull _vehicle) exitWith {};
@@ -129,6 +129,25 @@ if ( !_visible || ('cloak' in _status) || ('nolock' in _status) || !_inScope ) t
 } else {	
 	if (!isNil "_lastSeen") then { _vehicle setVariable ['lastSeen', nil]; };
 	_alpha = _alpha + 0.05;
+};
+
+_isAI = _vehicle getVariable ['isAI', false];
+if (_visible && _isAI && GW_LMBDOWN) then {
+
+	if (isNil "GW_LAST_THREAT_TRIGGER") then {
+		GW_LAST_THREAT_TRIGGER = time - 5;
+	};
+
+	if (time - GW_LAST_THREAT_TRIGGER < 5) exitWith {};
+	GW_LAST_THREAT_TRIGGER = time;
+
+	[
+		[_vehicle, GW_CURRENTVEHICLE],
+		'fireAtTargetAI',
+		_vehicle,
+		false
+	] call bis_fnc_mp;	
+
 };
 
 if ( (_pos select 2) < 1) then { _pos set[2, 1]; };

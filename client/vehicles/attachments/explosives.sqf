@@ -10,8 +10,7 @@ if (isNull ( _this select 0) || isNull (_this select 1)) exitWith { false };
 
 [] spawn cleanDeployList;
 
-_obj = _this select 0;
-_vehicle = _this select 1;
+params ['_obj', '_vehicle'];
 
 playSound3D ["a3\sounds_f\sfx\vehicle_drag_end.wss",_vehicle, false, getPosATL _vehicle, 2, 1, 50];
 
@@ -30,7 +29,8 @@ _holder = createVehicle ["Land_PenBlack_F", _pos, [], 0, 'CAN_COLLIDE']; // So i
 _obj attachTo [_holder, [0,0,0.1]];
 
 [_obj, _holder, _vehicle] spawn { 
-	_o = _this select 0;
+
+	params ['_o'];
 
 	_timeout = time + 10;
 	waitUntil {
@@ -74,9 +74,7 @@ GW_DEPLOYLIST = GW_DEPLOYLIST + [_obj];
 
 [_obj, _timeout, _vehicle] spawn {
 	
-	_o = _this select 0;
-	_t = _this select 1;
-	_v = _this select 2;
+	params ['_o', '_t', '_v'];
 
 	_triggered = false;
 
@@ -107,13 +105,13 @@ GW_DEPLOYLIST = GW_DEPLOYLIST + [_obj];
 			"setObjectSimulation",
 			false,
 			false 
-		] call gw_fnc_mp;
+		] call bis_fnc_mp;
 
 		_bomb = createVehicle ["Bo_GBU12_LGB", _pos, [], 0, "FLY"];		
 		_bomb setVelocity [0,0,-10];
 		[_pos, 40, 15] call shockwaveEffect;		
 
-		_nearby = _pos nearEntities [["Car"], 30];	
+		_nearby = _pos nearEntities [["Car", "Tank"], 30];	
 
 		if (count _nearby > 0) then {
 			{
@@ -125,6 +123,10 @@ GW_DEPLOYLIST = GW_DEPLOYLIST + [_obj];
 
 					_modifier = [1 - (30 / ( _x distance _pos)), 0.5, 1] call limitToRange;					
 					_d = if ('nanoarmor' in _status) then { 0.05 } else { (random (0.1) + 0.5) };
+
+					_armor = _x getVariable ['GW_Armor', 1];
+					_d = [(_d / (_armor / 15)), 0, _d] call limitToRange;
+
 					_d = _d * _modifier;
 
 					if (_d > 0) then {
@@ -136,7 +138,7 @@ GW_DEPLOYLIST = GW_DEPLOYLIST + [_obj];
 							"updateVehicleDamage",
 							_x,
 							false
-						] call gw_fnc_mp; 
+						] call bis_fnc_mp; 
 
 					};
 

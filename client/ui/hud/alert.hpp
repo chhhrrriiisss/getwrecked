@@ -1,6 +1,6 @@
-#define GW_Alert_ID 520000
-#define GW_Alert_Title_ID 520001
-#define GW_Alert_Icon_ID 520002
+#define GW_Alert_ID 920000
+#define GW_Alert_Title_ID 920001
+#define GW_Alert_Icon_ID 920002
 
 #define GW_ALERT_WIDTH 0.15
 #define GW_ALERT_HEIGHT 0.035
@@ -40,7 +40,7 @@ class GW_Alert
 		class Alert_Text : GW_StructuredTextBox
 		{
 			access = 0;
-			idc = 140002;
+			idc = 940002;
 
 			colorBackground[] = 
 			{
@@ -70,7 +70,7 @@ class GW_Alert
 		class Alert_Background : GW_StructuredTextBox
 		{
 			access = 0;
-			idc = 140001;
+			idc = 940001;
 
 			colorBackground[] = 
 			{

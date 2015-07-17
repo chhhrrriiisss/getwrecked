@@ -5,9 +5,7 @@
 //      Return: Nothing
 //
 private["_params", "_functionName", "_target", "_isPersistent", "_isCall", "_varName", "_varValue", "_function"];
-
-_varName = _this select 0;
-_varValue = _this select 1;
+params ['_varName', '_varValue'];
 
 _mode = [_varValue, 0, [0]] call filterParam;
 _params = [_varValue, 1, []] call filterParam;
@@ -19,7 +17,7 @@ _isCall = [_varValue, 5, false, [false]] call filterParam;
 if (typename _target == typename[]) then {
 
     {
-        [_varName, [_mode, _params, _functionName, _x, _isPersistent, _isCall]] call gw_fnc_mpexec;
+        [_varName, [_mode, _params, _functionName, _x, _isPersistent, _isCall]] call bis_fnc_mpexec;
     }
     foreach _target;
 

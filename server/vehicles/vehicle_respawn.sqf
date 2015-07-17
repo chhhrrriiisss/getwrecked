@@ -1,7 +1,7 @@
 private ["_veh", "_abandonDelay", "_deadDelay", "_create", "_dir", "_pos", "_vehType", "_active"];
+params ['_veh', '_del'];
 
-_veh = _this select 0;
-_abandonDelay = (_this select 1) * 60;
+_abandonDelay = _del * 60;
 
 _dir = getDir _veh; 
 _pos = getPos _veh; 

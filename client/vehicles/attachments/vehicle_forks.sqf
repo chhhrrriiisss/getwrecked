@@ -5,10 +5,7 @@
 //
 
 private ["_targets", "_vehicle"];
-
-_vehicle = _this select 0;
-_target = _this select 1;
-_power = _this select 4;
+params ['_vehicle', '_target', '_nil', '_nil', '_power'];
 
 // Need a little bit of power to attempt attach
 if (_power <= 10) exitWith {};
@@ -39,7 +36,7 @@ _power = ([_power, 20, 100] call limitToRange) / 10;
 				    "forkEffect",
 				    _target,
 				    false 
-				] call gw_fnc_mp; 
+				] call bis_fnc_mp; 
 
 			};
 			false

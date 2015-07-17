@@ -1,8 +1,4 @@
-
-private ['_v', '_o'];
-
-_o = _this select 0;	
-_v = _this select 1;
+params ['_o', '_v'];
 
 if (!alive _v) exitWith {};
 
@@ -19,7 +15,7 @@ playSound3D ["a3\sounds_f\weapons\mines\electron_trigger_1.wss", _o, false, _pos
 	"magnetEffect",
 	true,
 	false
-] call gw_fnc_mp;
+] call bis_fnc_mp;
 
 [		
 	[
@@ -30,7 +26,7 @@ playSound3D ["a3\sounds_f\weapons\mines\electron_trigger_1.wss", _o, false, _pos
 	"playSoundAll",
 	true,
 	false
-] call gw_fnc_mp;
+] call bis_fnc_mp;
 
 _v spawn {
 
@@ -66,4 +62,4 @@ addCamShake[10, 1, 10];
 	"setVelocityLocal",
 	_v,
 	false 
-] call gw_fnc_mp;  
+] call bis_fnc_mp;  

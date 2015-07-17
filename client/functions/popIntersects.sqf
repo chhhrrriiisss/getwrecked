@@ -33,7 +33,7 @@ if (count _objects == 0) exitWith {};
             "addVehicleStatus",
             _x,
             false 
-    	] call gw_fnc_mp;  
+    	] call bis_fnc_mp;  
 
         // Play tyre burst sound
         [       
@@ -45,7 +45,7 @@ if (count _objects == 0) exitWith {};
             "playSoundAll",
             true,
             false
-        ] call gw_fnc_mp;   
+        ] call bis_fnc_mp;   
 
     	// Tag as killed by
     	[_x] call markAsKilledBy;

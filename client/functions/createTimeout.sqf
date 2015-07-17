@@ -4,10 +4,7 @@
 //      Return: Bool (Success)
 //
 
-private ["_type", "_reloadTime"];
-
-_type = _this select 0;
-_reloadTime = _this select 1;
+params ["_type", "_reloadTime"];
 
 if (_reloadTime == 0) exitWith { false };
 

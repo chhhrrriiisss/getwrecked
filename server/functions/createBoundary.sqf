@@ -8,7 +8,7 @@ _source = +(_this select 0);
 _step = (_this select 1);
 
 _source set[2, 0];				
-_newDestination = [_source, _step, (_this select 2)] call BIS_fnc_relPos;
+_newDestination = [_source, _step, (_this select 2)] call relPos;
 
 _isWater = (surfaceIsWater _newDestination);
 

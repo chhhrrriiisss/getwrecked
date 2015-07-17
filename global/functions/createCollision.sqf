@@ -4,13 +4,7 @@
 //      Return: None
 //
 
-private ['_v1', '_vectIn', '_v2', '_vectOut'];
-
-_v1 = _this select 0;
-_vectIn = _this select 1;
-_v2 = _this select 2;
-_vectOut = _this select 3;
-
+params ['_v1', '_vectIn', '_v2', '_vectOut'];
 
 if (_v1 == _v2) exitWith {};
 if (GW_DEBUG) then { systemchat format['%1 colliding with %2 at %3.', typeof _v1, typeof _v2, time]; };
@@ -63,5 +57,5 @@ if (local _v2) then {
 		"setVelocityLocal",
 		_v2,
 		false 
-	] call gw_fnc_mp;
+	] call bis_fnc_mp;
 };

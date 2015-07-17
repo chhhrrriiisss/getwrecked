@@ -4,10 +4,7 @@
 //      Return: None
 //	
 
-private["_vehicle", "_status"];
- 
-_vehicle = _this select 0;
-_status = _this select 1;
+params ["_vehicle", "_status"];
 
 if (isNull _vehicle) exitWith {};
 if (!alive _vehicle) exitWith {};
@@ -20,7 +17,7 @@ if (!local _vehicle) exitWith {
 		"removeVehicleStatus",
 		_vehicle,
 		false 
-	] call gw_fnc_mp; 
+	] call bis_fnc_mp; 
 };
 
 if (typename _status == "STRING") then { _status = (call compile _status); };
@@ -28,8 +25,8 @@ if (typename _status == "STRING") then { _status = (call compile _status); };
 [_vehicle, _status] spawn {	
 	
 	private ['_v', '_sL'];
+	params ['_v'];
 	
-	_v = _this select 0;
 	_sL = _v getVariable ["status",[]];	
 	if (count _sL == 0) exitWith {};
 		

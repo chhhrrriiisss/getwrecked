@@ -5,9 +5,7 @@
 //
 
 private ['_p1', '_p2', '_dx', '_dy', '_h', '_o1', '_o2'];
-
-_o1 = _this select 0;
-_o2 = _this select 1;
+params ['_o1', '_o2'];
 
 _p1 = if (typename _o1 == "OBJECT") then { (ASLtoATL getPosASL _o1); } else { _o1 };
 _p2 =  if (typename _o2 == "OBJECT") then { (ASLtoATL getPosASL _o2); } else { _o2 };

@@ -10,6 +10,8 @@
 //     Permission must be sought from the Author for its commercial use, any modification or use of a non-public release obtained via the mission cache
 //     
 
+//TEST
+
 X_Server = false;
 X_Client = false;
 X_JIP = false;
@@ -33,7 +35,7 @@ MISSION_ROOT = call {
 call compile preprocessFile "global\compile.sqf";
 [] execVM "briefing.sqf";
 
-hint "v0.8.2 RLS";
+hint "v0.8.2c RC7";
 
 99999 cutText [localize "str_gw_loading", "BLACK", 0.01]; 
 

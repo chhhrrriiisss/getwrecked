@@ -42,12 +42,13 @@ _textureArray = [_file];
 			if (!isNil "_x") then {
 
 				// Use the array information to print a texture for each selection
-				_texture = switch (_x) do {
-					case "": { _baseClass };
-					case "default":{ _tx };
-					default	{_x	};
-				};
+				// _texture = switch (_x) do {
+				// 	case "": { _baseClass };
+				// 	case "default":{ _tx };
+				// 	default	{_x	};
+				// };
 
+				_texture = _tx;
 				_textureArray set [count _textureArray, format['client\images\vehicle_textures\%1\%2.jpg', toLower(_tx), toLower(_texture)] ];
 			};
 

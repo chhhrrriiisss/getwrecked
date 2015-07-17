@@ -51,9 +51,8 @@ if (_alt <= 4) exitWith { ['TOO LOW!', 0.25, warningIcon, colorRed, "flash"] spa
 
 	[(_this select 1), GW_CHUTE] spawn {
 
-		_veh = _this select 0;
-		_chute = _this select 1;
-
+		params ['_veh', '_chute'];
+		
 		GW_CHUTE_ACTIVE = true;
 
 		_pos = (ASLtoATL visiblePositionASL _veh);

@@ -4,18 +4,14 @@
 //      Return: None
 //
 
-private ["_obj", "_vehicle"];
-
-_obj = _this select 0;
-_vehicle = _this select 1;
+params ["_obj", "_vehicle"];
 
 if (isNull _obj || isNull _vehicle) exitWith { false };
 if (!alive _vehicle) exitWith { false };
 
 _this spawn {
-
-	_obj = _this select 0;
-	_vehicle = _this select 1;
+	
+	params ['_obj', '_vehicle'];
 
 	_pos = (ASLtoATL getPosASL _vehicle);
 
@@ -31,7 +27,7 @@ _this spawn {
 	// Drops a detector that causes the mine to explode 
 	dropTrigger = {
 
-		_obj = _this select 0;
+		params ['_obj'];
 		_pos = (ASLtoATL getPosASL _obj);
 		_pos set[2, 0];
 
@@ -58,7 +54,7 @@ _this spawn {
 			// Wait a quarter of a second between checks
 			Sleep 0.25;
 
-			_nearby = _pos nearEntities [["car"], 5];
+			_nearby = _pos nearEntities [["Car", "Tank"], 5];
 			_triggered = _obj getVariable ["triggered", false];
 
 			if (count _nearby > 0 || _triggered) then {
@@ -76,9 +72,12 @@ _this spawn {
 
 						playSound3D ["a3\sounds_f\weapons\mines\electron_trigger_1.wss", _obj, false, getPos _obj, 5, 1, 50]; 
 
-						_tPos =  (ASLtoATL getPosASL _x);
+						_tPos =  (ASLtoATL visiblePositionASL _x);
 						_tPos set[2, 0];
 						_d = if ('nanoarmor' in _status) then { 0.05 } else { (0.2 + random 0.1) };
+
+						_armor = _x getVariable ['GW_Armor', 1];
+						_d = [(_d / (_armor / 8)), 0, _d] call limitToRange;
 
 						_x setDamage ((getDammage _x) + _d);
 						
@@ -119,8 +118,7 @@ _this spawn {
 	// Drops the actual mine at the target location
 	dropMine = {
 
-		_oPos = _this select 0;
-		_oDir = _this select 1;
+		params ['_oPos', '_oDir'];
 
 		_type = "Land_FoodContainer_01_F";
 		_oPos = [_oPos, 5, 5, 0] call setVariance;
@@ -138,7 +136,7 @@ _this spawn {
 			"setObjectSimulation",
 			false,
 			false 
-		] call gw_fnc_mp;
+		] call bis_fnc_mp;
 
 		playSound3D ["a3\sounds_f\weapons\other\sfx9.wss", GW_CURRENTVEHICLE, false, (ASLtoATL visiblePositionASL GW_CURRENTVEHICLE), 6, 1, 50];
 

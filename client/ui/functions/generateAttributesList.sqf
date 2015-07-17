@@ -5,8 +5,7 @@
 //
 
 private ['_display', '_control', '_v', '_vehicleStats', '_dist'];
-
-_target = _this select 0;
+params ['_target'];
 
 disableSerialization;
 _statsList = ((findDisplay 96000) displayCtrl 96002);

@@ -4,10 +4,10 @@
 //      Return: None
 //
 
-private ['_source', '_destination', '_ignore', '_chance', '_minDuration'];
+private ['_ignore', '_chance', '_minDuration'];
 
-_source = _this select 0;
-_destination = _this select 1;
+params ['_source', '_destination'];
+
 _ignore = [_this,2, objNull, [objNull]] call filterParam;	
 _chance = [_this,3, 15, [0]] call filterParam; // Chance of setting something alight default 15%
 _minDuration = [_this,4, 3, [0]] call filterParam; // Duration

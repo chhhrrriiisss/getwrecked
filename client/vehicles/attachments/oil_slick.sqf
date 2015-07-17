@@ -16,7 +16,7 @@ if (isNull _obj || isNull _vehicle) exitWith {};
 createOilDetector = {
 	 
 	_timeout = time + 60;
-	_v = _this select 0;
+	params ['_v'];
 	GW_OIL_DETECTOR = true;
 
 	while {alive _v && alive player && (count GW_OIL_ARRAY > 0) && time < _timeout} do {
@@ -81,9 +81,8 @@ createOilDetector = {
 };
 
 dropOil = {
-
-	_oPos = _this select 0;
-	_oDir = _this select 1;
+	
+	params ['_oPos', '_oDir'];
 
 	_oPos = [_oPos, 1.6, 1.6, 0] call setVariance;
 	_oPos set[2, 0];
@@ -133,11 +132,8 @@ if (!isNil "GW_OIL_ARRAY") then {
 _cost = (['OIL'] call getTagData) select 1;
 
 [_vehicle, player, _fuel, _cost] spawn {
-
-	_v = _this select 0;
-	_u = _this select 1;
-	_f = _this select 2;
-	_c = _this select 3;
+	
+	params ['_v', '_u', '_f', '_c'];
 
 	while {alive _v && alive _u && _f > 0.01 && !isNil "GW_OIL_ACTIVE"} do {
 

@@ -10,7 +10,8 @@ disableSerialization;
 
 if (GW_WAITLOAD) exitWith {};
 
-_argument = _this select 0;
+params ['_argument'];
+
 _newPreview = _argument;
 _type = typename _argument;
 

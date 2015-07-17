@@ -5,8 +5,8 @@
 //
 
 waitUntil{!isNil { clientCompileComplete } };
+params ['_unit'];
 
-_unit = _this select 0;
 if (!local _unit) exitWith {};
 if (!isNil { _unit getVariable 'localInit'} ) exitWith {};
 _unit setVariable['localInit', true];
@@ -51,7 +51,8 @@ if (!isNil "GW_DC_EH") then {
 GW_DC_EH = addMissionEventHandler ["HandleDisconnect",{
 
 	// Remove ownership from any vehicles in workshop
-	_n = name (_this select 0);
+	_p = (_this select 0);
+	_n = name _p;
 	_o = nearestObjects [getmarkerpos "workshopZone_camera", [], 200];
 
 	pubVar_logDiag = format['%1 disconnected.', _n];
@@ -79,12 +80,10 @@ GW_DC_EH = addMissionEventHandler ["HandleDisconnect",{
 	} count _o > 0;
 
 	// Remove old event handlers
-	(_this select 0) removeEventHandler['killed', 0];
-	(_this select 0) removeEventHandler['handleDamage', 0];
-	(_this select 0) removeEventHandler['respawn', 0];
+	{ _p removeAllEventHandlers _x;	} foreach ['killed', 'handleDamage', 'respawn'];
 
 	// Kill the unit
-	(_this select 0) setDammage 1;
+	_p setDammage 1;
 
 }];
 

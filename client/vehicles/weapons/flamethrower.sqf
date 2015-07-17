@@ -4,11 +4,7 @@
 //      Return: None
 //
 
-private ["_obj"];
-
-_obj = _this select 0;
-_target = _this select 1;
-_vehicle = _this select 2;
+params ['_obj', '_target', '_vehicle'];
 
 _repeats = 3;
 _projectileSpeed = 60;
@@ -47,7 +43,7 @@ _velocity = [_heading, _projectileSpeed] call BIS_fnc_vectorMultiply;
 	"playSoundAll",
 	true,
 	false
-] call gw_fnc_mp;	  
+] call bis_fnc_mp;	  
 
 _src = createVehicle ["Land_PenBlack_F", _oPos, [], 0, "CAN_COLLIDE"];
 [_src, 1.5] spawn flameEffect;
@@ -60,13 +56,13 @@ _src = createVehicle ["Land_PenBlack_F", _oPos, [], 0, "CAN_COLLIDE"];
 	"flameEffect",
 	false,
 	false
-] call gw_fnc_mp;
+] call bis_fnc_mp;
 
 _src setVectorDir _heading; 
 _src setVelocity _velocity;
 
 _vehiclePos = (ASLtoATL getPosASL _vehicle);
-_nearby = _vehiclePos nearEntities [["Car"], 50];
+_nearby = _vehiclePos nearEntities [["Car", "Tank"], 50];
 
 if (count _nearby < 0) exitWith {};
 
@@ -113,9 +109,7 @@ _src spawn {
 [_src, _lifeTime] spawn { 
 
 	Sleep 3;
-
-	_o = _this select 0;
-	_l = _this select 1;
+	params ['_o', '_l'];
 
 	_timeout = time + _l;
 	waitUntil{

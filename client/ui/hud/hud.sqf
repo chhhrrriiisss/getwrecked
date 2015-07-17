@@ -67,7 +67,7 @@ _vHudHealth = (_vHud displayCtrl 12013);
 _vHudStatus = (_vHud displayCtrl 12014);
 _vHudNotification = (_vHud displayCtrl 12017);
 _vHudMoney = (_vHud displayCtrl 12016);
-_vHudHorn = (_vHud displayCtrl 12018);
+
 
 _hudStatusBox = [
 	(_hud displayCtrl 11000),
@@ -92,7 +92,7 @@ _count = (count _vHudBars -1);
 
 _moduleList = [];
 
-[[_vHudIcon, _vHudFuel, _vHudAmmo, _vHudHealth, _vHudMoney, _vHudNotification, _vHudHorn], [['fade', 0, 1, 0]], "quad"] spawn createTween;
+[[_vHudIcon, _vHudFuel, _vHudAmmo, _vHudHealth, _vHudMoney, _vHudNotification], [['fade', 0, 1, 0]], "quad"] spawn createTween;
 [[_hudStripesTopLeft, _hudStripesBottomRight], [['fade', 1, 0, 1.2]], "quad"] spawn createTween;
 
 // Starting conditions and loop config
@@ -179,7 +179,7 @@ for "_i" from 0 to 1 step 0 do {
 			[[_hudMoney, _hudTransaction], [['fade', 0, 1, 0]], "quad"] spawn createTween;
 
 			// Fade in Vehicle HUD 
-			[[_vHudIcon, _vHudFuel, _vHudAmmo, _vHudHealth, _vHudMoney, _vHudNotification, _vHudHorn], [['fade', 1, 0, 0.1]], "quad"] spawn createTween;
+			[[_vHudIcon, _vHudFuel, _vHudAmmo, _vHudHealth, _vHudMoney, _vHudNotification], [['fade', 1, 0, 0.1]], "quad"] spawn createTween;
 			_vHudIcon ctrlSetStructuredText parseText ( format["<img size='2.4' align='center' valign='top' image='%1' />", [typeOf _vehicle] call getVehiclePicture] );
 			_vHudIcon ctrlCommit 0;
 				
@@ -213,7 +213,7 @@ for "_i" from 0 to 1 step 0 do {
 				false
 			} count _moduleList > 0;		
 
-			[[_vHudIcon, _vHudFuel, _vHudAmmo, _vHudHealth, _vHudMoney, _vHudNotification, _vHudHorn], [['fade', 0, 1, 0]], "quad"] spawn createTween;
+			[[_vHudIcon, _vHudFuel, _vHudAmmo, _vHudHealth, _vHudMoney, _vHudNotification], [['fade', 0, 1, 0]], "quad"] spawn createTween;
 
 			_moduleList = [];
 
@@ -271,13 +271,10 @@ for "_i" from 0 to 1 step 0 do {
 		_vHudMoney ctrlSetStructuredText parseText ( (format["<t size='1' color='%1' align='center'>$%2</t>", _balanceColour, ([_balance] call numberToCurrency)]) );
 
 		_hornActive = if ("horn" in _status) then { true } else { false  };
-		_hornText = if (_hornActive) then { (format["<img size='1.15' align='center' valign='top' shadow='0' image='%1' color='#ffffff' /> ", hornIcon])  } else { '' };
-		_vHudHorn ctrlSetStructuredText parseText ( _hornText );
 
 		_vHudFuel ctrlCommit 0;
 		_vHudAmmo ctrlCommit 0;	
 		_vHudMoney ctrlCommit 0;	
-		_vHudHorn ctrlCommit 0;
 		
 		// Hud Status & Visual Effects			
         if (count _status == 0 && _lastStatusCount > 0) then {

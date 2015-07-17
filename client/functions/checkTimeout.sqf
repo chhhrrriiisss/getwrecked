@@ -6,8 +6,7 @@
 
 private ["_type", "_currentTime", "_state", '_timeLeft', "_count"];
 
-_type = _this select 0;
-_currentTime = _this select 1;
+params ['_type', '_currentTime'];
 
 _state = [0, false, 0];
 

@@ -5,7 +5,7 @@ GW_COMMANDS_LIST = [
 		"changebalance",
 		{
 
-			_argument = _this select 0;
+			params ['_argument'];
 
 			if ( !(serverCommandAvailable "#kick") ) exitWith {
 				systemChat 'You need to be an admin to use that.';
@@ -36,7 +36,7 @@ GW_COMMANDS_LIST = [
 							"changeBalance",
 							_target,
 							false
-						] call gw_fnc_mp;	 
+						] call bis_fnc_mp;	 
 
 					};
 
@@ -52,7 +52,7 @@ GW_COMMANDS_LIST = [
 		"supply",
 		{
 
-			_argument = _this select 0;	
+			params ['_argument'];	
 
 			if ( !(serverCommandAvailable "#kick") ) exitWith {
 				systemChat 'You need to be an admin to use that.';
@@ -65,7 +65,7 @@ GW_COMMANDS_LIST = [
 				'createSupplyDrop',
 				false,
 				false
-			] call gw_fnc_mp;	
+			] call bis_fnc_mp;	
 
 			systemChat 'Supply drop inbound.';	
 					
@@ -77,7 +77,7 @@ GW_COMMANDS_LIST = [
 		"reset",
 		{
 
-			_argument = _this select 0;			
+			params ['_argument'];			
 
 			_argument = if (isNil "_argument" || _argument == '' || _argument == ' ') then { 'all' } else { _argument };
 			_argument = toUpper(_argument);
@@ -129,7 +129,7 @@ GW_COMMANDS_LIST = [
 		"sendmoney",
 		{
 
-			_argument = _this select 0;
+			params ['_argument'];
 
 			if (isNil "_argument" || _argument == '' || _argument == ' ') exitWith {				
 				systemChat 'Please enter target name.';				
@@ -158,7 +158,7 @@ GW_COMMANDS_LIST = [
 								"changeBalance",
 								(_this select 0),
 								false
-							] call gw_fnc_mp;	 
+							] call bis_fnc_mp;	 
 
 							_string = format['%1 received $%2 from %3.', toUpper(_this select 1), ([_amount] call numberToCurrency), name player];
 							systemChat _string;	
@@ -234,7 +234,7 @@ GW_COMMANDS_LIST = [
 		"list",
 		{
 
-			_argument = _this select 0;
+			params ['_argument'];
 
 			if (isNil "_argument" || _argument == '' || _argument == ' ') exitWith {
 				[] spawn listVehicles;					
@@ -282,7 +282,7 @@ GW_COMMANDS_LIST = [
 				systemchat 'No shared vehicles available';
 			};
 
-			_argument = _this select 0;
+			params ['_argument'];
 
 			_len = count toArray(_argument);
 			_target = nil;
@@ -311,7 +311,7 @@ GW_COMMANDS_LIST = [
 		"copy",
 		{
 
-			_argument = _this select 0;
+			params ['_argument'];
 
 			if ( !(serverCommandAvailable "#kick") ) exitWith {
 				systemChat 'You need to be an admin to use that.';
@@ -327,7 +327,7 @@ GW_COMMANDS_LIST = [
 				'shareVehicle',
 				true,
 				false
-			] call gw_fnc_mp;	
+			] call bis_fnc_mp;	
 
 		}
 	],
@@ -337,7 +337,7 @@ GW_COMMANDS_LIST = [
 		"load",
 		{
 
-			_argument = _this select 0;
+			params ['_argument'];
 
 			if ( !(serverCommandAvailable "#kick") ) exitWith {
 				systemChat 'You need to be an admin to use that.';
@@ -352,17 +352,79 @@ GW_COMMANDS_LIST = [
 				_argument = GW_LASTLOAD; 
 			};
 
-			[GW_CURRENTVEHICLE modelToWorldVisual [0, 30, 0], _argument] spawn requestVehicle;
+			[GW_CURRENTVEHICLE modelToWorldVisual [0, 30, 0], _this] spawn requestVehicle;
+
 		}
 	],
 
+	[
+		
+		"loadai",
+		{
+
+			params ['_argument'];
+
+			if ( !(serverCommandAvailable "#kick") ) exitWith {
+				systemChat 'You need to be an admin to use that.';
+			};
+
+			_len = count toArray(_argument);
+			if (_len == 0 && isNil "GW_LASTLOAD") exitWith {
+				systemchat 'Please specify vehicle to load.';
+			};
+
+			[		
+				[
+					(GW_CURRENTVEHICLE modelToWorldVisual [0, 200, 0]),
+					_argument,
+					1
+				],
+				"createAI",
+				false,
+				false
+			] call bis_fnc_mp;
+
+			// [(GW_CURRENTVEHICLE modelToWorldVisual [0, 200, 0]), _argument, 1] execVM 'server\ai\createAI.sqf';
+			
+		}
+	],
+
+	[
+		
+		"clearai",
+		{
+
+			params ['_argument'];
+
+			if ( !(serverCommandAvailable "#kick") ) exitWith {
+				systemChat 'You need to be an admin to use that.';
+			};
+
+			[
+				[
+					[],
+					{
+						{
+							_x setdammage 1;
+						} foreach GW_AI_ACTIVE;
+					}
+				], 
+				"BIS_fnc_spawn",
+				false,
+				false
+			] call bis_fnc_mp;
+
+			// [(GW_CURRENTVEHICLE modelToWorldVisual [0, 200, 0]), _argument, 1] execVM 'server\ai\createAI.sqf';
+			
+		}
+	],
 
 	[
 		
 		"spawn",
 		{
 
-			_argument = _this select 0;
+			params ['_argument'];
 
 			if ( !(serverCommandAvailable "#kick") ) exitWith {
 				systemChat 'You need to be an admin to use that.';
@@ -404,10 +466,20 @@ GW_COMMANDS_LIST = [
 				"executeCleanUp",
 				false,
 				false
-			] call gw_fnc_mp;
+			] call bis_fnc_mp;
 		}
 	],
 
+	[
+		
+		"race",
+		{
+
+			if ( !(serverCommandAvailable "#kick") ) exitWith { systemChat 'You need to be an admin to use that.'; };	
+
+			[] execVM 'client\functions\generateRace.sqf';
+		}
+	],
 
 	[
 		
@@ -440,7 +512,7 @@ GW_COMMANDS_LIST = [
 		
 		"tp",
 		{
-			_argument = _this select 0;
+			params ['_argument'];
 
 			if ( !(serverCommandAvailable "#kick") ) exitWith { systemChat 'You need to be an admin to use that.'; };	
 
@@ -458,7 +530,7 @@ GW_COMMANDS_LIST = [
 		
 		"grab",
 		{
-			_argument = _this select 0;
+			params ['_argument'];
 
 			if ( !(serverCommandAvailable "#kick") ) exitWith { systemChat 'You need to be an admin to use that.'; };	
 
@@ -476,7 +548,7 @@ GW_COMMANDS_LIST = [
 		
 		"kill",
 		{
-			_argument = _this select 0;
+			params ['_argument'];
 
 			if ( !(serverCommandAvailable "#kick") ) exitWith { systemChat 'You need to be an admin to use that.'; };
 
@@ -497,7 +569,7 @@ GW_COMMANDS_LIST = [
 		
 		"fixdlc",
 		{
-			_argument = _this select 0;
+			params ['_argument'];
 
 			_fixdlc = profileNamespace getVariable ['GW_FIXDLC', false];
 

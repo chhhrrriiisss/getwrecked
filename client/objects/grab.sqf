@@ -22,7 +22,7 @@ if (!local _obj) then {
 		'setObjectOwner',
 		false,
 		false
-	] call gw_fnc_mp;	
+	] call bis_fnc_mp;	
 
 	_timeout = time + 2;
 	waitUntil {(local _obj || time > _timeout)};
@@ -90,14 +90,47 @@ for "_i" from 0 to 1 step 0 do {
 	_obj attachTo [_unit, GW_EDITING_TARGET];	
 	[_obj, _relDir] call setDirTo;
 
-	// Snap object direction to that of vehicle
-	_snapping = _unit getVariable ['snapping', false];	
-	if (_snapping) then {
+	// Snapping options
+	_snapping = false;
+	if (true) then {
 
 		_targetVehicle = ([_unit, 12, 180] call validNearby);
 		if (isNil "_targetVehicle") exitWith {};
 
-		// All angles available
+		// 
+		//  Height snapping		
+		//
+
+		_class = typeOf _obj;
+		_objPos = (_obj modelToWorldVisual [0,0,0]);	
+		_objHeight = _objPos select 2;	
+
+		_validHeights = [];
+		{
+			if (typeOf _x == _class) then { 
+				_height = (_x modelToWorldVisual [0,0,0]) select 2;
+				if ((_validHeights find _height) >= 0) exitWith {};
+				_validHeights pushBack ([_height, 2] call roundTo); 
+			};
+			false
+		} count (attachedObjects _targetVehicle) > 0; 
+
+		_tolerance = 0.2;
+		{
+			if (abs (_x - _objHeight) < _tolerance) exitWith {
+				GW_EDITING_TARGET set [2, _x];
+				_obj attachTo [_unit, GW_EDITING_TARGET];	
+			};
+			false
+		} count _validHeights > 0;	
+
+		_snapping = _unit getVariable ['snapping', false];	
+		if (!_snapping) exitWith {};
+
+		// 
+		//  Angle snapping
+		//
+
 		_frontDir = (getDir _targetVehicle);
 		_sideDir = [(_frontDir + 90)] call normalizeAngle;
 		_forwardCornerDir = [(_frontDir + 45)] call normalizeAngle;

@@ -1,29 +1,35 @@
-/*
+//
+//      Name: handleExplosion
+//      Return: None
+//
 
-    Handler for Vehicle Explosion Damage
+params ["_vehicle"];
 
-*/
+[_vehicle] spawn checkTyres; 
 
-private ["_veh"];
-
-_veh = _this select 0;
-
-[_veh] spawn checkTyres; 
-
-_status = _veh getVariable ["status", []];
+_status = _vehicle getVariable ["status", []];
 
 if ('cloak' in _status) then {
 
 	[       
 		[
-			_veh,
+			_vehicle,
 			"['cloak']"
 		],
 		"removeVehicleStatus",
-		_veh,
+		_vehicle,
 		false 
-	] call gw_fnc_mp;  
+	] call bis_fnc_mp;  
 
 };	
+
+// Deal sporadic damage to attached items
+{
+    if !(_x call isWeapon || _x call isModule) then {
+        _curHealth = _x getVariable ['GW_Health', 0];
+        _x setVariable['GW_Health', ([(_curHealth - (random 2)), 0, 100] call limitToRange), true];
+    };
+    false
+} count (attachedObjects _vehicle);
 
 false

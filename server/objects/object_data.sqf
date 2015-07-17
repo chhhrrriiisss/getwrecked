@@ -5,9 +5,8 @@
 
 if (!isServer) exitWith {};
 
-private["_obj"];
+params["_obj"];
 
-_obj = _this select 0;
 _type = typeOf _obj;
 _subType = _obj getVariable ["type", ''];
 _isHolder = if (_type == "GroundWeaponHolder" && _subType in GW_HOLDERARRAY) then { true } else { false };

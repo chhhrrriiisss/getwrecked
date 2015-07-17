@@ -5,8 +5,8 @@
 //
 
 private['_target', '_nearby'];
+params ['_target'];
 
-_target = _this select 0;
 _notify = [_this,1, true, [false]] call filterParam; 
 _targetPos = [0,0,0];
 
@@ -41,7 +41,7 @@ _nearbyPlayers = [];
         case (isPlayer _y && (_y distance _targetPos <= 5)): { _nearbyPlayers pushBack _y; };
         case (_type in GW_UNCLEARABLE_ITEMS): { };
         case (_type in GW_PROTECTED_ITEMS): {
-            _relPos = [_targetPos, 10, (random 360)] call BIS_fnc_relPos;
+            _relPos = [_targetPos, 10, (random 360)] call relPos;
             _y setPos _relPos;
             player customChat [GW_WARNING_CHANNEL, 'A supply box was moved as it was on the pad.'];  
         };
@@ -62,7 +62,7 @@ if (count _nearbyPlayers == 0) exitWith { true };
 if (!_itemsDeleted) exitWith { true };
     
 {
-    _newPos = [_targetPos, 10, (random 360)] call BIS_fnc_relPos;
+    _newPos = [_targetPos, 10, (random 360)] call relPos;
     _newDir = [_newPos, _targetPos] call dirTo;
     _x setPos _newPos;
     [_x, _newDir] call setDirTo;

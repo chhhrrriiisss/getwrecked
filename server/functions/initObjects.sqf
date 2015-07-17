@@ -17,8 +17,7 @@ if (!isServer) exitWith {};
 findLoot = {
 
 	private ['_value', '_loot', '_lootValue', '_class'];
-
-	_value = _this select 0;
+	params ['_value'];
 
 	_rnd = round ( random (count GW_LOOT_LIST - 1) );
 	_loot = (GW_LOOT_LIST select _rnd);
@@ -41,9 +40,7 @@ findLoot = {
 // Generate loot in random positions
 populateLoot = {
 
-	private ['_pos'];
-
-	_pos = _this select 0;
+	params ['_pos'];
 
 	_rndAmount = (random 15) + 15;
 

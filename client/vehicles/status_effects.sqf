@@ -7,9 +7,9 @@
 private ['_loop', '_statusEffect', '_commandToLoop', '_targetVehicle', '_vehicleStatus', '_inVehicle'];
 
 _loop = true;
-_statusEffect = _this select 0;
-_maxTimeout = _this select 1;
-_targetVehicle = _this select 2;
+
+params ['_statusEffect', '_maxTimeout', '_targetVehicle'];
+
 _vehicleStatus = _targetVehicle getVariable ['status', []];
 _inVehicle = player in _targetVehicle;
 
@@ -49,8 +49,8 @@ if ("emp" == _statusEffect || "harpoon" == _statusEffect) then {
 };
 
 if ("locked" == _statusEffect) then {
-	_condition = { ("locked" in _vehicleStatus) };
-	[_this, 9999, 'client\images\lock_halo.paa', _condition, false] spawn createHalo;
+	_condition = { ("locked" in GW_VEHICLE_STATUS) };
+	[_targetVehicle, 9999, 'client\images\lock_halo.paa', _condition, false] spawn createHalo;
 	playSound "beep_warning";
 };
 
@@ -103,7 +103,7 @@ _commandToLoop = switch (true) do {
 					-1
 				],
 				"smokeEffect"
-			] call gw_fnc_mp;    
+			] call bis_fnc_mp;    
 
 		};
 

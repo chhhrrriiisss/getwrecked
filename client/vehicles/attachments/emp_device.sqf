@@ -12,7 +12,7 @@ _vehicle = [_this,1, objNull, [objNull]] call filterParam;
 if (isNull _obj || isNull _vehicle) exitWith {};
 
 _pos = (ASLtoATL getPosASL _vehicle);
-_vehs = _pos nearEntities [["car"], 40];
+_vehs = _pos nearEntities [["Car", "Tank"], 40];
 
 [
 	[
@@ -20,7 +20,7 @@ _vehs = _pos nearEntities [["car"], 40];
 		0.7
 	],
 	"empCircle"
-] call gw_fnc_mp;
+] call bis_fnc_mp;
 
 playSound3D ["a3\sounds_f\sfx\special_sfx\sparkles_wreck_3.wss", _obj, false, _pos, 2, 1, 100];	
 
@@ -46,7 +46,7 @@ playSound3D ["a3\sounds_f\sfx\special_sfx\sparkles_wreck_3.wss", _obj, false, _p
                 "addVehicleStatus",
                 _x,
                 false 
-        	] call gw_fnc_mp;  
+        	] call bis_fnc_mp;  
 
 		};
 
@@ -67,7 +67,7 @@ playSound3D ["a3\sounds_f\sfx\special_sfx\sparkles_wreck_3.wss", _obj, false, _p
 				"removeVehicleStatus",
 				_x,
 				false 
-			] call gw_fnc_mp;  
+			] call bis_fnc_mp;  
 
 		};	
 
@@ -77,11 +77,17 @@ playSound3D ["a3\sounds_f\sfx\special_sfx\sparkles_wreck_3.wss", _obj, false, _p
 	
 } count _vehs > 0;
 
-// Small static effect for epicness
-_layerStatic = ("BIS_layerStatic" call BIS_fnc_rscLayer);
-_layerStatic cutRsc ["RscStatic", "PLAIN" , 2];
 
-["EMP ACTIVATED ", 1, empIcon, colorWhite, "warning"] spawn createAlert; 
+
+_isAI = _vehicle getVariable ['isAI', false];
+if (!_isAI) then { 
+
+	// Small static effect for epicness
+	_layerStatic = ("BIS_layerStatic" call BIS_fnc_rscLayer);
+	_layerStatic cutRsc ["RscStatic", "PLAIN" , 2];
+
+	["EMP ACTIVATED ", 1, empIcon, colorWhite, "warning"] spawn createAlert; 
+};
 
 true
 

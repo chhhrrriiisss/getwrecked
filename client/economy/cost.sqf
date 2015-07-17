@@ -32,7 +32,7 @@ if (_sponsor == _company && _sponsor != "" && _company != "") then { _discount =
 	} count _arr > 0;
 	false
 } count [	
-	["slytech", GW_LOOT_BUILDING],
+	["tyraid", GW_LOOT_BUILDING],
 	["terminal", GW_LOOT_WEAPONS],
 	["gastrol", GW_LOOT_PERFORMANCE],
 	["cognition", GW_LOOT_DEPLOYABLES],

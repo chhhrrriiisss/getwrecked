@@ -16,9 +16,13 @@ if (!alive _vehicle) exitWith { GW_WAITCOMPILE = false; };
 	
 _attachedObjects = attachedObjects _vehicle;
 
-_vehicle lock true;
-_vehicle lockDriver true;
-_vehicle lockCargo true;
+_isAi = _vehicle getVariable ['isAI', false];
+
+if (!_isAi) then {
+	_vehicle lock true;
+	_vehicle lockDriver true;
+	_vehicle lockCargo true;
+};
 
 // Gather any previous values on the vehicle
 _prevAmmo = _vehicle getVariable ["ammo", nil];
@@ -26,7 +30,7 @@ _prevFuel = (fuel _vehicle) + (_vehicle getVariable ["fuel", 0]);
 [_vehicle] call setDefaultData;
 
 // Check for max limits or old items and prune
-if (GW_CURRENTZONE == "workshopZone") then { _vehicle call cleanAttached; };
+if (GW_CURRENTZONE == "workshopZone" || isServer) then { _vehicle call cleanAttached; };
 
 _attachedValue = 0;
 _maxMass = _vehicle getVariable ['maxMass', 99999];
@@ -119,7 +123,9 @@ _combinedMass = 0;
 } count _attachedObjects > 0;
 
 // Apply combined mass to vehicle
-_vehicle setMass ([_combinedMass, _defaultMass, _maxMass] call limitToRange);
+_isAi = _vehicle getVariable ['isAI', false];
+_newMass = if (!_isAi) then { ([_combinedMass, _defaultMass, _maxMass] call limitToRange) } else { _defaultMass };
+_vehicle setMass _newMass;
 
 // Calculate and set vehicle value
 _vehicleValue = [(typeOf _vehicle), "", ""] call getCost;
@@ -130,7 +136,7 @@ _vehicle setVariable ["GW_Value", _totalValue];
 [_vehicle] call setVehicleActions;
 
 // Automatically max out fuel/ammo if we're in the workshop
-if (GW_CURRENTZONE == "workshopZone") then {
+if (GW_CURRENTZONE == "workshopZone" || isServer) then {
 
 	_maxAmmo = _vehicle getVariable ["maxAmmo", 1];
 	_vehicle setVariable ["ammo", _maxAmmo];
@@ -163,7 +169,7 @@ if (GW_CURRENTZONE == "workshopZone") then {
 	};
 };
 
-if (GW_CURRENTZONE != "workshopZone") then {
+if (GW_CURRENTZONE != "workshopZone" && !isServer) then {
 	_vehicle lockDriver false;
 	_vehicle lock false;
 };

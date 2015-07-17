@@ -4,11 +4,7 @@
 //      Return: None
 //
 
-private ['_gun', '_target', '_vehicle'];
-
-_gun = _this select 0;
-_target = _this select 1;
-_vehicle = _this select 2;
+params ['_gun', '_target', '_vehicle'];
 
 _repeats = 1;
 _round = "R_PG32V_F";

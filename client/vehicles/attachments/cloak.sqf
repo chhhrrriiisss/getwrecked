@@ -52,7 +52,7 @@ playSound3D ["a3\sounds_f\sfx\special_sfx\sparkles_wreck_3.wss", _vehicle, false
     "setVisibleAttached",
     false,
     false 
-] call gw_fnc_mp;  
+] call bis_fnc_mp;  
 
 player action ["engineoff", _vehicle];
 
@@ -64,12 +64,8 @@ waitUntil{
 };
 
 [_vehicle, _vehAmmo, _cost, _size, _pos] spawn {
-
-	_v = _this select 0;
-	_vA= _this select 1;
-	_c = _this select 2;
-	_s = _this select 3;
-	_p = _this select 4;
+	
+	params ['_v', '_vA', '_c', '_s', '_p'];
 
 	_prevFuel = fuel _v;
 	_v setFuel 0;
@@ -91,10 +87,10 @@ waitUntil{
 			"cloakEffect",
 			true,
 			false
-		] call gw_fnc_mp;
+		] call bis_fnc_mp;
 
 		_pos = (ASLtoATL visiblePositionASL (_this select 0));
-		_nearby = _pos nearEntities [["car"], 10];
+		_nearby = _pos nearEntities [["Car", "Tank"], 10];
 
 		_found = false;
 
@@ -126,7 +122,7 @@ waitUntil{
 	    "setVisibleAttached",
 	    false,
 	    false 
-	] call gw_fnc_mp;  
+	] call bis_fnc_mp;  
 
 	[       
 	    [
@@ -137,7 +133,7 @@ waitUntil{
 	    "addVehicleStatus",
 	    _v,
 	    false 
-	] call gw_fnc_mp;  
+	] call bis_fnc_mp;  
 
 	_layerStatic = ("BIS_layerStatic" call BIS_fnc_rscLayer);
 	_layerStatic cutRsc ["RscStatic", "PLAIN" , 2];
@@ -150,7 +146,7 @@ waitUntil{
 		"removeVehicleStatus",
 		_v,
 		false 
-	] call gw_fnc_mp;  
+	] call bis_fnc_mp;  
 
 
 	[       
@@ -162,7 +158,7 @@ waitUntil{
 		"magnetEffect",
 		true,
 		false 
-	] call gw_fnc_mp;  
+	] call bis_fnc_mp;  
 
 	playSound3D ["a3\sounds_f\sfx\special_sfx\sparkles_wreck_1.wss", _v, false, _p, 2, 1, 150];	
 	

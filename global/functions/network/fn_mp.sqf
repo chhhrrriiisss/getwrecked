@@ -15,12 +15,11 @@ with missionnamespace do {
 	_isPersistent =	[_this,3,false,[false]] call filterParam;
 	_isCall =	[_this,4,false,[false]] call filterParam;
 
-
 	BIS_fnc_mp_packet = [0,_params,_functionName,_target,_isPersistent,_isCall];
 	publicvariableserver "BIS_fnc_mp_packet";
 
 	if  (!isMultiplayer) then {
-		["BIS_fnc_mp_packet",BIS_fnc_mp_packet] spawn bis_fnc_mpExec;
+		["BIS_fnc_mp_packet",BIS_fnc_mp_packet] spawn BIS_fnc_mpExec;
 	};
 
 	BIS_fnc_mp_packet

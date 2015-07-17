@@ -4,11 +4,7 @@
 //      Return: None
 //
 
-private ['_gun', '_target', '_vehicle'];
-
-_gun = _this select 0;
-_target = _this select 1;
-_vehicle = _this select 2;
+params ['_gun', '_target', '_vehicle'];
 
 _round = "B_762x51_Tracer_Green";
 _soundToPlay = "a3\sounds_f\weapons\HMG\HMG_gun.wss";

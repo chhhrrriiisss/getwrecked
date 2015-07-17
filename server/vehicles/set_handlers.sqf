@@ -4,9 +4,7 @@
 //      Return: Bool
 //
 
-private ['_vehicle'];
-
-_vehicle = _this select 0;
+params ['_vehicle'];
 
 _hasHandlers = _vehicle getVariable ['hasHandlers', false];
 if (_hasHandlers) exitWith { true };

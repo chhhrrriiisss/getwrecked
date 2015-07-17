@@ -44,7 +44,7 @@ _vehicle setDammage 0;
 		0.5
 	],
 	"muzzleEffect"
-] call gw_fnc_mp;
+] call bis_fnc_mp;
 
 ["REPAIRED!", 1, emergencyRepairIcon, nil, "slideDown"] spawn createAlert;
 

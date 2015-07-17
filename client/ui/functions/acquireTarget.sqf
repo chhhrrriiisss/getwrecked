@@ -10,7 +10,7 @@ private ['_vehicle', '_target', '_acquireTime', '_data', '_status'];
 if (GW_ACQUIRE_ACTIVE) exitWith {};
 GW_ACQUIRE_ACTIVE = true;
 
-_target = _this select 0;
+params ['_target'];
 
 // Calculate how long we'll need to lock the target
 _acquireTime = time; 
@@ -55,7 +55,7 @@ for "_i" from 0 to 1 step 0 do {
 			"addVehicleStatus",
 			_target,
 			false 
-		] call gw_fnc_mp;  
+		] call bis_fnc_mp;  
 	};
 
 	_pos =  _target modelToWorldVisual [0,0,0];
@@ -110,7 +110,7 @@ if ('locking' in _status) then {
 		"removeVehicleStatus",
 		_target,
 		false 
-	] call gw_fnc_mp;  
+	] call bis_fnc_mp;  
 	
 };
 

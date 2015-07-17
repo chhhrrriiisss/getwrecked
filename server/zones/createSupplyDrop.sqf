@@ -79,7 +79,7 @@ supplyBoxCleanup = {
 			0.5
 		],
 		"dustCircle"
-	] call gw_fnc_mp;
+	] call bis_fnc_mp;
 
 
 	_parts spawn { 
@@ -194,14 +194,14 @@ _source setDir (random 360);
 				_dir = getDir (_this select 1);
 				_speed = (_this select 4) / 12;
 
-				[[(_this select 1),[(_vel select 0)+(sin _dir*_speed),(_vel select 1)+(cos _dir*_speed),(_vel select 2)]],"setVelocityLocal",(_this select 1),false ] call gw_fnc_mp;  
+				[[(_this select 1),[(_vel select 0)+(sin _dir*_speed),(_vel select 1)+(cos _dir*_speed),(_vel select 2)]],"setVelocityLocal",(_this select 1),false ] call bis_fnc_mp;  
 
 				[		
 					[(_this select 0), _type],
 					"supplyDropEffect",
 					(_this select 1),
 					false
-				] call gw_fnc_mp;				
+				] call bis_fnc_mp;				
 				
 			};
 
@@ -223,8 +223,7 @@ _para setVectorUp [0,0,1];
 	Sleep 0.5;
 	(_this select 0) enableSimulationGlobal true;
 	
-	_s = _this select 0;
-	_ps = _this select 1;
+	params ['_s', '_ps'];
 
 	_timeout = time + 20;
 	waitUntil {
@@ -252,7 +251,7 @@ _para setVectorUp [0,0,1];
 			0.5
 		],
 		"dustCircle"
-	] call gw_fnc_mp;
+	] call bis_fnc_mp;
 
 	[
 		[
@@ -263,7 +262,7 @@ _para setVectorUp [0,0,1];
 			5
 		],
 		"smokeEffect"
-	] call gw_fnc_mp;
+	] call bis_fnc_mp;
 
 	_p = getPos _s;
 	_p set [2,0];

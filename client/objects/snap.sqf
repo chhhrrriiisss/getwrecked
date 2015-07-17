@@ -5,10 +5,8 @@
 //
 
 private ['_origPos', '_origObj', '_origDir', '_unit'];
+params ['_origObj', '_unit'];
 
-
-_origObj = _this select 0;
-_unit = _this select 1;
 _origPos = _origObj modelToWorldVisual [0,0,0];
 _origDir = [ (getDir _origObj - getDir _unit)] call normalizeAngle;
 

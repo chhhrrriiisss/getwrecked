@@ -76,7 +76,7 @@ GW_LOOT_LIST = [
 	["Land_FoodContainer_01_F", "Proximity Mines",  5, 500, 0, 0, 'MIN', "Drops a handful of mines", 0.7, minesIcon, [30,0.2] ],
 	["Box_IND_Wps_F", "Shield Generator",  5, 500, 0, 0, 'SHD', "Shield that grants temporary invulnerability", 1, shieldIcon, [60,0] ],
 	["Land_Coil_F", "Magnetic Coil",  5, 6000, 0, 0, 'MAG', "Deploys a magnetic pulse that pulls in vehicles", 1, magneticIcon, [45,0] ],
-	["Land_Sleeping_bag_folded_F", "Teleportation Pad",  5, 500, 0, 0, 'TPD', "Drops a teleportation pad", 0.9, tpdIcon, [15,0] ],
+	["Land_Sleeping_bag_folded_F", "Teleportation Pad",  5, 500, 0, 0, 'TPD', "Drops a teleportation pad", 0.9, tpdIcon, [8,0] ],
 	["Land_WaterBarrel_F", "Electromagnet",  5, 2000, 0, 0, 'ELM', "Magical distance minimizer", 0.9, elmIcon, [60,0] ]
 
 	

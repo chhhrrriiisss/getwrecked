@@ -33,7 +33,7 @@ _veh spawn {
     _name = _veh getVariable ['name', ""];
 
     // Log a death for this vehicle
-    ['death', _name, 1] call logStat;   
+    if (!isServer) then { ['death', _name, 1] call logStat;  };
 
     // Kill the crew & nearby players  
     _crew = crew _veh;
@@ -58,9 +58,7 @@ _veh spawn {
     };
 
     _killedBy = _veh getVariable ["killedBy", nil];    
-    if (isNil "_killedBy") exitWith {};
-
-    
+    if (isNil "_killedBy") exitWith {};    
     
     _owner = _veh getVariable ["GW_Owner", ""];  
     _veh setVariable ["GW_Owner", '', true];     
@@ -73,11 +71,11 @@ _veh spawn {
     // No money for killing new spawns
     _rawValue = _veh getVariable ['GW_Value', 200];
     _wanted = _veh getVariable ['GW_WantedValue', 0];
-    _value =  if (_newSpawn) then { 0 } else { ((_rawValue + _wanted) * GW_KILL_VALUE) };
+    _valueOfKill =  if (_newSpawn) then { 0 } else { ((_rawValue + _wanted) * GW_KILL_VALUE) };
     _crew = crew _veh;    
-
+    
     // No money for destroying own vehicle
-    _value = if (_owner == (_killedBy select 0)) then { 0 } else { _value }; 
+    _valueOfKill = if (_owner == (_killedBy select 0)) then { 0 } else { _valueOfKill }; 
 
     if (_name == "") then { _name = 'A vehicle'; };                
         
@@ -86,12 +84,12 @@ _veh spawn {
             _name,
             (_killedBy select 0), // Killer
             [(_killedBy select 2), (_killedBy select 3)], // Killer's vehicle
-            _value,
+            _valueOfKill,
             (_killedBy select 1) // Method
         ],
         "logKill",
         false,
         false 
-    ] call gw_fnc_mp;       
+    ] call bis_fnc_mp;       
   
 };

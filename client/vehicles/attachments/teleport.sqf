@@ -10,8 +10,7 @@ if (isNull ( _this select 0) || isNull (_this select 1)) exitWith { false };
 
 [] spawn cleanDeployList;
 
-_obj = _this select 0;
-_vehicle = _this select 1;
+params ['_obj', '_vehicle'];
 
 // Ok, let's position it behind the vehicle
 _maxLength = ([_vehicle] call getBoundingBox) select 1;
@@ -20,8 +19,6 @@ _pos set [2, 0];
 
 playSound3D ["a3\sounds_f\sfx\vehicle_drag_end.wss",_vehicle, false, (ASLtoATL visiblePositionASL _vehicle), 10, 1, 50];
 deleteVehicle _obj;
-
-
 
 _obj = createVehicle ["containmentArea_02_sand_F", _pos, [], 0, 'CAN_COLLIDE']; // So it doesnt collide when spawned in]
 _obj setVectorUp (surfaceNormal _pos);
@@ -36,7 +33,7 @@ _obj setDir (random 360);
 	"setObjectSimulation",
 	false,
 	false 
-] call gw_fnc_mp;
+] call bis_fnc_mp;
 
 // Recompile the vehicle to account for dropping one bag
 [_this select 2] call compileAttached;
@@ -62,17 +59,13 @@ GW_DEPLOYLIST = GW_DEPLOYLIST + [_obj];
 
 [_obj, _timeout, _vehicle] spawn {
 
-	private ['_o', '_t', '_v'];
-	
-	_o = _this select 0;
-	_t = _this select 1;
-	_v = _this select 2;
+	params ['_o', '_t', '_v'];
 
 	Sleep 3;
 
 	waitUntil {	
 	
-		_nearby = (ASLtoATL visiblePositionASL _o) nearEntities [["Car"], 5];
+		_nearby = (ASLtoATL visiblePositionASL _o) nearEntities [["Car", "Tank"], 5];
 
 		{
 			_isVehicle = _x getVariable ['isVehicle', false];
@@ -92,7 +85,7 @@ GW_DEPLOYLIST = GW_DEPLOYLIST + [_obj];
 					'addVehicleStatus',
 					_x,
 					false
-				] call gw_fnc_mp;
+				] call bis_fnc_mp;
 
 				false
 			};

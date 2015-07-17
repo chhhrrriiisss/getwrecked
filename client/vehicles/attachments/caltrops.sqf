@@ -4,18 +4,14 @@
 //      Return: None
 //
 
-private ["_obj", "_vehicle"];
-
-_obj = _this select 0;
-_vehicle = _this select 1;
+params ["_obj", "_vehicle"];
 
 if (isNull _vehicle || isNull _obj) exitWith { false };
 if (!alive _vehicle) exitWith { false };
 
 _this spawn {
-
-	_obj = _this select 0;
-	_vehicle = _this select 1;
+	
+	params ['_obj', '_vehicle'];
 
 	_pos = (ASLtoATL getPosATL _vehicle);
 	["DROPPING CALTROPS", 1, warningIcon, nil, "default"] spawn createAlert;   
@@ -59,9 +55,8 @@ _this spawn {
 	// Drop a caltrop at the specified location
 	dropDebris = {
 
-		_oPos = _this select 0;
-		_oDir = _this select 1;
-
+		params ['_oPos', '_oDir'];
+		
 		Sleep 0.5;
 
 		_type = "Land_New_WiredFence_5m_F";
@@ -80,7 +75,7 @@ _this spawn {
 			"setObjectSimulation",
 			false,
 			false 
-		] call gw_fnc_mp;
+		] call bis_fnc_mp;
 
 		_o setDir _oDir;
 

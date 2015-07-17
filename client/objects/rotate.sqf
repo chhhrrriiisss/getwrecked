@@ -5,10 +5,7 @@
 //
 
 private ["_obj", "_rotateAmount","_targetDirection"];
-
-_obj = _this select 0;
-_rotateAmount = _this select 1;
-_toggle = _this select 2;
+params ['_obj', '_rotateAmount', '_toggle'];
 
 _targetDirection = if (isNull attachedTo _obj) then { [(getDir _obj) + _rotateAmount] call normalizeAngle; } else { 
 	_dirAttached = getDir (attachedTo _obj);

@@ -165,7 +165,7 @@ checkBinds = {
 
 			_dirTo = [GW_CHUTE_TARGET, GW_CHUTE] call dirTo;
 			_dirTo = [_dirTo + _angleOffset] call normalizeAngle;
-			_newTarget = [GW_CHUTE_TARGET, _yawFactor, _dirTo] call BIS_fnc_relPos;
+			_newTarget = [GW_CHUTE_TARGET, _yawFactor, _dirTo] call relPos;
 			_currentPos = (ASLtoATL visiblePositionASL GW_CHUTE);
 			_currentPos set [2, 0];
 			_dist = (_newTarget distance _currentPos);

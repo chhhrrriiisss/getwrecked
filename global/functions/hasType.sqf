@@ -5,9 +5,7 @@
 //
 
 private ['_arr', '_t', '_v', '_r', '_tag'];
-
-_t = _this select 0;
-_v = _this select 1;
+params ['_t', '_v'];
 
 if (_t == "" || isNull _v) exitWith { -1 };
 _r = 0;

@@ -48,7 +48,7 @@ if (isServer) then {
 		"setupObject",
 		false,
 		false 
-	] call gw_fnc_mp;
+	] call bis_fnc_mp;
 };
 
 if (_handlers) then { 
@@ -63,7 +63,7 @@ if (_handlers) then {
 			"setObjectHandlers",
 			false,
 			false 
-		] call gw_fnc_mp;
+		] call bis_fnc_mp;
 
 	};
 
@@ -75,7 +75,7 @@ if (_handlers) then {
 		"setObjectHandlers",
 		_newObj,
 		false 
-	] call gw_fnc_mp;
+	] call bis_fnc_mp;
 };
 
 _newObj

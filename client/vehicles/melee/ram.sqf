@@ -4,8 +4,7 @@ if (isNil "GW_LAST_COLLISION") then { GW_LAST_COLLISION = time - (GW_COLLISION_F
 if (time - GW_LAST_COLLISION < (GW_COLLISION_FREQUENCY / 2)) exitWith { true };
 GW_LAST_COLLISION = TIME;
 
-_source = _this select 0;
-_target = _this select 1;
+params ['_source', '_target'];
 	
 _status = _target getVariable ['status', []];
 if ('invulnerable' in _status || 'cloak' in _status) exitWith { true };
@@ -26,7 +25,7 @@ if ((getDammage _source) >= 1) exitWith {
         "impactEffect",
         true,
         false 
-    ] call gw_fnc_mp;        
+    ] call bis_fnc_mp;        
 
     deleteVehicle _source;
 
@@ -41,7 +40,7 @@ if ((getDammage _source) >= 1) exitWith {
     "impactEffect",
     true,
     false 
-] call gw_fnc_mp; 
+] call bis_fnc_mp; 
 
 _target setDammage (getDammage _target) + _damage;
 
@@ -50,7 +49,7 @@ _target setDammage (getDammage _target) + _damage;
     "updateVehicleDamage",
     _target,
     false 
-] call gw_fnc_mp; 
+] call bis_fnc_mp; 
 
 [_target, 'WBR'] call markAsKilledBy;
 

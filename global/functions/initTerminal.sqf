@@ -5,9 +5,7 @@
 //
 
 private ['_obj', '_pad', '_p'];
-
-_obj = _this select 0;
-_var = _this select 1;
+params ['_obj', '_var'];
 
 _obj setVariable ['isTerminal', _var];
 _obj setVariable ['GW_CU_IGNORE', true];

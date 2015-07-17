@@ -4,17 +4,13 @@
 //
 
 private ["_vehicle", "_selection", "_damage", "_ammo"];
-
-_vehicle = _this select 0;
-_selection = _this select 1;
-_damage = _this select 2;
+params ['_vehicle', '_selection', '_damage', '_nil', '_projectile'];
 
 // If we're in the workshop, ignore all damage
 if (_vehicle distance (getMarkerPos "workshopZone_camera") < 200) exitWith { false };
 
 _origDamage = _damage;
 _oldDamage = nil;
-_projectile = _this select 4;
 _scale = 1;
 _armor = 1;
 
@@ -97,10 +93,7 @@ if ("invulnerable" in _status) then {
         false
     } count _parts > 0;   
 
-    //if (_highestDmg > 0.91) then {} else {
-        { _vehicle setHit [_x, _highestDmg]; false } count _parts > 0;
-        //_vehicle setDammage _highestDmg;
-    //};
+    { _vehicle setHit [_x, _highestDmg]; false } count _parts > 0;  
 
 };
 

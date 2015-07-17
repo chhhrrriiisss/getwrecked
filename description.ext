@@ -1,5 +1,7 @@
 respawn = "BASE"; 
 respawndelay = 1;  
+respawnTemplates[] = {"Base"}; 
+respawnDialog = 0;
 
 author="SLI";
 OnLoadName = "GET WRECKED";
@@ -40,6 +42,7 @@ disableChannels[] = {0,2,3,6};
 #include "client\ui\dialogs\buy.hpp"
 #include "client\ui\dialogs\settings.hpp"
 #include "client\ui\dialogs\inventory.hpp"
+#include "client\ui\dialogs\race.hpp"
 #include "client\ui\dialogs\message.hpp"
 #include "client\ui\dialogs\timer.hpp"
 
@@ -274,6 +277,77 @@ class CfgSounds
 		sound[] = {"\client\sounds\sparta.ogg", 1.1, 1};
 		titles[] = {};
 	};
+
+	class hit1
+	{
+		name = "hit1";
+		sound[] = {"\client\sounds\hit1.ogg", 1.1, 1};
+		titles[] = {};
+	};
+
+	class hit2
+	{
+		name = "hit2";
+		sound[] = {"\client\sounds\hit2.ogg", 1.1, 1};
+		titles[] = {};
+	};
+
+	class hit3
+	{
+		name = "hit3";
+		sound[] = {"\client\sounds\hit3.ogg", 1.1, 1};
+		titles[] = {};
+	};
+
+	class hit4
+	{
+		name = "hit4";
+		sound[] = {"\client\sounds\hit4.ogg", 1.1, 1};
+		titles[] = {};
+	};
+
+	class hit5
+	{
+		name = "hit5";
+		sound[] = {"\client\sounds\hit5.ogg", 1.1, 1};
+		titles[] = {};
+	};
+
+	class wrench1
+	{
+		name = "wrench1";
+		sound[] = {"\client\sounds\wrench1.ogg", 1.1, 1};
+		titles[] = {};
+	};
+
+	class wrench2
+	{
+		name = "wrench2";
+		sound[] = {"\client\sounds\wrench2.ogg", 1.1, 1};
+		titles[] = {};
+	};
+
+	class wrench3
+	{
+		name = "wrench3";
+		sound[] = {"\client\sounds\wrench3.ogg", 1.1, 1};
+		titles[] = {};
+	};
+
+	class wrench4
+	{
+		name = "wrench4";
+		sound[] = {"\client\sounds\wrench4.ogg", 1.1, 1};
+		titles[] = {};
+	};
+
+	class wrench5
+	{
+		name = "wrench5";
+		sound[] = {"\client\sounds\wrench5.ogg", 1.1, 1};
+		titles[] = {};
+	};
+ 
  
 };
 

@@ -4,10 +4,7 @@
 //      Return: None
 //
 
-private ["_pad", "_vehicle"];
-
-_pad = _this select 0;
-_vehicle = _this select 1;
+params ["_pad", "_vehicle"];
 
 if (isNull _vehicle || isNull _pad || (player == _vehicle)) exitWith {};
 if (!alive _vehicle) exitWith {};
@@ -25,7 +22,7 @@ if ("boost" in _status) exitWith {};
     "addVehicleStatus",
     _vehicle,
     false 
-] call gw_fnc_mp;  
+] call bis_fnc_mp;  
 
 _pb = _vehicle call BIS_fnc_getPitchBank;
 
@@ -42,7 +39,7 @@ _maxSpeed = [_actualVel * 1.5, 30, 80] call limitToRange;
 		3
 	],
 	"nitroEffect"
-] call gw_fnc_mp;
+] call bis_fnc_mp;
 
 for "_i" from 1 to _maxSpeed step 0.1 do {
 

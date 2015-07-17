@@ -5,7 +5,6 @@
 //
 
 private ['_startIndex'];
-
-_control = _this select 0;
+params ['_control'];
 
 [GW_BUY_OBJ] spawn generateItemsList;

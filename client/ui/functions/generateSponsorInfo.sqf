@@ -21,7 +21,7 @@ _stringTable = switch (_company) do {
 	case "gastrol": { ['-10% Sponsor Discount', '-25% Performance Equipment', 'Large Fuel Tank'] };
 	case "haywire": { ['-10% Sponsor Discount', '-25% Electronics', 'Magnetic Coil'] };
 	case "cognition": { ['-10% Sponsor Discount', '-25% Deployables', 'Caltrops'] };
-	case "slytech": { ['-10% Sponsor Discount', '-25% Building Supplies', 'Large Ammo Container'] };
+	case "tyraid": { ['-10% Sponsor Discount', '-25% Building Supplies', 'Large Ammo Container'] };
 	case "tank": { ['-10% Sponsor Discount', '-25% Defensive Items', 'Large Steel Panel'] };
 	case "veneer": { ['-10% Sponsor Discount', '-25% Evasive Items', 'Vertical Thruster'] };
 

@@ -14,7 +14,7 @@ if (!local (_this select 0)) exitWith {
 		'setDirTo',
 		(_this select 0),
 		false
-	] call gw_fnc_mp;	
+	] call bis_fnc_mp;	
 
 };
 

@@ -10,7 +10,8 @@ _this spawn {
 		
 	_colour = [1,0,0,1];
 	_duration = 1;
-	_packet = _this select 0;
+
+	params ['_packet'];
 
 	GW_LINEEFFECT_COLOR = _colour;
 	GW_LINEFFECT_ARRAY pushback _packet;	

@@ -1,12 +1,25 @@
 # [Get Wrecked](http://getwrecked.info) Changelog
-## Last Updated: [13-05-2015] ##
+## Last Updated: [15-07-2015] ##
 
-Note: Some changes that are deemed spoilers are hidden from this log 
-(WIP) Indicates items that may not be fully functional and are only partially implemented
-Items without Fixed/Added/Removed proceeding, are typically balance changes
+Note: Some changes that are deemed spoilers are hidden from this log. 
+(WIP) Indicates items that may not be fully functional and are only partially implemented.
+Items without Fixed/Added/Removed proceeding are typically balance changes.
+
+**v0.8.2c** [1.48 Compatibility - Public alpha release]
+
+- Combined cleanup scripts into events loop to improve server fps
+- Guided missile, lock-on, railgun, mines and explosive damage now affected by target armor
+- Notifications and alerts should now fade a bit more smoothly
+- Updated several commands to avoid conflicts in 1.48
+- Fixed - PreviewLocation defaulting to the sea
+- Fixed - Owner not being set on vehicle creation to lock terminal correctly
+- Fixed - Vehicle lock halo not showing
+- Removed - Tailored vehicle textures in favor of file size reduction
+- Removed - Respawn scoreboard flashing on death screen
+- Added - Auto height snapping of similar types to object manipulation
+- Added - Custom sound effects to attach/detach actions
 
 **v0.8.2** [Public alpha release]
-
 
 - Melee weapons now take a small amount of damage when used until they break (damage no longer less per item)
 - Weapon damage and vehicle armor pass to help re-balance engagement times and viability

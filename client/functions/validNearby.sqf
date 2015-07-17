@@ -15,7 +15,7 @@ _found = nil;
 if (isNull _source) exitWith { nil };
 
 _pos = (ASLtoATL (getPosASL _source));
-_nearby = _pos nearEntities [["Car"], _range];
+_nearby = _pos nearEntities [["Car", "Tank"], _range];
 
 if (count _nearby == 0) exitWith { nil };
 

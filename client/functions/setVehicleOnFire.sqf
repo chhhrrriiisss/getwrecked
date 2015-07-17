@@ -34,7 +34,7 @@ if ( !('inferno' in _status) && !('nofire' in _status) && _isVehicle && _rnd < _
         "addVehicleStatus",
         _target,
         false 
-	] call gw_fnc_mp;  
+	] call bis_fnc_mp;  
 
 	[
 		[
@@ -42,6 +42,6 @@ if ( !('inferno' in _status) && !('nofire' in _status) && _isVehicle && _rnd < _
 			_rnd
 		],
 		"burnEffect"
-	] call gw_fnc_mp;
+	] call bis_fnc_mp;
 
 };

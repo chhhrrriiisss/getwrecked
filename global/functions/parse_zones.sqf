@@ -1,9 +1,7 @@
 parsePoints = {
 	
 	private ['_zone', '_mP'];
-
-	_zoneName = _this select 0; // zone to parse
-	_array = _this select 1; // array to parse into
+	params ['_zoneName', '_array'];
 
 	_zoneData = [];
 	_pointData = [];

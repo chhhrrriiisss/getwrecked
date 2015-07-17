@@ -76,7 +76,7 @@ _count = 0;
 
 	// Custom target offsets for different items
 	_defaultDir = [_type, _defaultDir] call {
-		_tag = _this select 0;
+		params ['_tag'];
 		if (_tag == "LSR" || _tag == "FLM") exitWith { ([(_this select 1) + 180] call normalizeAngle) };
 		if (_tag == "RPD") exitWith { ([(_this select 1) -90] call normalizeAngle) };
 		(_this select 1)

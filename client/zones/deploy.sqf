@@ -12,8 +12,8 @@ if (GW_DEPLOY_ACTIVE) exitWith {
 GW_DEPLOY_ACTIVE = true;
 
 private ['_pad', '_unit', '_location'];
+params ['_targetVehicle'];
 
-_targetVehicle = _this select 0;
 _targetName = _targetVehicle getVariable ['name', ''];
 
 GW_LASTLOAD = _targetName;
@@ -116,7 +116,7 @@ _targetVehicle setVariable ['GW_HIDDEN', nil, true];
 	"setObjectSimulation",
 	false,
 	false 
-] call gw_fnc_mp;
+] call bis_fnc_mp;
 
 // Set wanted value
 _targetVehicle setVariable ['GW_WantedValue', 0];

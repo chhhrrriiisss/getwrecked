@@ -1,4 +1,3 @@
-_o = _this select 0;
-_state = _this select 1;
+params ['_o', '_state'];
 _o hideObject _state;
 { _x hideObject _state; false } count (attachedObjects _o);

@@ -5,9 +5,8 @@
 //
 
 private ['_o', '_a', '_s', '_v'];
+params ['_o', '_a'];
 
-_o = _this select 0;
-_a = _this select 1;
 _s = _a select 0;
 _v = _a select 1;
 

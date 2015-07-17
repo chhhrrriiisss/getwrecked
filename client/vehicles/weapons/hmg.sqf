@@ -4,11 +4,7 @@
 //      Return: None
 //
 
-private ['_gun', '_target', '_vehicle'];
-
-_gun = _this select 0;
-_target = _this select 1;
-_vehicle = _this select 2;
+params ['_gun', '_target', '_vehicle'];
 
 _round = "B_127x99_Ball";
 _soundToPlay = "a3\sounds_f\weapons\HMG\HMG_gun.wss";
@@ -18,7 +14,7 @@ _range = 300;
 
 [_gun] spawn muzzleEffect;
 
-_targetPos = if (typename _target == 'OBJECT') then { getPosASL _target } else { _target };
+_targetPos = if (typename _target == 'OBJECT') then { (_target modelToWorldVisual [0,0,0.5]) } else { _target };
 _gPos = _gun modelToWorldVisual [0, 3, -0.7];
 
 _heading = [_gPos, _targetPos] call BIS_fnc_vectorFromXToY;

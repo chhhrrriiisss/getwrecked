@@ -8,9 +8,7 @@ private ['_condition'];
 
 if (!isServer) exitWith {};
 
-if (isNil "GW_EVENTS_ACTIVE") then {
-	GW_EVENTS_ACTIVE = false;
-};
+if (isNil "GW_EVENTS_ACTIVE") then { GW_EVENTS_ACTIVE = false; };
 
 if (GW_EVENTS_ACTIVE) then {
 	GW_EVENTS_ACTIVE = false;
@@ -68,21 +66,44 @@ _eventsList = [
 			if (_curTime < 7) exitWith { skiptime (7 - _curTime); true };
 			true
 		}
+	],
+
+	// Cleanup check
+	[
+		"cleanup", // Name of event
+		100, // Probability of event
+		// Condition to check for
+		{ (time >= GW_CLEANUP_TIMEOUT) },
+		// Script to run on TRUE condition
+		{ 
+
+			_rate = ( (count allPlayers) / GW_MAX_PLAYERS) call {
+				_this = [_this, 0, 1] call limitToRange;
+				if (_this >= 0.75) exitWith { GW_CLEANUP_RATE_HIGH };
+				if (_this >= 0.5) exitWith { GW_CLEANUP_RATE_MED };
+				GW_CLEANUP_RATE_LOW
+			};
+
+			GW_CLEANUP_TIMEOUT = time + _rate;
+			diag_log format['Running cleanup script at %1', time];
+
+			[] call executeCleanUp;
+
+			true
+		}
 	]
-
-
 
 ];
 
 GW_EVENTS_ACTIVE = true;
 diag_log format['Events check initialized at %1.', time];
 
-for "_i" from 0 to 1 step 0 do {
+waitUntil {
 
 	if (!GW_EVENTS_ACTIVE) exitWith {};	
 
 	// Adjust timeout based on number of active players on server
-	_timeout = ( (count allUnits) - (count (['workshopZone'] call findAllInZone)) ) call {
+	_timeout = ( (count allPlayers) - (count (['workshopZone'] call findAllInZone)) ) call {
 		if (_this > 8) exitWith { (GW_EVENTS_FREQUENCY select 2) };
 		if (_this >= 4) exitWith { (GW_EVENTS_FREQUENCY select 1) };
 		(GW_EVENTS_FREQUENCY select 0)
@@ -106,6 +127,8 @@ for "_i" from 0 to 1 step 0 do {
     	false
 
 	} count _eventsList > 0;
+
+	!GW_EVENTS_ACTIVE
 };
 
 diag_log format['Events check stopped at %1.', time];

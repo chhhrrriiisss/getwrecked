@@ -4,12 +4,12 @@
 //      Return: None
 //
 
-private["_type", "_key", "_value"];
+private["_type", "_key", "_killValue"];
 
 _victim = [_this,0,"",[""]] call filterParam;
 _killer = [_this,1,"",[""]] call filterParam;
 _killersVehicle = [_this,2,[],[[]]] call filterParam;
-_value = [_this,3,0,[0]] call filterParam;
+_killValue = [_this,3,0,[0]] call filterParam;
 _method = [_this,4,"",[""]] call filterParam;
 
 if (_victim == "" || _killer == "") exitWith {};
@@ -31,18 +31,18 @@ publicVariable "pubVar_systemChat";
 
 // Give the killer his cash if we can find him
 _killerTarget = [_killer] call findUnit;
-
+    
 if (!isNil "_killerTarget") then {
 
     [       
         [
-            _value,
+            _killValue,
             (_killersVehicle select 0)
         ],
         "assignKill",
         _killerTarget,
         false 
-    ] call gw_fnc_mp;  
+    ] call bis_fnc_mp;  
     
 };	
 
@@ -50,6 +50,6 @@ if (!isNil "_killerTarget") then {
 if (GW_LEADERBOARD_ENABLED) then {
 
 	_killerId = getPlayerUID _killerTarget;
-	[_killerId, _killer, (_killersVehicle select 0), (_killersVehicle select 1), [1, 0, _value]] spawn addToLeaderboard;
+	[_killerId, _killer, (_killersVehicle select 0), (_killersVehicle select 1), [1, 0, _killValue]] spawn addToLeaderboard;
 
 };

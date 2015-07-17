@@ -5,9 +5,7 @@
 //
 
 private ["_obj", "_oPos", "_vehicle"];
-
-_obj = _this select 0;
-_vehicle = _this select 1;
+params ['_obj', '_vehicle'];
 
 if (isNull _obj || isNull _vehicle) exitWith { false };
 if (!alive _obj || !alive _vehicle) exitWith { false };
@@ -23,7 +21,7 @@ playSound3D ["a3\sounds_f\sfx\explosion3.wss", _obj, false, _oPos, 2, 1, 100];
 		10
 	],
 	"shieldEffect"
-] call gw_fnc_mp;
+] call bis_fnc_mp;
 
 // If we're not already invulnerable
 _status = _vehicle getVariable ["status", []];	
@@ -38,7 +36,7 @@ if ( !("invulnerable" in _status) ) then {
 		"addVehicleStatus",
 		_vehicle,
 		false 
-	] call gw_fnc_mp;  
+	] call bis_fnc_mp;  
 
 	// Swap vehicle texture temporarily
 	[_vehicle, 'client\images\vehicle_textures\special\shield.jpg', 10, { ("invulnerable" in ( (vehicle player) getVariable ['status', []])) } ] spawn swapVehicleTexture;

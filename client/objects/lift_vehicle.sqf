@@ -23,7 +23,7 @@ GW_EDITING = false;
 	"setObjectSimulation",
 	false,
 	false 
-] call gw_fnc_mp;
+] call bis_fnc_mp;
 
 // Add the drop vehicle action
 removeAllActions _unit;
@@ -92,7 +92,7 @@ if ( GW_LIFT_VEHICLE getVariable ['GW_suspend', true] ) then {
 		"setObjectSimulation",
 		false,
 		false 
-	] call gw_fnc_mp;
+	] call bis_fnc_mp;
 
 } else {
 
@@ -106,7 +106,7 @@ if ( GW_LIFT_VEHICLE getVariable ['GW_suspend', true] ) then {
 		"setObjectSimulation",
 		false,
 		false 
-	] call gw_fnc_mp;
+	] call bis_fnc_mp;
 
 };
 

@@ -13,7 +13,9 @@ if (!isNil "GW_MAP_EH") then {
 };
 
 GW_MAP_EH = ((findDisplay 12) displayCtrl 51) ctrlAddEventHandler ["Draw", {
-
+	
+	if (GW_GENERATOR_ACTIVE) exitWith {};
+		
 	_vehicle = (vehicle player);
 	_scale = 1;
 
@@ -70,14 +72,14 @@ GW_MAP_EH = ((findDisplay 12) displayCtrl 51) ctrlAddEventHandler ["Draw", {
 				_distance = _p1 distance _p2;
 				_thickness = 1;
 
-				_repeats = (ceil (_distance / 70)) max 10;
+				_repeats = 3;
 
 				for "_i" from _repeats to 0 step -1 do {
 
 					// Create a slightly shorter line each time
 					_step = _distance * (_i / _repeats);
 					_source = +_p1;
-					_newDestination = [_source, _step, _dirTo] call BIS_fnc_relPos;
+					_newDestination = [_source, _step, _dirTo] call relPos;
 
 					// Alternate the line colour
 					_currentColor = if ((_i % 2) == 0) then { [0.99,0.82,0.04,1] } else { [0,0,0,1] };

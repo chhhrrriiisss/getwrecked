@@ -53,7 +53,7 @@ GW_DISPLAY_EH = addMissionEventHandler ["Draw3D", {
 	if (isNil "GW_CURRENTZONE") exitWith {};
 
 	// If there's no nearby targets, no point going any further
-	_targets = if (GW_DEBUG) then { ((ASLtoATL visiblePositionASL GW_CURRENTVEHICLE) nearEntities [["Car", "Man"], 1000]) } else { ([GW_CURRENTZONE] call findAllInZone) };	
+	_targets = if (GW_DEBUG) then { ((ASLtoATL visiblePositionASL GW_CURRENTVEHICLE) nearEntities [["Car", "Man", "Tank"], 1000]) } else { ([GW_CURRENTZONE] call findAllInZone) };	
 	if (count _targets == 0) exitWith {};	
 
 	call drawTags;

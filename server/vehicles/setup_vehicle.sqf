@@ -11,6 +11,8 @@ _name = [_this,1, "Untitled", [""]] call filterParam;
 
 if (isNull _vehicle) exitWith { diag_log 'Couldnt initialize vehicle.'; };
 
+_isAI = _vehicle getVariable ['isAI', false];
+
 // Prevent two vehicles being spawned on top of the same location	
 _abort = if (isNil "GW_LAST_TARGET") then { GW_LAST_TARGET = [_vehicle, diag_tickTime]; false } else {
 
@@ -26,9 +28,11 @@ if (_abort) exitWith {};
 GW_LAST_TARGET = [_vehicle, diag_tickTime];
 
 // Prevent access temporarily
-_vehicle lockDriver true;
-_vehicle lockCargo true;
-_vehicle lockTurret [[0], true];
+if (!_isAI) then {
+    _vehicle lockDriver true;
+    _vehicle lockCargo true;
+    _vehicle lockTurret [[0], true];
+};
 
 if (count toArray _name == 0 || _name == " ") then {  _name == 'Untitled'; };
 
@@ -52,7 +56,7 @@ _vehicle setVariable["status", [], true];
     "setVehicleHandlers",
     _vehicle,
     false 
-] call gw_fnc_mp;
+] call bis_fnc_mp;
 
 clearWeaponCargoGlobal _vehicle;
 clearMagazineCargoGlobal _vehicle;

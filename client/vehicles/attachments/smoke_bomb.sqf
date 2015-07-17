@@ -11,9 +11,10 @@ _obj = [_this,0, objNull, [objNull]] call filterParam;
 if (isNull _obj) exitWith { false };
 
 _oPos = (ASLtoATL getPosASL _obj);
-_veh = (vehicle player);
+_veh = attachedTo _obj; 
 
 _status = _veh getVariable ["status",[]];
+_isAI = _obj getVariable ["isAI", false];
 _statusList = [];
 
 // Reset locked targets
@@ -35,10 +36,10 @@ if (count _statusList > 0) then {
 		"removeVehicleStatus",
 		_veh,
 		false 
-	] call gw_fnc_mp;   
+	] call bis_fnc_mp;   
 
 } else {
-	["SMOKE ACTIVATED!", 1, smokeIcon, nil, "default"] spawn createAlert;
+	if (!_isAI) then { ["SMOKE ACTIVATED!", 1, smokeIcon, nil, "default"] spawn createAlert; };
 };
 
 playSound3D ["a3\sounds_f\sfx\explosion3.wss", _obj, false, _oPos, 2, 1, 100];
@@ -49,7 +50,7 @@ playSound3D ["a3\sounds_f\sfx\explosion3.wss", _obj, false, _oPos, 2, 1, 100];
 		8
 	],
 	"smokeEffect"
-] call gw_fnc_mp;
+] call bis_fnc_mp;
 
 [       
 	[
@@ -60,7 +61,7 @@ playSound3D ["a3\sounds_f\sfx\explosion3.wss", _obj, false, _oPos, 2, 1, 100];
 	"addVehicleStatus",
 	_veh,
 	false 
-] call gw_fnc_mp;  
+] call bis_fnc_mp;  
 
 
 true

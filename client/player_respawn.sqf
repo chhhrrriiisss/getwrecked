@@ -4,7 +4,7 @@
 //      Return: None
 //
 
-_unit = _this select 0;
+params ['_unit'];
 
 [_unit] spawn playerSpawn;
 

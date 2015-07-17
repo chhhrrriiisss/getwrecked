@@ -45,7 +45,7 @@ cancelCurrentDialog = {
 };
 
 // If the buy or settings menus are open, dont blur or static
-if (!GW_SETTINGS_ACTIVE && !GW_BUY_ACTIVE && !GW_NEW_ACTIVE) then {
+if (!GW_SETTINGS_ACTIVE && !GW_BUY_ACTIVE && !GW_NEW_ACTIVE && !GW_GENERATOR_ACTIVE) then {
 
 	"dynamicBlur" ppEffectEnable true;
 	"dynamicBlur" ppEffectAdjust [0.3]; 
@@ -91,7 +91,7 @@ if (isNil { (_functionToCall select 0) }) then {
 };
 
 // If no menu with margins active, remove margins
-if (!GW_DEATH_CAMERA_ACTIVE && !GW_PREVIEW_CAM_ACTIVE && !GW_SPAWN_ACTIVE) then {
+if (!GW_DEATH_CAMERA_ACTIVE && !GW_PREVIEW_CAM_ACTIVE && !GW_SPAWN_ACTIVE && !GW_GENERATOR_ACTIVE) then {
 	_marginTop ctrlShow false;
 	_marginTop ctrlCommit 0;
 	_marginBottom ctrlShow false;

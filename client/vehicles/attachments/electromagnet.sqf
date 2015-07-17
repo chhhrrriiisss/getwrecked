@@ -9,12 +9,11 @@ _this spawn {
 
 	if (isNil { _this select 1}) exitWith { false };
 	
-	_object = _this select 0;
-	_vehicle = _this select 1;
+	params ['_object', '_vehicle'];
 
 	if (!alive _vehicle) exitWith { false };
 
-	_pos = ASLtoATL visiblePositionASL _vehicle;
+	_pos = ASLtoATL getPosASL _vehicle;
 
 	playSound3D ["a3\sounds_f\vehicles\armor\APC\APC2\int_engine_start.wss", _vehicle, false, _pos, 3, 1, 250];
 
@@ -32,15 +31,15 @@ _this spawn {
 
 		_range = 50;
 		_object = _this;
-		_pos = ASLtoATL visiblePositionASL _object;
+		_pos = ASLtoATL getPosASL _object;
 		_nearby =  _pos nearEntities [["Car"], _range];		
 		
 		{
 			_isVehicle = _x getVariable ['isVehicle', false];
 
-			if (_isVehicle) then {
+			if (_isVehicle && _x != _object) then {
 
-				_dist = _pos distance (ASLtoATL visiblePositionASL _x);
+				_dist = _pos distance (ASLtoATL getPosASL _x);
 
 				if (_dist < _range && _x != GW_CURRENTVEHICLE) then {
 
@@ -55,7 +54,7 @@ _this spawn {
 						"magnetizeEffect",
 						_x,
 						false
-					] call gw_fnc_mp;				
+					] call bis_fnc_mp;				
 
 				};
 
@@ -74,7 +73,7 @@ _this spawn {
 		    0.1
 		],
 		"magnetEffect"
-	] call gw_fnc_mp;
+	] call bis_fnc_mp;
 
 	_timeout = time + 5;
 	_n = 0;

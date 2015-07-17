@@ -67,7 +67,7 @@ if (count _objectList == 0) exitWith {};
 			"setVelocityLocal",
 			_x,
 			false 
-		] call gw_fnc_mp;  
+		] call bis_fnc_mp;  
 	};
 
 	false

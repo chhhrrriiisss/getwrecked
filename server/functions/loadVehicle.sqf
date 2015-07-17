@@ -5,10 +5,7 @@
 //
 
 private['_class', '_name', '_camo', '_source', '_o', '_k', '_raw'];
-
-_player = _this select 0;
-_target = _this select 1;
-_raw = _this select 2;
+params ['_player', '_target', '_raw'];
 
 _ai = [_this, 3, false, [false]] call filterParam;
 
@@ -138,14 +135,14 @@ _newVehicle enableSimulationGlobal true;
 [_newVehicle, (_data select 1), true, false, true] call setupVehicle;
 
 if (!isNil "_paint") then {
-    [[_newVehicle,_paint],"setVehicleTexture",true,false] call gw_fnc_mp;
+    [[_newVehicle,_paint],"setVehicleTexture",true,false] call bis_fnc_mp;
 };
 
 _timeout = time + 2;
 waitUntil { Sleep 0.1; ((time > _timeout) || (simulationEnabled _newVehicle)) };
 
 // Set Vehicle Texture
-[[_newVehicle,_paint],"setVehicleTexture",true,false] call gw_fnc_mp;
+[[_newVehicle,_paint],"setVehicleTexture",true,false] call bis_fnc_mp;
 
 // Check for bad weapons/too many parts
 _newVehicle call cleanAttached;

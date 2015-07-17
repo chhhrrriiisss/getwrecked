@@ -26,16 +26,19 @@ _this spawn {
 	   	_eject = true;
 	};
 
-	for "_i" from _timeout to 0 step -1 do {
-		['SELF DESTRUCT', 1.5, warningIcon, colorRed, 'slideDown'] spawn createAlert;
-		Sleep 0.3;
+	_isAi = _vehicle getVariable ['isAI', false];
+	if (!_isAi) then {
+		for "_i" from _timeout to 0 step -1 do {
+			['SELF DESTRUCT', 1.5, warningIcon, colorRed, 'slideDown'] spawn createAlert;
+			Sleep 0.3;
+		};
 	};
 
 	_pos = (ASLtoATL getPosATL _vehicle);
 
 	// Prevent invulnerability from stopping it
 	_vehicle setVariable ["status", [], true];
-	_nearby = _pos nearEntities [["Car"], 30];
+	_nearby = _pos nearEntities [["Car", "Tank"], 30];
 
 	{
 		if (_x != _vehicle) then { 

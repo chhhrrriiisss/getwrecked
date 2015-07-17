@@ -27,7 +27,7 @@ if (isNil "_shooter") then {
 
 	switch (_tx) do {
 		
-		case "slytech": { _unit addheadgear "H_RacingHelmet_1_white_F"; };
+		case "tyraid": { _unit addheadgear "H_RacingHelmet_1_white_F"; };
 		case "crisp": { _unit addheadgear "H_RacingHelmet_1_red_F"; };
 		case "gastrol": { _unit addheadgear "H_RacingHelmet_1_black_F"; };
 		case "haywire": { _unit addheadgear "H_RacingHelmet_1_black_F"; };
@@ -38,7 +38,7 @@ if (isNil "_shooter") then {
 		default { _unit addheadgear "H_RacingHelmet_1_black_F"; };
 	};
 
-	[[_unit,_tx],"setPlayerTexture",true,false] call gw_fnc_mp;
+	[[_unit,_tx],"setPlayerTexture",true,false] call bis_fnc_mp;
 	_v setVariable ['shooter', _unit];
 	_unit addWeapon "launch_RPG32_F";
 

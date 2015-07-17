@@ -7,16 +7,16 @@
 private ["_controls", "_to", "_duration", "_ease", "_controlsList"];
 
 disableSerialization; 
-_controls = _this select 0;
-_properties = _this select 1;
+
+params ['_controls', '_properties'];
+
 ease = _this select 2;
 
 _controlsList = [];
 
 power = {
-
-	_num = _this select 0;
-	_repeats = _this select 1;
+	
+	params ['_num', '_repeats'];
 
 	for [{_i=1},{_i<=_repeats},{_i=_i+1}] do {
 		_num = _num * _num;
@@ -27,12 +27,8 @@ power = {
 
 // Different easing types
 getEasedValue = {
-
-	_type = _this select 0;
-	_i = _this select 1; // current time
-	_d = _this select 2; // total duration
-	_s = _this select 3; // start value
-	_e = _this select 4; // end value
+	
+	params ['_type', '_i', '_d', '_s', '_e'];
 	_value = _s;
 
 	switch (_type) do {
@@ -75,12 +71,9 @@ getEasedValue = {
 tweenProperty = {
 
 	disableSerialization;
-	_control = _this select 0;
-	_property = _this select 1;
-	_startValue = _this select 2;
-	_endValue = _this select 3;
-	_duration = _this select 4;	
 
+	params ['_control', '_property', '_startValue', '_endValue', '_duration'];
+	
 	_defaultX = (ctrlPosition _control) select 0;
 	_defaultY = (ctrlPosition _control) select 1;
 	_defaultW = (ctrlPosition _control) select 2;
@@ -89,7 +82,8 @@ tweenProperty = {
 
 	// Determine if we should add to existing position or use the specific value
 	isRelative = {
-		_valueToChange = _this select 0;
+
+		params ['_valueToChange'];
 
 		if (typeName _startValue == "STRING") then { 	
 			_startValue = _valueToChange + parseNumber ( _startValue );
@@ -155,10 +149,9 @@ tweenProperty = {
 tweenControl = {
 
 	disableSerialization;
-	_control = _this select 0;
-	_properties = _this select 1;
-	_ease = _this select 2;
 
+	params ['_control', '_properties', '_ease'];
+	
 	{
 		_p = _x select 0;
 		_s = _x select 1;
@@ -173,8 +166,8 @@ tweenControl = {
 // Trigger animation on controls, trigger a new tween on arrays of controls
 filterArray = {
 	disableSerialization;
-	_array = _this select 0;
-	_properties = _this select 1;
+
+	params ['_array', '_properties'];
 
 	{
 		disableSerialization;

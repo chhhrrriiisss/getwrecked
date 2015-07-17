@@ -46,7 +46,7 @@ if (_ammo <= 0 && _type != "FLM") exitWith {
 	    "addVehicleStatus",
 	    _vehicle,
 	    false 
-	] call gw_fnc_mp;  
+	] call bis_fnc_mp;  
 
 	GW_WAITFIRE = false;
 };
@@ -93,7 +93,7 @@ if (_ammo < _cost && _type != "FLM") exitWith {
 	    "addVehicleStatus",
 	    _vehicle,
 	    false 
-	] call gw_fnc_mp;  
+	] call bis_fnc_mp;  
 
 	GW_WAITFIRE = false;
 };

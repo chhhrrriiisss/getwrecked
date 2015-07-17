@@ -4,10 +4,8 @@
 //      Return: None
 //
 
-_vehicle = _this select 0;
-_type = _this select 1;
+params ['_vehicle', '_type'];
 _driver = (driver _vehicle);
-
 
 if (isNil "GW_LASTSERVICE_CHECK") then {
 	GW_LASTSERVICE_CHECK = time;
@@ -36,7 +34,7 @@ if (_type == "REPAIR" && _currentDmg > 0 && _lowVelocity) exitWith {
 		"playSoundAll",
 		true,
 		false
-	] call gw_fnc_mp;	
+	] call bis_fnc_mp;	
 
 	_vehicle setDamage ((getDammage _vehicle) - 0.05);
 
@@ -63,7 +61,7 @@ if (_type == "REFUEL" && _currentFuel < _maxFuel && _lowVelocity ) exitWith {
 		"playSoundAll",
 		true,
 		false
-	] call gw_fnc_mp;	
+	] call bis_fnc_mp;	
 
 	_increment = (_maxFuel * 0.05);
 
@@ -96,7 +94,7 @@ if (_type == "REARM" && _currentAmmo < _maxAmmo && _lowVelocity ) exitWith {
 	"playSoundAll",
 	true,
 	false
-	] call gw_fnc_mp;	 
+	] call bis_fnc_mp;	 
 
 	_increment = _maxAmmo * 0.1;
 

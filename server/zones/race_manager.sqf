@@ -12,8 +12,7 @@ GW_RACE_MIN = 2;
 GW_RACE_WAIT_TIMER = 10;
 GW_RACE_TIMEOUT = 600;
 
-_player = _this select 0;
-_zone = _this select 1;
+params ['_player', '_zone'];
 
 _status = 0; // Default, not active
 

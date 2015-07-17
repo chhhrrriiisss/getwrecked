@@ -4,9 +4,7 @@
 //      Return: None
 //
 
-private ['_startIndex'];
-
-_startIndex = _this select 0;
+params ['_startIndex'];
 
 disableSerialization;
 _catList = ((findDisplay 97000) displayCtrl 97012);

@@ -61,7 +61,7 @@ receiveMoney = {
 		"playSoundAll",
 		true,
 		false
-	] call gw_fnc_mp;	 
+	] call bis_fnc_mp;	 
 };
 
 // Converts a number to a string with commas (as a currency)

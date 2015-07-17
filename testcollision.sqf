@@ -14,11 +14,8 @@ if (_collisionEnabled) exitWith {
 _this setVariable ['GW_COLLISION', true];
 
 _collide = {
-
-	_v1 = _this select 0;
-	_vectIn = _this select 1;
-	_v2 = _this select 2;
-	_vectOut = _this select 3;
+	
+	params ['_v1', '_vectIn', '_v2', '_vectOut'];
 
 	if (isNil "GW_LAST_VELOCITY_UPDATE") then { GW_LAST_VELOCITY_UPDATE = time - 1; };
 	if (time - GW_LAST_VELOCITY_UPDATE < 0.025) exitWith {};
@@ -60,7 +57,7 @@ _collide = {
 			"setVelocityLocal",
 			_v2,
 			false 
-		] call gw_fnc_mp;
+		] call bis_fnc_mp;
 	};
 
 };

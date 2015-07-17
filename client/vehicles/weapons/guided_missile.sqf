@@ -4,15 +4,11 @@
 //      Return: None
 //
 
-private ['_gun', '_target', '_vehicle'];
+params ['_gun', '_target', '_vehicle'];
 
 _layerStatic = ("BIS_layerStatic" call BIS_fnc_rscLayer);
 _layerInterlace = ("BIS_layerInterlacing" call BIS_fnc_rscLayer);
 _layerDisplay = ("Custom_Layer" call BIS_fnc_rscLayer);
-    
-_gun = _this select 0;
-_target = _this select 1;
-_vehicle = _this select 2;
 
 // GW_GUIDED_MISSILE Properties
 _repeats = 1;
@@ -157,7 +153,7 @@ waitUntil {
 
 if (!alive GW_GUIDED_MISSILE && _lastMissilePos distance [0,0,0] > 1) then {
 
-	_nearby = _lastMissilePos nearEntities [["Car"], 7];
+	_nearby = _lastMissilePos nearEntities [["Car", "Tank"], 7];
 	if (count _nearby == 0) exitWith {};
 
 	{
@@ -173,6 +169,9 @@ if (!alive GW_GUIDED_MISSILE && _lastMissilePos distance [0,0,0] > 1) then {
 			[_x, "GUD"] call markAsKilledBy;	
 			_d = if ('nanoarmor' in _status) then { 0.05 } else { (0.15 + (random 0.25)) };
 
+			_armor = _x getVariable ['GW_Armor', 1];
+			_d = [(_d / (_armor / 8)), 0, _d] call limitToRange;
+
 			_x setDamage ((getDammage _x) + _d);	
 			[_lastMissilePos, 10, 25] call shockwaveEffect;
 
@@ -181,7 +180,7 @@ if (!alive GW_GUIDED_MISSILE && _lastMissilePos distance [0,0,0] > 1) then {
 				"updateVehicleDamage",
 				_x,
 				false
-			] call gw_fnc_mp; 
+			] call bis_fnc_mp; 
 
 		};
 

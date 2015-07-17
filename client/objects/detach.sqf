@@ -30,7 +30,7 @@ _wasSimulated = (simulationEnabled _veh);
 	"setObjectSimulation",
 	false,
 	false 
-] call gw_fnc_mp;
+] call bis_fnc_mp;
 
 _timeout = time + 3;
 waitUntil{
@@ -39,6 +39,17 @@ waitUntil{
 };
 
 detach _obj;
+
+[		
+	[
+		_obj,
+		'hit1',
+		60
+	],
+	"playSoundAll",
+	true,
+	false
+] call bis_fnc_mp;
 
 if (_wasSimulated) then {
 
@@ -51,7 +62,7 @@ if (_wasSimulated) then {
 		"setObjectSimulation",
 		false,
 		false 
-	] call gw_fnc_mp;
+	] call bis_fnc_mp;
 };
 
 removeAllActions _obj;

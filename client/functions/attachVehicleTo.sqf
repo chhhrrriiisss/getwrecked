@@ -1,8 +1,6 @@
 //systemchat 'attach function called';
 
-_target = _this select 0;
-_source = _this select 1;
-_duration = _this select 2;
+params ['_target', '_source', '_duration'];
 
 if (!alive _target || !alive _source || _duration == 0) exitWith {};
 

@@ -4,9 +4,8 @@
 //      Return: None
 //
 
-private ['_startIndex'];
-
-_startIndex = _this select 0;
+private ['_startIndex', '_type', '_name'];
+params ['_startIndex'];
 
 disableSerialization;
 _spawnList = ((findDisplay 52000) displayCtrl 52002);
@@ -20,7 +19,7 @@ lnbClear _spawnList;
 
 	if (_type == 'safe') then {} else {
 
-		_vehs = [format['%1%2', _id, 'Zone']] call findAllInZone;
+		_vehs = if (_type == 'race') then { [] } else { ([format['%1%2', _id, 'Zone']] call findAllInZone) };
 		_string = if (count _vehs > 0) then { format['[%1]', (count _vehs)] } else { '' };
 		_name = toUpper (_name);		
 
@@ -29,7 +28,7 @@ lnbClear _spawnList;
 
 	};
 	
-} foreach GW_VALID_ZONES;
+} foreach (call GW_AREAS);
 
 if (!isNil "_startIndex") then {
 	lbSetCurSel[52002,_startIndex];

@@ -15,7 +15,7 @@ GW_GAME_MODE = (paramsArray select 0);
 GW_ITEM_COST = (paramsArray select 7);
 
 // Spawn timer in seconds (default: 30)
-GW_RESPAWN_DELAY = (paramsArray select 1);
+GW_RESPAWN_DELAY = 120;
 
 // Object respawn settings (default: 3, .5)
 GW_OBJECT_ABANDON_DELAY = 3;
@@ -53,7 +53,7 @@ GW_LOCKON_TOLERANCE = 10; // Difference in angle needed to acquire target (defau
 GW_MAXDEPLOYABLES = (paramsArray select 6); // Per player (default :50)
 
 // Render distance of effects
-GW_EFFECTS_RANGE = 1700; // Increasing this may add lag at the workshop (default: 1700)
+GW_EFFECTS_RANGE = 2000; // Increasing this may add lag at the workshop (default: 1700)
 
 // % Chance of eject system failing
 GW_EJECT_FAILURE = 15;
@@ -77,6 +77,10 @@ GW_SUPPLY_ACTIVE = 0; // Dont change this
 GW_SUPPLY_MAX = 30; // Maximum number of supply drops active at once (default: 30)
 GW_SUPPLY_CLEANUP = (3*60); // Timeout before cleaning up supply drop (default: (3*60) )
 
+// AI
+GW_AI_MAX = 3;
+GW_AI_ACTIVE = [];
+
 // Misc
 GW_MAX_DATA_SIZE = 8000; // Max packet size (in characters) that can be loaded (loadVehicle or saveVehicle will not work if this is too large)
 
@@ -95,7 +99,11 @@ vehicleDamageData = {
 	private ['_d'];
 
 	_d = _this call {
-
+		if (_this == "B_65x39_Caseless") exitWith { ((random 0.25) + 0.75) };
+		if (_this == "B_35mm_AA_Tracer_Yellow" ||
+			_this == "B_35mm_AA_Tracer_Red" ||
+			_this == "B_35mm_AA_Tracer_Green" || 
+			_this == "B_35mm_AA") exitWith { ((random 0.25) + 0.75) };
 		if (_this == "R_PG32V_F" || _this == "RPG") exitWith { ((random 0.075) + 0.05) };
 		if (_this == "M_Titan_AT_static" || _this == "RPD") exitWith { ((random 0.05) + 0.01) };			
 		if (_this == "M_PG_AT" || _this == "GUD") exitWith { 0 };
@@ -120,7 +128,8 @@ objectDamageData = {
 	private ['_d'];
 
 	_d = _this call {
-
+		if (_this == "B_65x39_Caseless") exitWith { ((random 5) + 5) };
+		if (_this == "680Rnd_35mm_AA_shells_Tracer_Yellow") exitWith { ((random 5) + 5) };
 		if (_this == "R_PG32V_F" || _this == "RPG") exitWith { 10 };
 		if (_this == "M_PG_AT" || _this == "RPD") exitWith { 8 };
 		if (_this == "M_Titan_AT" || _this == "GUD" || _this == "MIS") exitWith { 20 };
@@ -138,6 +147,13 @@ objectDamageData = {
 	(_d * GW_GHS)
 };
 
+GW_AREAS = {	
+	private ['_allZones'];
+	_allZones = +GW_VALID_ZONES;
+	_allZones append GW_ACTIVE_RACES;
+	_allZones
+};
+
 // Available arenas and game type
 GW_VALID_ZONES = [
 	
@@ -148,6 +164,11 @@ GW_VALID_ZONES = [
 	['drylake', 'battle', 'Dry Lake'],
 	// ['highway', 'race'], 
 	['workshop', 'safe', 'Workshop']
+];
+
+// Active races and race hosts
+GW_ACTIVE_RACES = [
+
 ];
 
 // Objects that cant be cleared by clearPad
@@ -195,7 +216,8 @@ GW_TEXTURES_SPECIAL = [
 	['C_Van_01_transport_F', ["", "default"] ],
 	['C_Van_01_box_F', ["C_Van_01_transport_F", "default"] ],
 	['C_Van_01_fuel_F', ["C_Van_01_transport_F", "default"] ],
-	['O_truck_02_fuel_f', ["default", "default"] ]
+	['O_truck_02_fuel_f', ["default", "default"] ],
+	['B_APC_Tracked_01_AA_F', ["default", "default", "default"] ]
 	
 ];
 

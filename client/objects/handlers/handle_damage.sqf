@@ -5,10 +5,7 @@
 //
 
 private ["_obj", "_damage", "_projectile"];
-
-_obj = _this select 0;
-_damage = _this select 2;
-_projectile = _this select 4;
+params ['_obj', '_nil', '_damage', '_nil', '_projectile'];
 
 if (_obj distance (getMarkerPos "workshopZone_camera") < 200) exitWith { false };
 

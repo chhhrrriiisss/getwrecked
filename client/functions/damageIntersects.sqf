@@ -30,12 +30,22 @@ if (count _objects == 0) exitWith {};
 
 		_modifier = if ("nanoarmor" in _status) then { 0.01 } else { _modifier };
 
+		_armor = _x getVariable ['GW_Armor', 1];
+		_modifier = [(_modifier / (_armor / 4)), 0, _modifier] call limitToRange;	
+
 		// Apply the damage, or destroy if we're going to KO it
 		if ( (_dmg + _modifier) > 1) then {		
 			_x call destroyInstantly;
 		} else {
 			_x setDamage ((getDammage _x) + (_dmg + _modifier));
-			_x call updateVehicleDamage;
+
+			[
+				_x,
+				"updateVehicleDamage",
+				_x,
+				false
+			] call bis_fnc_mp;
+
 		};
 	};
 

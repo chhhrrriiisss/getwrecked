@@ -3,10 +3,7 @@
 //      Desc: Converts a decimal degree to a vector heading
 //      Return: Array (Vector)
 //
-
-_dir = _this select 0;
-_angle = _this select 1;
-_pitch = _this select 2;
+params ['_dir', '_angle', '_pitch'];
 
 _vecdx = sin(_dir) * cos(_angle);
 _vecdy = cos(_dir) * cos(_angle);

@@ -27,8 +27,9 @@ GW_PAINT_CANCEL = false;
 // Paint vehicle action
 _paintAction = _unit addAction[paintVehicleFormat, {
 
-	_unit = _this select 0;
-	_nearby = (ASLtoATL getPosASL _unit) nearEntities [["Car"], 10];
+	params ['_unit'];
+
+	_nearby = (ASLtoATL getPosASL _unit) nearEntities [["Car", "Tank"], 10];
 
 	if ([(_nearby select 0), _unit, false] call checkOwner) then {
 		_unit setVariable ['GW_paintTarget', (_nearby select 0)];
@@ -78,10 +79,10 @@ Sleep 0.25;
 	"playSoundAll",
 	true,
 	false
-] call gw_fnc_mp;	  
+] call bis_fnc_mp;	  
 
 // Apply Vehicle Texture in MP
-[[_target,_color],"setVehicleTexture",true,false] call gw_fnc_mp;
+[[_target,_color],"setVehicleTexture",true,false] call bis_fnc_mp;
 
 ['VEHICLE PAINTED!', 2, successIcon, nil, "slideDown"] spawn createAlert; 
 

@@ -40,6 +40,7 @@ GW_NEW_ACTIVE = false;
 GW_INVENTORY_ACTIVE = false;
 GW_DEATH_CAMERA_ACTIVE = false;
 GW_PREVIEW_CAM_ACTIVE = false;
+GW_GENERATOR_ACTIVE = false;
 GW_SETTINGS_ACTIVE = false;
 GW_SPAWN_ACTIVE = false;
 GW_DEPLOY_ACTIVE = false;
@@ -130,6 +131,7 @@ listFunctions = compile preprocessFile  'client\persistance\library.sqf';
 listVehicles = compile preprocessFile  'client\persistance\list.sqf';
 createDefaultLibrary = compile preprocessFile 'client\persistance\default.sqf';
 toggleHidden = compile preprocessFile 'client\functions\toggleHidden.sqf';
+createDefaultRaces = compile preprocessFile 'client\persistance\defaultRaces.sqf';
 
 // Setup Functions
 setupLocalVehicle = compile preprocessFile "client\vehicles\local_vehicle_setup.sqf";
@@ -182,25 +184,6 @@ meleeRam = compile preprocessFile "client\vehicles\melee\ram.sqf";
 meleeHook = compile preprocessFile "client\vehicles\melee\hook.sqf";
 meleePylon = compile preprocessFile "client\vehicles\melee\pylon.sqf";
 
-// Module Functions
-smokeBomb = compile preprocessFile "client\vehicles\attachments\smoke_bomb.sqf";
-verticalThruster = compile preprocessFile "client\vehicles\attachments\thruster.sqf";
-nitroBoost = compile preprocessFile "client\vehicles\attachments\nitro_boost.sqf";
-emergencyRepair = compile preprocessFile "client\vehicles\attachments\emergency_repair.sqf";
-empDevice = compile preprocessFile "client\vehicles\attachments\emp_device.sqf";
-selfDestruct = compile preprocessFile "client\vehicles\attachments\self_destruct.sqf";
-emergencyParachute = compile preprocessFile "client\vehicles\attachments\emergency_parachute.sqf";
-oilSlick = compile preprocessFile "client\vehicles\attachments\oil_slick.sqf";
-dropCaltrops = compile preprocessFile "client\vehicles\attachments\caltrops.sqf";
-dropMines = compile preprocessFile 'client\vehicles\attachments\mines.sqf';
-dropExplosives = compile preprocessFile "client\vehicles\attachments\explosives.sqf";
-dropTeleport = compile preprocessFile "client\vehicles\attachments\teleport.sqf";
-dropJammer = compile preprocessFile "client\vehicles\attachments\frequency_jammer.sqf";
-shieldGenerator = compile preprocessFile "client\vehicles\attachments\shield_generator.sqf";
-cloakingDevice = compile preprocessFile "client\vehicles\attachments\cloak.sqf";
-magneticCoil = compile preprocessFile "client\vehicles\attachments\magnetic_coil.sqf";
-dropLimpets = compile preprocessFile 'client\vehicles\attachments\limpet_mines.sqf';
-activateElectromagnet = compile preprocessFile 'client\vehicles\attachments\electromagnet.sqf';
 
 vehicleForks = compile preprocessFile "client\vehicles\attachments\vehicle_forks.sqf";
 attachVehicleTo = compile preprocessFile "client\functions\attachVehicleTo.sqf";

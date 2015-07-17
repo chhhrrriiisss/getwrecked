@@ -3,10 +3,7 @@
 	Event Handler for hit Vehicle
 */
 
-private ["_veh"];
-
-_vehicle = _this select 0; 
-_projectile = _this select 1;
+params ['_vehicle', '_projectile'];
 
 // [_vehicle, _projectile] call sendVehicleHit;
 

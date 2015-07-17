@@ -14,7 +14,7 @@ if (!alive _v) exitWith {};
 
 // Don't tag our own vehicle
 if (_v == GW_CURRENTVEHICLE) exitWith {};
-if !(_v isKindOf "Car") exitWith {};
+if !(_v isKindOf "Car" || _v isKindOf "Tank") exitWith {};
 
 _v setVariable['killedBy', format['%1', [name player, _m, (GW_CURRENTVEHICLE getVariable ['name', '']), (typeOf GW_CURRENTVEHICLE) ] ], true];	
 _driver = driver _v;

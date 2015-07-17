@@ -63,7 +63,7 @@ if (_forceServerLoad) exitWith {
         'loadVehicle',
         false,
         false
-    ] call gw_fnc_mp;   
+    ] call bis_fnc_mp;   
 
     GW_WAITLOAD = false;
     loadError = false;

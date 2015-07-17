@@ -34,7 +34,7 @@ if (!isNil "_sound") then {
 			"playSoundAll",
 			true,
 			false
-		] call gw_fnc_mp;
+		] call bis_fnc_mp;
 
 	};
 

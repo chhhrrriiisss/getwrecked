@@ -5,9 +5,7 @@
 //
 
 private ['_vehicle', '_dir', '_pos', '_alt', '_vel'];
-
-_vehicle = _this select 0;
-_state = _this select 1;
+params ['_vehicle', '_state'];
 
 _currentState = _vehicle getVariable ["lockOns", false];
 _state = if (typename _state == "BOOL") then { _state } else { !_currentState };

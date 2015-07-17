@@ -5,8 +5,7 @@
 //
 
 private ['_box', '_inv'];
-
-_box = _this select 0;
+params ['_box'];
 
 _inv = _box getVariable ["GW_INVENTORY", []];
 _total = 0;

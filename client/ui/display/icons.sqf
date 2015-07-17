@@ -103,7 +103,7 @@ if (!isNil "GW_CURRENTZONE") then {
 				drawIcon3D [hiddenIcon,[1,1,1,_opacity], (_x modelToWorldVisual [0,0,1]), 1.7,1.7,0, '', 0, 0.04, "PuristaMedium"];
 			};
 			false
-		} count ((getMarkerPos "workshopZone_camera") nearEntities [["Car"], 200]);
+		} count ((getMarkerPos "workshopZone_camera") nearEntities [["Car", "Tank"], 200]);
 
 	};
 

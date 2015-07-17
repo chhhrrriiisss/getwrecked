@@ -33,7 +33,7 @@ _s = if (_fuel < _cost) then {
 	    "addVehicleStatus",
 	    _vehicle,
 	    false 
-	] call gw_fnc_mp;  
+	] call bis_fnc_mp;  
 
 	false
 } else {
@@ -67,7 +67,7 @@ _s = if (_fuel < _cost) then {
 			0.75
 			],
 			"nitroEffect"
-		] call gw_fnc_mp;
+		] call bis_fnc_mp;
 
 		_final = _fuel - _cost;	
 

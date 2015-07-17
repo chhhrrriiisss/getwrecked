@@ -4,10 +4,7 @@
 //      Return: Array (All found values)
 //
 
-private ['_t', '_m'];
-
-_t = _this select 0;
-_m =  _this select 1;
+params ['_t', '_m'];
 
 if (isNull _t) exitWith {};
 
@@ -35,7 +32,7 @@ if (_isVehicle) then {
 			"removeVehicleStatus",
 			_t,
 			false 
-		] call gw_fnc_mp;  
+		] call bis_fnc_mp;  
 
 	};				
 

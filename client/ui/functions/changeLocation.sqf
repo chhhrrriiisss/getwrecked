@@ -3,18 +3,21 @@
 //      Desc: Cycle through available locations via next/prev
 //      Return: None
 //
+private ['_allZones', '_currentIndex', '_type'];
+params ['_value'];
 
 disableSerialization;
 
-_value = _this select 0;
 _newValue = 0;
+
+_allZones = GW_VALID_ZONES;
 
 _currentIndex = 0;
 {
-    if ((_x select 0) == GW_SPAWN_LOCATION) exitWith { _currentIndex = _foreachindex; };
-} Foreach GW_VALID_ZONES;
+    if ((_x select 0) == GW_SPAWN_LOCATION) exitWith {_currentIndex = _foreachindex; };
+} Foreach _allZones;
 
-_length = ((count GW_VALID_ZONES) - 1);
+_length = ((count _allZones) - 1);
 _type = typename _value;
 
 if (_type == "STRING") then {
@@ -30,16 +33,17 @@ if (_type == "STRING") then {
 	_newValue = _value;
 };
 
-_currentIndex = [_newValue, 0, (count GW_VALID_ZONES - 1), true] call limitToRange;
+_currentIndex = [_newValue, 0, (count _allZones - 1), true] call limitToRange;
 
-GW_SPAWN_LOCATION = (GW_VALID_ZONES select _currentIndex) select 0;
-_displayName = (GW_VALID_ZONES select _currentIndex) select 2;
+GW_SPAWN_LOCATION = (_allZones select _currentIndex) select 0;
+_typeOfZone = (_allZones select _currentIndex) select 1;
+_displayName = (_allZones select _currentIndex) select 2;
 
-if (((GW_VALID_ZONES select _currentIndex) select 1) == "safe") exitWith {
+if (_typeOfZone == "safe") exitWith {
 	[_value] spawn changeLocation;
 };
 
-[GW_SPAWN_LOCATION, _displayName] spawn previewLocation;
+[GW_SPAWN_LOCATION, _displayName, _typeOfZone] spawn previewLocation;
 
 
 

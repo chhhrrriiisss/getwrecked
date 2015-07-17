@@ -4,11 +4,7 @@
 //      Return: None
 //
 
-_pos = _this select 0;
-_defaultIcon =_this select 1;
-_activeIcons = _this select 2;
-_maxVisibleRange = _this select 3;
-_type = _this select 4;
+params ['_pos', '_defaultIcon', '_activeIcons', '_maxVisibleRange', '_type'];
 
 _distance = _pos distance GW_CURRENTVEHICLE;
 _size = (1 - ((_distance / _maxVisibleRange) * 0.6)) * 1.4;

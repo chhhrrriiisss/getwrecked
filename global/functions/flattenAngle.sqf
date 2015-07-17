@@ -4,9 +4,7 @@
 //      Return: Number
 //
 
-private ['_angle'];
-
-_angle = _this select 0;
+params ['_angle'];
 
 if (_angle < -180) then { _angle = _angle + 360; };
 if (_angle > 180) then { _angle = _angle - 360; };

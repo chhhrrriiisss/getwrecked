@@ -4,9 +4,7 @@
 //      Return: None
 //
 
-private ['_z'];
-
-_z = _this select 0;
+params ['_z'];
 if (_z == "") exitWith {};
 
 {

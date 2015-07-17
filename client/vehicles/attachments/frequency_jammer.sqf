@@ -37,7 +37,7 @@ playSound3D ["a3\sounds_f\sfx\vehicle_drag_end.wss",_vehicle, false, getPosATL _
 // 	"setObjectSimulation",
 // 	false,
 // 	false 
-// ] call gw_fnc_mp;
+// ] call bis_fnc_mp;
 
 // _releaseTime = time;
 // _timer = 60;
@@ -87,7 +87,7 @@ playSound3D ["a3\sounds_f\sfx\vehicle_drag_end.wss",_vehicle, false, getPosATL _
 // 		_bomb = createVehicle ["Bo_GBU12_LGB", _pos, [], 0, "CAN_COLLIDE"];
 // 		_bomb setVelocity [0,0,-100];
 
-// 		_nearby = _pos nearEntities [["Car"], 10];	
+// 		_nearby = _pos nearEntities [["Car", "Tank"], 10];	
 
 // 		if (count _nearby > 0) then {
 // 			// To be extra badass, lets spawn a bomb for each vehicle nearby

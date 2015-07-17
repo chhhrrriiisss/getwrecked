@@ -145,8 +145,7 @@ if (_dist > _range) then {
 
 	[_vehicle, _crate] spawn {
 
-		_v = _this select 0;
-		_t = _this select 1;
+		params ['_v', '_t'];
 		_d = (_v distance _t);
 
 		for "_i" from 0 to (15*(_d / 100)) do {
@@ -190,7 +189,7 @@ if (_dist > _range) then {
 
 	// Get the angle we're getting thrown too
 	_dir = [_crate,_vehicle] call dirTo;
-	_relPos = [_vehicle, _dist, _dir] call BIS_fnc_relPos;
+	_relPos = [_vehicle, _dist, _dir] call relPos;
 
 	// Use vehicle pos to calculate velocity vector
 	_vehPos = getPosATL _vehicle;

@@ -78,7 +78,7 @@ if (isNil "GW_TARGET_DIRECTION") then {	GW_TARGET_DIRECTION = 0; };
 						"removeVehicleStatus",
 						_x,
 						false 
-					] call gw_fnc_mp;  
+					] call bis_fnc_mp;  
 				};
 			};
 
@@ -97,7 +97,7 @@ if (isNil "GW_TARGET_DIRECTION") then {	GW_TARGET_DIRECTION = 0; };
 					"removeVehicleStatus",
 					_x,
 					false 
-				] call gw_fnc_mp;  		
+				] call bis_fnc_mp;  		
 
 			};
 		};
@@ -159,7 +159,7 @@ if (count GW_LOCKEDTARGETS > 0) then {
             "addVehicleStatus",
             _lockedTarget,
             false 
-    	] call gw_fnc_mp;  
+    	] call bis_fnc_mp;  
 
     	false
 
@@ -176,7 +176,7 @@ if (count GW_LOCKEDTARGETS > 0) then {
             "removeVehicleStatus",
             _lockedTarget,
             false 
-    	] call gw_fnc_mp;  
+    	] call bis_fnc_mp;  
 
     	GW_LOCKEDTARGETS = GW_LOCKEDTARGETS - [_lockedTarget];
     	GW_VALIDTARGETS = GW_VALIDTARGETS - [_lockedTarget];

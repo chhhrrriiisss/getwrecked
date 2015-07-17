@@ -8,8 +8,7 @@ private ['_gun', '_target', '_vehicle'];
 
 _this spawn {
 
-	_gun = _this select 0;
-	_target = _this select 1;
+	params ['_gun', '_target'];
 
 	_repeats = 0;
 	_round = "R_TBG32V_F";
@@ -32,7 +31,7 @@ _this spawn {
 			_gPos set [2, (_gPos select 2) + 3];
 
 			_dir = [_gPos, _targetPos] call dirTo;	
-			_tPos = [_gun, _range, _dir] call BIS_fnc_relPos;
+			_tPos = [_gun, _range, _dir] call relPos;
 			_tPos set[2, 500];
 
 			_launch = createVehicle [_round, _gPos, [], 0, "FLY"];
@@ -80,7 +79,7 @@ _this spawn {
 
 					_dir = getDir (vehicle player);
 					_dir = _dir + ((random 90) - 45);
-					_targetPos = [_targetPos, 15, _dir] call BIS_fnc_relPos;		
+					_targetPos = [_targetPos, 15, _dir] call relPos;		
 					GW_LOCKEDTARGETS = GW_LOCKEDTARGETS - [_x];
 				};	
 

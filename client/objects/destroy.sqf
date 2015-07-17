@@ -19,7 +19,7 @@ if (_effect) then {
 			0.5
 		],
 		"muzzleEffect"
-	] call gw_fnc_mp;
+	] call bis_fnc_mp;
 
 };
 

@@ -4,9 +4,8 @@
 //      Return: None
 //
 
-private ['_v', '_c'];
-
-_v = _this select 0;
+params ['_v'];
+private ['_c'];
 
 if (isNull _v) exitWith {};
 

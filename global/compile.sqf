@@ -55,6 +55,9 @@ if (hasInterface) then {
 
 		true
 	};
+	
+} else {
+	logDebug = { true };
 };
 
 // Custom checks for object/vehicles
@@ -116,8 +119,7 @@ isHolder = {
 
 // Trigger function for a supply box effects
 supplyDropEffect = {	
-	_crate = _this select 0;
-	_id = _this select 1;
+	params ['_crate', '_id'];
 	(_this select 0) spawn ((GW_SUPPLY_TYPES select _id) select 3);	
 	playsound "upgrade";
 };
@@ -196,7 +198,6 @@ findClosest = compile preprocessFile 'global\functions\findClosest.sqf';
 findEmpty = compile preprocessFile 'global\functions\findEmpty.sqf';
 findUnit = compile preprocessFile 'global\functions\findUnit.sqf';
 findVehicle = compile preprocessFile 'global\functions\findVehicle.sqf';
-allPlayers = compile preprocessFile 'global\functions\allPlayers.sqf';
 getBoundingBox = compile preprocessFile 'global\functions\getBoundingBox.sqf';
 getData = compile preprocessFile 'global\functions\getData.sqf';
 snapToPad = compile preprocessFile 'global\functions\snapToPad.sqf';
@@ -210,7 +211,9 @@ checkOwner = compile preprocessFile 'global\functions\checkOwner.sqf';
 findLocationInZone = compile preprocessFile "global\functions\findLocationInZone.sqf";
 arrayToJson = compile preprocessFile 'global\functions\arrayToJson.sqf';
 dirTo = compile preprocessFile 'global\functions\dirTo.sqf';
+relPos = compile preprocessFile 'global\functions\relPos.sqf';
 filterParam = compile preprocessFile 'global\functions\filterParam.sqf';
+insertAt = compile preprocessFile 'global\functions\insertAt.sqf';
 
 shareVehicle = compile preprocessFile 'global\functions\shareVehicle.sqf';
 copyVehicle = compile preprocessFile 'global\functions\copyVehicle.sqf';
@@ -222,6 +225,26 @@ flattenAngle = compile preprocessFile 'global\functions\flattenAngle.sqf';
 padZeros = compile preprocessFile 'global\functions\padZeros.sqf';
 dirToVector = compile preprocessFile 'global\functions\dirToVector.sqf';
 roundTo = compile preprocessFile 'global\functions\roundTo.sqf';
+
+// Module Functions
+smokeBomb = compile preprocessFile "client\vehicles\attachments\smoke_bomb.sqf";
+verticalThruster = compile preprocessFile "client\vehicles\attachments\thruster.sqf";
+nitroBoost = compile preprocessFile "client\vehicles\attachments\nitro_boost.sqf";
+emergencyRepair = compile preprocessFile "client\vehicles\attachments\emergency_repair.sqf";
+empDevice = compile preprocessFile "client\vehicles\attachments\emp_device.sqf";
+selfDestruct = compile preprocessFile "client\vehicles\attachments\self_destruct.sqf";
+emergencyParachute = compile preprocessFile "client\vehicles\attachments\emergency_parachute.sqf";
+oilSlick = compile preprocessFile "client\vehicles\attachments\oil_slick.sqf";
+dropCaltrops = compile preprocessFile "client\vehicles\attachments\caltrops.sqf";
+dropMines = compile preprocessFile 'client\vehicles\attachments\mines.sqf';
+dropExplosives = compile preprocessFile "client\vehicles\attachments\explosives.sqf";
+dropTeleport = compile preprocessFile "client\vehicles\attachments\teleport.sqf";
+dropJammer = compile preprocessFile "client\vehicles\attachments\frequency_jammer.sqf";
+shieldGenerator = compile preprocessFile "client\vehicles\attachments\shield_generator.sqf";
+cloakingDevice = compile preprocessFile "client\vehicles\attachments\cloak.sqf";
+magneticCoil = compile preprocessFile "client\vehicles\attachments\magnetic_coil.sqf";
+dropLimpets = compile preprocessFile 'client\vehicles\attachments\limpet_mines.sqf';
+activateElectromagnet = compile preprocessFile 'client\vehicles\attachments\electromagnet.sqf';
 
 // Vehicle Functions 
 call compile preprocessFile 'client\vehicles\functions.sqf';

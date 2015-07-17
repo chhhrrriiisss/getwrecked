@@ -37,13 +37,16 @@ GW_LIFT_ACTIVE = false;
 GW_SPAWN_ACTIVE = false;
 GW_DIALOG_ACTIVE = false;
 
+// Get rid of previous locked targets 
+GW_LOCKED_TARGETS = [];
+
 // Force hud refresh
 GW_HUD_ACTIVE = false;
 
 _tx = _unit getVariable ["texture", ""];
 
 if (_tx == "") then {
-	_tx = "slytech";
+	_tx = "tyraid";
 };
 
 // Auto remove racing helmets for people without the DLC
@@ -54,7 +57,7 @@ if (_hasDLC) then {
 
 	switch (_tx) do {
 		
-		case "slytech": { _unit addheadgear "H_RacingHelmet_1_white_F"; };
+		case "tyraid": { _unit addheadgear "H_RacingHelmet_1_white_F"; };
 		case "crisp": { _unit addheadgear "H_RacingHelmet_1_red_F"; };
 		case "gastrol": { _unit addheadgear "H_RacingHelmet_1_black_F"; };
 		case "haywire": { _unit addheadgear "H_RacingHelmet_1_black_F"; };
@@ -71,7 +74,7 @@ if (_hasDLC) then {
 	
 if(!isNil "_tx") then {
 	_unit setVariable ["GW_Sponsor", _tx];
-	[[_unit,_tx],"setPlayerTexture",true,false] call gw_fnc_mp;
+	[[_unit,_tx],"setPlayerTexture",true,false] call bis_fnc_mp;
 };
 
 playerPos = (ASLtoATL visiblePositionASL _unit);
@@ -91,6 +94,7 @@ if (!_firstSpawn) then {
 	_defaultTarget = getMarkerPos format['%1_%2', GW_CURRENTZONE, 'camera'];
 	_prevPos = _unit getVariable ['GW_prevPos', [0,0,0]];
 	_prevPos = if (_prevPos distance [0,0,0] > 1) then { _prevPos } else { _defaultTarget };
+	_prevPos = [(_prevPos select 0), (_prevPos select 1), ([(_prevPos select 2), 0, 100] call limitToRange) ];
 
 	// Killed by something - lets create a camera on them
 	if (!isNil "_killedBy" && !_killedByNuke) then {
@@ -174,7 +178,7 @@ _unit setVariable ['name player', name player, true];
 
 waitUntil {
 	
-	_currentPos = (ASLtoATL (getPosASL player));
+	_currentPos = (ASLtoATL visiblePositionASL player);
 	_vehicle = (vehicle player);
 	_inVehicle = !(player == _vehicle);
 	_isDriver = (player == (driver _vehicle));

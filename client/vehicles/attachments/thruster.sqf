@@ -30,7 +30,7 @@ _s = if (_fuel < _cost) then {
 	    "addVehicleStatus",
 	    _vehicle,
 	    false 
-	] call gw_fnc_mp;  
+	] call bis_fnc_mp;  
 
 	false
 
@@ -102,7 +102,7 @@ _s = if (_fuel < _cost) then {
 		0.2
 		],
 		"thrusterEffect"
-	] call gw_fnc_mp;
+	] call bis_fnc_mp;
 
 	_vehicle setVelocity _newVelocity;
 	

@@ -4,8 +4,7 @@
 //
 
 private ['_vehicle', '_target'];
-
-_vehicle = _this select 0; 
+params ['_vehicle'];
 
 if (!local _vehicle) exitWith {};
 

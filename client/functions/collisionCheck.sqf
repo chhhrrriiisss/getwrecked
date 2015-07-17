@@ -112,4 +112,6 @@ if (isNil "getMeleeOffsets") then {
 
 } count (attachedObjects _v);
 
+['Melee Update', (format['%1', ([time - _startTime, 2] call roundTo)])] call logDebug;
+
 true

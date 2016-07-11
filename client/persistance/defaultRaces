@@ -1,8 +1,0 @@
-_defaultRaces = [
-
-	// [ ["HIGHWAY", 'SLI', 'Altis'], [""] ],
-	// [ ["TEST2", 'SLI', 'Altis'], [""] ]		
-];
-
-profileNamespace setVariable ['GW_RACES', _defaultRaces]; 
-saveProfileNamespace;  

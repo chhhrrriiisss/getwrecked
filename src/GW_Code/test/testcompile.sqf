@@ -1,0 +1,1 @@
+call compile format['test = compile preprocessFile "server2\test.sqf";'];

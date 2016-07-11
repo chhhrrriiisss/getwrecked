@@ -13,3 +13,62 @@ $RECYCLE.BIN/
 *.msi
 *.msm
 *.msp
+
+# Windows shortcuts
+*.lnk
+
+node_modules/
+backup/
+
+*.gitignore
+
+# Ignore sublime project files
+*.sublime-project
+*.sublime-workspace
+*.ftppass
+*.js
+*.json
+
+# Ignore everything in location-only folders, but include .sqm/load-image
+
+src/GW_Altis.Altis/*
+!src/GW_Altis.Altis/mission.sqm
+!src/GW_Altis.Altis/load-image.jpg
+
+src/GW_Stratis.Stratis/*
+!src/GW_Stratis.Stratis/mission.sqm
+!src/GW_Stratis.Stratis/load-image.jpg
+
+src/GW_Tanoa.Tanoa/*
+!src/GW_Tanoa.Tanoa/mission.sqm
+!src/GW_Tanoa.Tanoa/load-image.jpg
+
+# =========================
+# Operating System Files
+# =========================
+
+# OSX
+# =========================
+
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+jhvehppn.tko.txt

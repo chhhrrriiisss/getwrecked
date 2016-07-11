@@ -1,11 +1,130 @@
 # [Get Wrecked](http://getwrecked.info) Changelog
-## Last Updated: [15-07-2015] ##
+## Last Updated: [12-07-2016] ##
 
 Note: Some changes that are deemed spoilers are hidden from this log. 
 (WIP) Indicates items that may not be fully functional and are only partially implemented.
 Items without Fixed/Added/Removed proceeding are typically balance changes.
 
-**v0.8.2c** [1.48 Compatibility - Public alpha release]
+**v0.8.6** [Public alpha release — A3 1.62]
+
+- Added hud marker for dead players in current race
+- Added Prowler to unlockable vehicles
+- Changes to loading process to ensure welcome message doesn't appear while on loading screen
+- Race checkpoints now give 10% ammo on even points and 10% fuel on odd points
+- Updated and simplified supply box script to allow them to function on bridges/steeper terrain
+- Added Hunter Seeker Missile to supply crates (will be added to races at a later point)
+- Added service points to Port, Quarry
+- Lowered laser chance of burn, but increased raw damage output
+- Service points now use notification icon instead of screen alert
+- Invalid position icons for race editor
+- Removed squadRadar
+- Removed duplicate mouseHandler function
+- Reverted boundary spawn to server side only
+- Refactored HUD and playerLoop to run from same loop
+- Reduced setPos frequency on lift vehicle
+- Overall fire damage reduced
+- Slightly lowered GMG rate of fire
+- Removed zone boundaries from workshop
+- New 'hidden' icon to targetCursor while using cloak
+- Reduction in number of simulated objects in zones using makeSimpleObject
+- Melee weapons now do more damage, break more easily and no longer collide with buildings
+- Improved race editor usability (tooltips and changes to the way checkpoints are added to make it a bit more logical)
+- Race checkpoint trigger area is now 15m (10m previously)
+- Damage in race zones decreased slightly (it's now roughly 2x damage in a battle zone)
+- Last loaded vehicle is no longer loaded on player respawn to prevent terminals overflowing
+- Loading in a new vehicle will now clear other vehicles you own in the workshop
+- Reduced sound volume on GMG, HMG, Rocket Pods
+- Better handling of bad race data or ID when deploying to a race zone
+- Removed an unnecessary loop from the chat commands system
+- Improved angle of ramps at Terminal
+
+- Fixed Race not correctly ending after at least one player has finished
+- Fixed "_newFuel" undefined variable error
+- Fixed Several outdated .wss file locations 
+- Fixed isEqualType [] error related to lack of available vHud bar space
+- Fixed Race checkpoints couldn't be placed on bridges
+- Fixed Deploy point on plantation above flame pad (lol)
+- Fixed setVehicleTexture no longer called for blank paints
+- Fixed Closing settings menu too quickly causes corrupted keybinds
+- Fixed Melee weapons colliding with invisible objects on bridges
+- Fixed Potential HUD break related to getOut EH on vehicles
+- Fixed Objects placed below vehicle when lifted caused vehicle to explode
+- Fixed Param error when using Rocket Pods on opponents
+- Fixed Battleye kick when using too many lasers
+- Fixed Mines sitting above ground when deployed
+- Fixed Race progress bar stopping for remaining players after first player completes it
+- Fixed Player unable to return to workshop if all vehicle terminals are full
+- Fixed Crash when deploying to a zone with a chat channel open
+- Fixed Races not ending as intended when players killed outside their vehicles or DC
+- Fixed Out of bounds deploy point on Plantation
+- Fixed Workshop occasionally showed as an option when deploying to a battle
+- Fixed HUD progress bar was overlapping player locations in race
+- Fixed Renaming a race twice caused race library to break
+- Fixed No sound when shooting some weapons
+- Fixed Some actions (save, deploy) were running on multiple clients
+
+**v0.8.2 - v0.8.5** [Closed alpha release]
+
+- Added Race editor and race mode
+- Added FlamePads to map
+- Added 'Loading' text to vehicle preview
+- Added 'Crash Test Dummy' texture for dev builds
+- Added 'Napalm Bomb' as droppable module
+- Race lobby menu and 'ready' threshold for race starting
+- Caltrops now more reliable and destroyed after first collision
+- Increased global damage scale by x2 (0.04 > 0.08)
+- Decreased ammo requirements of some weapons
+- Decreased breakage frequency for melee weapons
+- EM Fencing now only mitigates the speed reduction of an EMP, rather than removing effect entirely
+- Alert UI moved further upwards to reduce screen clutter
+- Halo effect now follows ground when vehicle is airborne
+- New system that uses server to determine empty setpos locations
+- Reduced particle effect drop frequency on verticalThruster to improve FPS
+- New method to dynamically spawn zone boundaries (client and local) on deploy to boost server FPS
+- Typename comparisons updated to new isEqualType command (faster)
+- Changed player proximity action refresh to a new lazy-update method
+- New vehicle save name method to avoid profileNameSpace conflicts
+- Renaming a vehicle now correctly deletes old named entry (no more cloning!)
+- Global keybinds (settings, rotate keys) can now be set in the vehicle settings menu
+- Changing keybinds no longer requires vehicle to be saved at the workshop
+- Sponsorship money now triggered by server side events check
+- Redesigned default vehicle 'Fresh Meat' to make it a bit more noob friendly
+- Unit/Vehicle stance info is now hidden from HUD
+- New command !boundary which toggles visible zone boundaries on/off (may improve Client FPS)
+- Removed a number of buildings in Downtown Kavala to improve FPS in that zone
+- Caching on entries in drawIcons to eliminate unnecessary repeat position finding per frame
+- Damage now differs between Battle / Race zones
+- Magnetic Coil now 50% less power/range in race zones
+- Group global keybind added (open settings menu to configure)
+- Mines can now be dropped while airborne
+- Warning icons for mines and caltrops, now only added for first item in the group
+- Snapping now aligns to axis of matching objects (rotation align currently disabled)
+- Progress saved on DEV versions of Get Wrecked is now isolated from live version
+- Emergency repair device now only repairs 50% damage
+- Updated targetCursor to better calculate shooting while on steep terrain
+
+- Fixed Issue with stats retrieval occuring too early on previewVehicle
+- Fixed Bug preventing local vehicle setup from properly occuring
+- Fixed Suspended vehicles no longer drop altitude when attaching/detaching objects
+- Fixed Death camera sometimes triggering multiple times consecutively
+- Fixed Settings menu keybind should now work for vehicles nearby the player
+- Fixed HUD not fading in correctly if deploying in first person
+- Fixed Incorrect offset on muzzle effect
+- Fixed Unsaved vehicle prompt should now correctly show only for edited or non-loaded vehicles
+- Fixed Hitting ESC/Enter should now correctly confirm or cancel dialog message boxes
+- Fixed You can no longer disassemble static weapons
+- Fixed Player going unconscious when hitting supply boxes or vehicles
+- Fixed Vehicle spawn protection status being applied twice on deploy
+- Fixed 'Beach' zone on Stratis with bad boundary detection
+- Fixed occasional missing items on vehicle load
+- Fixed 'Slytech' missing texture bug
+- Fixed some vehicle items tending not to load under low server fps
+- Fixed Items shifting position when saved multiple times 
+- Fixed Purchasing multiple items should now correctly use nearby supply boxes owned by player
+- Fixed Filter list on deploy menu should now correctly update when arrows are used
+- Fixed Race menu should now correctly only show races valid on the current map
+
+**v0.8.2c** [Public alpha release — 1.48 Compatibility]
 
 - Combined cleanup scripts into events loop to improve server fps
 - Guided missile, lock-on, railgun, mines and explosive damage now affected by target armor
@@ -25,7 +144,7 @@ Items without Fixed/Added/Removed proceeding are typically balance changes.
 - Weapon damage and vehicle armor pass to help re-balance engagement times and viability
 - Supply boxes should no longer take over the workshop
 - Objects now hold their rotate while attaching them 
-- effectIsVisible dedicated check to minimize unnecessary visual effects being spawned on clientsw
+- effectIsVisible dedicated check to minimize unnecessary visual effects being spawned on clients
 - Teleport mechanic adjusted to make it more practical to use
 - Shockwave velocity limitation
 - Increased audability of most weapon/module effects 

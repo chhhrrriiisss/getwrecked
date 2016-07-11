@@ -1,0 +1,51 @@
+[] spawn {
+
+sleep 2;
+
+systemchat 'running!';
+
+_target = 9377;
+
+{
+	
+	if (_target == _x) exitWith {
+
+		disableSerialization;
+		_ctrl = ((findDisplay 60490) displayCtrl _x);
+		_ctrl ctrlSetBackgroundColor colorYellow;
+		_ctrl ctrlCommit 0;
+
+	};
+
+} foreach [
+	9377,
+	2,
+	9978, // Create Button
+	9979, // Promote Button
+	9977, // Join Button
+	9980, // Invite Button
+	10677, // Group info
+	9379,
+	9578,
+	9384,
+	9381,
+	9577,
+	9777,
+	11177,
+	9878,
+	9380,
+	9383,
+	9386,
+	9390,
+	9387,
+	9388,
+	9389,
+	10679,
+	9382,
+	9981,
+	9983,
+	9877,
+	9880
+];
+
+};
